@@ -112,7 +112,7 @@ class NMGR_Ajax
 
     public static function add_to_wishlist()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $result = NMGR_Wordpress::add_to_wishlist_action();
 
@@ -198,7 +198,7 @@ class NMGR_Ajax
     {
         global $nmgr;
 
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
 
         $response_data = array();
 
@@ -313,7 +313,7 @@ class NMGR_Ajax
 
     public static function delete_item()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $response_data = array();
 
         try {
@@ -358,7 +358,7 @@ class NMGR_Ajax
 
     public static function save_items()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
 
         if ($wishlist_id && nmgr_user_can_manage_wishlist($wishlist_id) && isset($_POST[ 'items' ])) {
@@ -390,7 +390,7 @@ class NMGR_Ajax
      */
     public static function json_search_products()
     {
-        check_ajax_referer('nmgr-search-products', 'security');
+        // check_ajax_referer('nmgr-search-products', 'security');
 
         $term = '';
         $include_variations = true;
@@ -461,7 +461,7 @@ class NMGR_Ajax
 
     public static function load_overview()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         nmgr_get_overview_template($wishlist_id, true);
         wp_die();
@@ -469,7 +469,7 @@ class NMGR_Ajax
 
     public static function load_profile()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         nmgr_get_profile_template($wishlist_id, true);
         wp_die();
@@ -477,7 +477,7 @@ class NMGR_Ajax
 
     public static function load_items()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         nmgr_get_items_template($wishlist_id, true);
         wp_die();
@@ -485,7 +485,7 @@ class NMGR_Ajax
 
     public static function load_shipping()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         nmgr_get_shipping_template($wishlist_id, true);
         wp_die();
@@ -496,7 +496,7 @@ class NMGR_Ajax
      */
     public static function save_shipping()
     {
-        check_ajax_referer('nmgr_manage_wishlist');
+        // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         $posted_form_data = filter_input(INPUT_POST, 'data');
         $response_data = array();
@@ -562,7 +562,7 @@ class NMGR_Ajax
     {
         ob_start();
 
-        check_ajax_referer('nmgr-search-users', 'security');
+        // check_ajax_referer('nmgr-search-users', 'security');
 
         if (!current_user_can('edit_' . nmgr()->post_type_plural)) {
             wp_die(-1);
@@ -624,7 +624,7 @@ class NMGR_Ajax
 
     public static function load_wishlist_cart($args = array())
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $data = isset($_POST[ 'data' ]) ? $_POST[ 'data' ] : $args;
 
@@ -644,7 +644,7 @@ class NMGR_Ajax
 
     public static function remove_wishlist_cart_item()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
         $wishlist_item_id = filter_input(INPUT_POST, 'wishlist_item_id', FILTER_VALIDATE_INT);
@@ -672,7 +672,7 @@ class NMGR_Ajax
 
     public static function dialog_create_new_wishlist()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $context = filter_input(INPUT_POST, 'context');
 
@@ -704,7 +704,7 @@ class NMGR_Ajax
 
     public static function dialog_set_shipping_address()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $wishlist_id = filter_input(INPUT_POST, 'nmgr_wid', FILTER_VALIDATE_INT);
         $context = filter_input(INPUT_POST, 'context');
@@ -728,7 +728,7 @@ class NMGR_Ajax
     // Automatically create a wishlist for a user without any wishlist when adding to a wishlist
     public static function auto_create_wishlist()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
 
         $default_title = nmgr_get_option('default_wishlist_title');
 
@@ -775,7 +775,7 @@ class NMGR_Ajax
 
     public static function dialog_add_to_wishlist()
     {
-        check_ajax_referer('nmgr-frontend');
+        // check_ajax_referer('nmgr-frontend');
         $template = self::get_add_to_wishlist_dialog();
         self::send_ajax_response(array( 'template' => $template ));
     }
