@@ -11,17 +11,17 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 ?>
 
 <div class="after-table-row">
-	<table class="total">
-		<tr>
-			<td class="label"><?php esc_html_e( 'Total', 'nm-gift-registry-lite' ); ?>:</td>
-			<td width="1%"></td>
-			<td class="total">
-				<?php echo $wishlist->get_total( 'true' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</td>
-		</tr>
-	</table>
+  <table class="total">
+    <tr>
+      <td class="label"><?php esc_html_e('Total', 'nm-gift-registry-lite'); ?>:</td>
+      <td width="1%"></td>
+      <td class="total">
+        <?php echo $wishlist->get_total('true'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
+      </td>
+    </tr>
+  </table>
 </div>

@@ -12,18 +12,16 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.3
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-get_header( 'shop' );
+get_header('shop');
 
-do_action( 'woocommerce_before_main_content' );
+do_action('woocommerce_before_main_content');
 
-nmgr_get_search_results_template( '', true );
+nmgr_get_search_results_template('', true);
 
-do_action( 'woocommerce_after_main_content' );
+do_action('woocommerce_after_main_content');
 
-do_action( 'nmgr_sidebar' );
+do_action('nmgr_sidebar');
 
-get_footer( 'shop' );
-
-
+get_footer('shop');

@@ -15,5 +15,5 @@ defined('ABSPATH') || exit;
 ?>
 
 <td class="thumb">
-		<?php echo '<div class="thumbnail">' . $thumbnail . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+  <?php echo '<div class="thumbnail">' . $thumbnail . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
 </td>

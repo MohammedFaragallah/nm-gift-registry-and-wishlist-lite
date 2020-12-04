@@ -11,30 +11,31 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 ?>
 
 <td class="actions edit-delete">
-	<div class="edit-delete-wrapper">
+  <div class="edit-delete-wrapper">
 
-		<?php if ( $show_edit_button ) : ?>
-			<a class="edit-wishlist-item nmgr-tip" href="#" title="<?php esc_attr_e( 'Edit item', 'nm-gift-registry-lite' ); ?>">
-				<?php
-				echo nmgr_get_svg( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'icon' => 'pencil',
-					'fill' => 'currentColor'
-				) );
-				?>
-			</a>
-		<?php endif; ?>
+    <?php if ($show_edit_button) : ?>
+    <a class="edit-wishlist-item nmgr-tip" href="#" title="<?php esc_attr_e('Edit item', 'nm-gift-registry-lite'); ?>">
+      <?php
+                echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    'icon' => 'pencil',
+                    'fill' => 'currentColor'
+                ));
+                ?>
+    </a>
+    <?php endif; ?>
 
-		<a class="delete-wishlist-item nmgr-tip" href="#" title="<?php esc_attr_e( 'Delete item', 'nm-gift-registry-lite' ); ?>">
-			<?php
-			echo nmgr_get_svg( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				'icon' => 'trash-can',
-				'fill' => 'currentColor'
-			) );
-			?>
-		</a>
-	</div>
+    <a class="delete-wishlist-item nmgr-tip" href="#"
+      title="<?php esc_attr_e('Delete item', 'nm-gift-registry-lite'); ?>">
+      <?php
+            echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                'icon' => 'trash-can',
+                'fill' => 'currentColor'
+            ));
+            ?>
+    </a>
+  </div>
 </td>

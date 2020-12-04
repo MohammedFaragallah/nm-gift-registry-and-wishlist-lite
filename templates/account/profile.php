@@ -11,37 +11,36 @@
  * @package NM Gift Registry Lite/Templates
  * @version 2.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 ?>
 
-<div id="nmgr-profile"
-		 class="<?php echo esc_attr( $class ); ?>"
-		 data-wishlist-id="<?php echo $wishlist ? absint( $wishlist->get_id() ) : 0; ?>"
-		 data-nonce="<?php echo esc_attr( $nonce ); ?>">
+<div id="nmgr-profile" class="<?php echo esc_attr($class); ?>"
+  data-wishlist-id="<?php echo $wishlist ? absint($wishlist->get_id()) : 0; ?>"
+  data-nonce="<?php echo esc_attr($nonce); ?>">
 
-	<?php
-	do_action( 'nmgr_before_profile', $wishlist );
+  <?php
+    do_action('nmgr_before_profile', $wishlist);
 
-	if ( $title ) {
-		printf( '<div class="nmgr-template-title profile">%s</div>', nmgr_kses_post( $title ) );
-	}
-	?>
+    if ($title) {
+        printf('<div class="nmgr-template-title profile">%s</div>', nmgr_kses_post($title));
+    }
+    ?>
 
-	<form class="nmgr-profile-form" method="POST">
+  <form class="nmgr-profile-form" method="POST">
 
-		<?php
-		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $form->get_fields_html( 'profile' );
+    <?php
+        // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $form->get_fields_html('profile');
 
-		if ( $form->has_fields() ) {
-			echo $form->get_hidden_fields();
-			echo $form->get_submit_button();
-		}
-		// phpcs:enable
-		?>
+        if ($form->has_fields()) {
+            echo $form->get_hidden_fields();
+            echo $form->get_submit_button();
+        }
+        // phpcs:enable
+        ?>
 
-	</form>
+  </form>
 
-	<?php do_action( 'nmgr_after_profile', $wishlist ); ?>
+  <?php do_action('nmgr_after_profile', $wishlist); ?>
 
 </div>

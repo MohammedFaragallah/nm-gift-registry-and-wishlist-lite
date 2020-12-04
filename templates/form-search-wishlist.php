@@ -11,25 +11,21 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.4
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 ?>
 
-<form role="search" method="get" class="nmgr-search-form" action="<?php echo esc_url( $form_action ); ?>">
-	<label class="screen-reader-text" for="<?php echo esc_attr( $input_name ); ?>">
-		<?php esc_html_e( 'Search for:', 'nm-gift-registry-lite' ); ?>
-	</label>
-	<input type="search"
-				 class="search-field"
-				 placeholder="<?php
-				 /* translators: %s: wishlist type title */
-				 printf( esc_attr__( 'Search %s&hellip;', 'nm-gift-registry-lite' ), esc_html( nmgr_get_type_title( '', true ) ) );
-				 ?>"
-				 value="<?php echo esc_attr( $input_value ); ?>"
-				 name="<?php echo esc_attr( $input_name ); ?>" />
-	<button type="submit" value="<?php echo esc_attr_x( 'Search', 'submit button', 'nm-gift-registry-lite' ); ?>">
-		<?php echo esc_html_x( 'Search', 'submit button', 'nm-gift-registry-lite' ); ?>
-	</button>
-	<?php if ( $using_wp_search ) : ?>
-		<input type="hidden" name="post_type" value="nm_gift_registry" />
-	<?php endif; ?>
+<form role="search" method="get" class="nmgr-search-form" action="<?php echo esc_url($form_action); ?>">
+  <label class="screen-reader-text" for="<?php echo esc_attr($input_name); ?>">
+    <?php esc_html_e('Search for:', 'nm-gift-registry-lite'); ?>
+  </label>
+  <input type="search" class="search-field" placeholder="<?php
+                 /* translators: %s: wishlist type title */
+                 printf(esc_attr__('Search %s&hellip;', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title('', true)));
+                 ?>" value="<?php echo esc_attr($input_value); ?>" name="<?php echo esc_attr($input_name); ?>" />
+  <button type="submit" value="<?php echo esc_attr_x('Search', 'submit button', 'nm-gift-registry-lite'); ?>">
+    <?php echo esc_html_x('Search', 'submit button', 'nm-gift-registry-lite'); ?>
+  </button>
+  <?php if ($using_wp_search) : ?>
+  <input type="hidden" name="post_type" value="nm_gift_registry" />
+  <?php endif; ?>
 </form>

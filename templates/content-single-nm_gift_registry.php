@@ -18,16 +18,15 @@ $wishlist = nmgr_get_wishlist(get_the_ID(), true);
 do_action('nmgr_before_single', $wishlist);
 
 if (post_password_required()) {
-	echo get_the_password_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	return;
+    echo get_the_password_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    return;
 }
 ?>
 <div id="nmgr-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-		<?php
-		do_action('nmgr_wishlist', $wishlist);
-		?>
+  <?php
+        do_action('nmgr_wishlist', $wishlist);
+        ?>
 </div>
 
 <?php do_action('nmgr_after_single', $wishlist); ?>
-

@@ -11,20 +11,21 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-$checked = get_user_meta( get_current_user_id(), 'nmgr_enable_wishlist', true ) ? 'checked="checked"' : '';
+$checked = get_user_meta(get_current_user_id(), 'nmgr_enable_wishlist', true) ? 'checked="checked"' : '';
 ?>
 
 <div id="nmgr-enable-wishlist">
-	<form method="post" id="nmgr-enable-wishlist-form">
-		<label class="checkbox">
-			<input type="checkbox" value="1" name="nmgr_enable_wishlist" id="nmgr-enable-wishlist" <?php echo esc_attr($checked); ?>>
-			<?php
-			/* translators: %s: wishlist type title */
-			printf( esc_html__( 'Enable %s', 'nm-gift-registry-lite' ), esc_html(nmgr_get_type_title()) );
-			?>
-		</label>
-		<?php wp_nonce_field( 'nmgr_enable_wishlist', 'nmgr-enable-wishlist-nonce' ); ?>
-	</form>
+  <form method="post" id="nmgr-enable-wishlist-form">
+    <label class="checkbox">
+      <input type="checkbox" value="1" name="nmgr_enable_wishlist" id="nmgr-enable-wishlist"
+        <?php echo esc_attr($checked); ?>>
+      <?php
+            /* translators: %s: wishlist type title */
+            printf(esc_html__('Enable %s', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
+            ?>
+    </label>
+    <?php wp_nonce_field('nmgr_enable_wishlist', 'nmgr-enable-wishlist-nonce'); ?>
+  </form>
 </div>

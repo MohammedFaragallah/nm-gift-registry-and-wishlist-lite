@@ -11,11 +11,11 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 ?>
 
 <div class="after-table-row">
-	<p>
-		<?php do_action( 'nmgr_after_items_actions', $items, $wishlist, $items_args ); ?>
-	</p>
+  <p>
+    <?php do_action('nmgr_after_items_actions', $items, $wishlist, $items_args); ?>
+  </p>
 </div>

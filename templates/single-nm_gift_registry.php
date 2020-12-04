@@ -17,24 +17,22 @@
  * @package NM Gift Registry Lite/Templates
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-get_header( 'shop' );
+get_header('shop');
 
-do_action( 'woocommerce_before_main_content' );
+do_action('woocommerce_before_main_content');
 
-while ( have_posts() ) :
-	the_post();
+while (have_posts()) :
+    the_post();
 
-	nmgr_template( 'content-single-nm_gift_registry.php' );
+    nmgr_template('content-single-nm_gift_registry.php');
 
 endwhile;
 
-do_action( 'woocommerce_after_main_content' );
+do_action('woocommerce_after_main_content');
 
 
-do_action( 'nmgr_sidebar' );
+do_action('nmgr_sidebar');
 
-get_footer( 'shop' );
-
-
+get_footer('shop');
