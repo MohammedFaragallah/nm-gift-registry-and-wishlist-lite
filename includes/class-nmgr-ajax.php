@@ -80,10 +80,7 @@ class NMGR_Ajax
             if (method_exists(__CLASS__, $event)) {
                 add_action('wp_ajax_nmgr_' . $event, array( __CLASS__, $event ));
 
-				if ( nmgr_get_option( 'allow_guest_wishlists' ) ) {
-					add_action( 'wp_ajax_nopriv_nmgr_' . $event, array( __CLASS__, $event ) );
-				}
-			}
+                add_action('wp_ajax_nopriv_nmgr_' . $event, array( __CLASS__, $event ));
             }
         }
 
