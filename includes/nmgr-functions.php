@@ -2,6 +2,8 @@
 
 defined('ABSPATH') || exit;
 
+use JWTAuth\AUTH;
+
 /**
  * Returns NM Gift Registry Lite main properties
  *
@@ -2568,6 +2570,15 @@ function is_nmgr_guest()
  */
 function nmgr_get_current_user_id()
 {
+    if (AUTH) {
+        $auth = new AUTH();
+        $jwt_user = $auth->validate_token(false);
+
+        if ($jwt_user->data->user_id) {
+            return $jwt_user->data->user_id;
+        }
+    }
+
     if (get_current_user_id()) {
         /**
          * Always return logged in user id as a string so that it can be compatible with the guest
