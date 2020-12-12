@@ -44,7 +44,61 @@ class NMGR_Wordpress
         add_action('nmgr_before_shipping', array( __CLASS__, 'show_shipping_address_required_notice' ));
         add_filter('wp_insert_post_data', array( __CLASS__, 'insert_post_data' ), 1, 2);
 
+        add_action(
+            'rest_api_init',
+            function () {
+                $namespace = 'frego-mobile-builder/v1';
 
+                $base = 'gift-registry';
+
+                register_rest_route(
+                    $namespace,
+                    '/' . $base,
+                    [
+                        [
+                            'methods'             => WP_REST_Server::READABLE,
+                            'callback'            => 'get_wishlist',
+                            'args'                => [
+                                'items' => [
+                                    'required'    => false,
+                                    'type'        => 'boolean',
+                                    'description' => 'Whether to get the wishlist items with the data.',
+                                    'default'     => false,
+                                ],
+                            ],
+                            'permission_callback' => '__return_true',
+                        ],
+                    ]
+                );
+            }
+        );
+
+        function get_wishlist(WP_REST_Request $request)
+        {
+            $params      = $request->get_params();
+            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+
+            if ($wishlist_id > 0) {
+                try {
+                    $wishlist_class = new NMGR_Wishlist($wishlist_id);
+
+                    if (!$wishlist_class->is_active()) {
+                        return false;
+                    }
+
+                    $wishlist_obj = $wishlist_class->get_data($params['items']);
+
+                    $wishlist_obj['total'] = $wishlist_class->get_total();
+                    $wishlist_obj['permalink'] = $wishlist_class->get_permalink();
+
+                    return $wishlist_obj;
+                } catch (Exception $e) {
+                    return rest_ensure_response($e);
+                }
+            }
+
+            return rest_ensure_response($wishlist_id);
+        }
 
         self::set_add_to_wishlist_button_position();
     }
