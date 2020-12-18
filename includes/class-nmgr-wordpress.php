@@ -40,6 +40,7 @@ class NMGR_Wordpress
         add_action('nmgr_data_before_save', array( __CLASS__, 'before_save_wishlist' ));
         add_action('nmgr_delete_wishlist_item', array( __CLASS__, 'delete_item_from_cart' ), 10, 2);
         add_action('wp_footer', array( __CLASS__, 'add_modal_template' ));
+        add_action('admin_footer', array( __CLASS__, 'add_modal_template' ));
         add_filter('nmgr_account_tabs', array( __CLASS__, 'filter_account_sections' ));
         add_action('nmgr_before_shipping', array( __CLASS__, 'show_shipping_address_required_notice' ));
         add_filter('wp_insert_post_data', array( __CLASS__, 'insert_post_data' ), 1, 2);
@@ -864,10 +865,40 @@ class NMGR_Wordpress
 
     public static function add_modal_template()
     {
-        ?>
+        $close_button = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'; ?>
 <div id="nmgr-modal" class="nmgr-modal modal fade" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg no-transform">
-    <div class="modal-content"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <?php echo $close_button; ?>
+      </div>
+      <div class="modal-body">
+        <?php echo $close_button; ?>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="nmgr-mago" class="nmgr-modal modal fade" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg no-transform">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button type="button" class="close nmgr-hide" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button class="nmgr-dialog-submit-button"><?php esc_html_e('Ok', 'nm-gift-registry-lite'); ?></button>
+      </div>
+    </div>
   </div>
 </div>
 <?php

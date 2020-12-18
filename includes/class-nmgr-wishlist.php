@@ -950,13 +950,13 @@ class NMGR_Wishlist extends NMGR_Data
         }
 
         $items = $order->get_items();
-        $tems_in_order = array();
+        $items_in_order = array();
 
         foreach ($items as $item_id => $item) {
             $meta = $item->get_meta(nmgr()->cart_key);
             if ($meta) {
                 if ($meta[ 'wishlist_id' ] === $this->get_id()) {
-                    $tems_in_order[ $item_id ] = array(
+                    $items_in_order[ $item_id ] = array(
                         'name' => $item->get_name(),
                         'quantity' => $item->get_quantity(),
                         'variation_id' => $item->get_variation_id(),
@@ -966,7 +966,27 @@ class NMGR_Wishlist extends NMGR_Data
             }
         }
 
-        return $tems_in_order;
+        return apply_filters('nmgr_wishlist_get_items_in_order', $items_in_order, $order, $this);
+    }
+
+    /**
+     * Get the wishlist item representing a product, if the product is in the wishlist
+     *
+     * @param int|WC_Product $product_id The product id or object
+     * @return NMGR_Wishlist_Item|false
+     */
+    public function get_item_by_product($product_id)
+    {
+        $product = wc_get_product($product_id);
+
+        if ($product) {
+            foreach ($this->get_items() as $item) {
+                if ($item->get_product_id() === $product->get_id()) {
+                    return $item;
+                }
+            }
+        }
+        return false;
     }
 
     /*
@@ -1058,7 +1078,7 @@ class NMGR_Wishlist extends NMGR_Data
 
     /**
      * Check whether the wishlist is active.
-     * An active wishist is a wishlist that has any of the registered post status and is not trashed.
+     * An active wishist is a wishlist that has any of the registered post statuses and is not trashed.
      *
      * @return boolean
      */

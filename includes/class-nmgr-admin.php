@@ -209,8 +209,12 @@ class NMGR_Admin
 
                 echo '<div class="nm-wishlist">';
                 echo nmgr_get_wishlist_link($wishlist);
-                echo '<span class="description">' . $item_count_text . '</span>';
-                echo '</div>';
+                echo '<div class="wishlist-details">';
+                if ($wishlist->get_display_name()) {
+                    echo '<span class="wishlist-display-name">' . $wishlist->get_display_name() . '</span>';
+                }
+                echo '<span class="wishlist-item-count-in-order nmgr-grey">' . $item_count_text . '</span>';
+                echo '</div></div>';
             }
         }
     }
@@ -221,7 +225,8 @@ class NMGR_Admin
 
         if ('edit.php' === $pagenow && 'shop_order' === $post_type) {
             $css = 'td.column-nm_gift_registry .nm-wishlist {line-height:1.5em;margin-bottom:5px;}' .
-                'td.column-nm_gift_registry .description { color: #999;display:block; }';
+                'td.column-nm_gift_registry .nm-wishlist .wishlist-details > * { display:block; }' .
+                'td.column-nm_gift_registry .nm-wishlist .nmgr-grey { color: #999; }';
             wp_add_inline_style('woocommerce_admin_styles', $css);
         }
     }

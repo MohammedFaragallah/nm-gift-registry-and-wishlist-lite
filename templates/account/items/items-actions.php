@@ -14,7 +14,7 @@
 defined('ABSPATH') || exit;
 ?>
 
-<div class="after-table-row">
+<div class="after-table-row items-actions nmgr-data-row-toggle">
   <p>
     <?php do_action('nmgr_after_items_actions', $items, $wishlist, $items_args); ?>
   </p>

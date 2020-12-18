@@ -86,7 +86,7 @@ class NMGR_Form
      */
     public static function modify_form_fields($fields)
     {
-        if (!is_ajax() && is_admin()) {
+        if (!wp_doing_ajax() && is_admin()) {
             return $fields;
         }
 
@@ -732,6 +732,7 @@ class NMGR_Form
 
         $data = $this->get_data();
         $fields = $this->get_fields('', '', false);
+        $unsanitized_data = $data;
 
         foreach (array_keys($fields) as $key) {
             if (isset($data[ $key ])) {
@@ -754,7 +755,11 @@ class NMGR_Form
                         break;
                 }
 
-                $data[ $key ] = apply_filters('nmgr_sanitize_' . $type . '_field', apply_filters('nmgr_sanitize_field_' . $key, $data[ $key ]));
+                $data[ $key ] = apply_filters(
+                    'nmgr_sanitize_' . $type . '_field',
+                    apply_filters('nmgr_sanitize_field_' . $key, $data[ $key ], $data, $unsanitized_data),
+                    $key
+                );
             }
         }
         $this->set_data($data);

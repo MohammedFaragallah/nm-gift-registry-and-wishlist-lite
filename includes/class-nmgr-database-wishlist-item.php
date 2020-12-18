@@ -31,7 +31,8 @@ class NMGR_Database_Wishlist_Item
         $this->update_meta_data($item, true);
         $item->apply_changes();
 
-        do_action('nmgr_new_wishlist_item', $item->get_id(), $item, $item->get_wishlist_id());
+        do_action_deprecated('nmgr_new_wishlist_item', array( $item->get_id(), $item, $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_created');
+        do_action('nmgr_wishlist_item_created', $item, $item->get_wishlist());
     }
 
     /**
@@ -93,7 +94,8 @@ class NMGR_Database_Wishlist_Item
         $this->update_meta_data($item);
         $item->apply_changes();
 
-        do_action('nmgr_update_wishlist_item', $item->get_id(), $item, $item->get_wishlist_id());
+        do_action_deprecated('nmgr_update_wishlist_item', array( $item->get_id(), $item, $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_updated');
+        do_action('nmgr_wishlist_item_updated', $item, $item->get_wishlist());
     }
 
     /**
@@ -118,7 +120,8 @@ class NMGR_Database_Wishlist_Item
             $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_items', array( 'wishlist_item_id' => $id ));
             $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_itemmeta', array( 'wishlist_item_id' => $id ));
 
-            do_action('nmgr_delete_wishlist_item', $item->get_id(), $item->get_wishlist_id());
+            do_action_deprecated('nmgr_delete_wishlist_item', array( $item->get_id(), $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_deleted');
+            do_action('nmgr_wishlist_item_deleted', $item, $item->get_wishlist());
         }
     }
 

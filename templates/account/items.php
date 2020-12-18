@@ -42,6 +42,7 @@ global $post;
       <?php
                 foreach ($items as $item_id => $item) :
                     $the_product = $item->get_product();
+                    $tr_title = '';
 
                     if (!$the_product) {
                         if (!is_nmgr_wishlist()) {
@@ -56,8 +57,17 @@ global $post;
                         continue;
                     }
 
-                    $item_class = $item->is_purchased() ? "item-purchased " : '';
-                    $item_class .= $item->is_fulfilled() ? "item-fulfilled " : '';
+                    $item_class = array();
+
+                    if ($item->is_purchased()) {
+                        $item_class[] = 'item-purchased';
+                    }
+
+                    if ($item->is_fulfilled()) {
+                        $item_class[] = 'item-fulfilled';
+                    }
+
+                    $row_class = apply_filters('nmgr_items_table_row_class', $item_class, $item, $items_args);
 
                     if ($item->is_fulfilled()) {
                         $tr_title = apply_filters('nmgr_item_row_fulfilled_text', sprintf(
@@ -67,11 +77,10 @@ global $post;
                         ));
                     }
                     ?>
-      <tr class="item <?php echo esc_attr($item_class); ?>"
+      <tr class="item <?php echo esc_attr(implode(' ', array_filter($row_class))); ?>"
         data-product_title="<?php echo sanitize_text_field($the_product->get_title()); ?>"
         data-wishlist_item_id="<?php echo absint($item->get_id()); ?>"
-        data-wishlist_id="<?php echo absint($wishlist->get_id()); ?>"
-        title="<?php echo isset($tr_title) ? esc_attr($tr_title) : ''; ?>">
+        data-wishlist_id="<?php echo absint($wishlist->get_id()); ?>" title="<?php echo esc_attr($tr_title); ?>">
 
         <?php
                         wc_setup_product_data($the_product->get_id());
@@ -84,6 +93,7 @@ global $post;
       </tr>
       <?php endforeach; ?>
     </tbody>
+    <?php do_action('nmgr_after_items_table_body', $items, $wishlist, $items_args); ?>
   </table>
 
   <?php

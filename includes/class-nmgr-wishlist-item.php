@@ -199,7 +199,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
      */
     public function get_purchased_quantity()
     {
-        return absint($this->get_prop('purchased_quantity'));
+        return ( int ) apply_filters('nmgr_item_purchased_quantity', $this->get_prop('purchased_quantity'), $this);
     }
 
     /**
@@ -444,21 +444,26 @@ class NMGR_Wishlist_Item extends NMGR_Data
      */
     public function is_purchased()
     {
-        return nmgr_get_option('display_item_purchased_quantity', 1) ? ( bool ) $this->get_purchased_quantity() : false;
+        $purchased = false;
+        if (nmgr_get_option('display_item_purchased_quantity', 1)) {
+            $purchased = ( bool ) $this->get_purchased_quantity();
+        }
+        return ( bool ) apply_filters('nmgr_item_is_purchased', $purchased, $this);
     }
 
     /**
      * Get whether the desired quantity of this item has been completely purchased
      *
-     * This is only possible if the 'quantity' and 'purchased_quantity' columns are visible on the items table
+     * This is typically only possible if the 'quantity' and 'purchased_quantity' columns are visible on the items table
      *
      * @return boolean
      */
     public function is_fulfilled()
     {
+        $fulfilled = false;
         if (nmgr_get_option('display_item_quantity', 1) && nmgr_get_option('display_item_purchased_quantity')) {
-            return ( bool ) 0 >= $this->get_unpurchased_quantity();
+            $fulfilled = ( bool ) 0 >= $this->get_unpurchased_quantity();
         }
-        return false;
+        return ( bool ) apply_filters('nmgr_item_is_fulfilled', $fulfilled, $this);
     }
 }

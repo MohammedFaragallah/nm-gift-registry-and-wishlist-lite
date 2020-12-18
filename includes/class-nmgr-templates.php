@@ -96,6 +96,8 @@ class NMGR_Templates
         // Search
         add_action('nmgr_search_results_header', array( __CLASS__, 'search_results_header' ), 10);
         add_action('nmgr_no_search_results', array( __CLASS__, 'no_search_results_notification' ), 10);
+
+        add_filter('nmgr_delete_item_notice', array( __CLASS__, 'notify_of_item_purchased_status' ), 10, 2);
     }
 
     /**
@@ -732,7 +734,12 @@ class NMGR_Templates
                 $show_edit_button = true;
             }
 
-            nmgr_template('account/items/item-actions-edit-delete.php', array( 'show_edit_button' => $show_edit_button ));
+            nmgr_template('account/items/item-actions-edit-delete.php', array(
+                'show_edit_button' => apply_filters('nmgr_items_table_show_edit_button', $show_edit_button, $item, $items_args),
+                'show_delete_button' => apply_filters('nmgr_items_table_show_delete_button', true, $item, $items_args),
+                'item' => $item,
+                'items_args' => $items_args,
+            ));
         }
     }
 
@@ -870,9 +877,9 @@ class NMGR_Templates
         $is_admin = is_nmgr_admin();
         $title = $is_admin ? '' : esc_attr__('Go shopping for items to add to your wishlist', 'nm-gift-registry-lite');
         $data_url = $is_admin ? '' : esc_attr(nmgr_get_add_items_url());
-        $data_target = $is_admin ? '#nmgr-add-items-modal' : ''; ?>
+        $data_content = $is_admin ? '#nmgr-add-items-dialog' : ''; ?>
 <button type="button" title="<?php echo $title; ?>" class="button nmgr-add-items-action nmgr-tip"
-  data-url="<?php echo $data_url; ?>" data-target="<?php echo $data_target; ?>">
+  data-url="<?php echo $data_url; ?>" data-dialog-width="small" data-dialog-content="<?php echo $data_content; ?>">
   <?php esc_html_e('Add item(s)', 'nm-gift-registry-lite'); ?>
 </button>
 <?php
@@ -1248,5 +1255,13 @@ class NMGR_Templates
             esc_html(nmgr_get_type_title('', true))
         ) .
         '</p>';
+    }
+
+    public static function notify_of_item_purchased_status($notice, $item)
+    {
+        if ($item->get_purchased_quantity()) {
+            $notice .= ' ' . __('This item has purchases that may be lost if deleted.', 'nm-gift-registry-lite');
+        }
+        return $notice;
     }
 }

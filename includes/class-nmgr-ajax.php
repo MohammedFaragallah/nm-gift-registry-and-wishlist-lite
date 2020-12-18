@@ -42,7 +42,7 @@ class NMGR_Ajax
      */
     public static function get_wishlist_data($data, $wishlist)
     {
-        if (!is_ajax()) {
+        if (!wp_doing_ajax()) {
             return $data;
         }
 
@@ -61,12 +61,11 @@ class NMGR_Ajax
             'save_shipping',
             'add_item',
             'add_to_wishlist',
-            'delete_item',
+            'delete_items',
             'json_search_products',
             'json_search_users',
             'load_overview',
             'load_profile',
-            'load_items',
             'load_shipping',
             'load_messages',
             'load_settings',
@@ -85,10 +84,10 @@ class NMGR_Ajax
         }
 
         $ajax_nopriv_events = array(
+            'load_items',
             'add_to_cart',
             'get_cart_fragments',
             'load_wishlist_cart',
-            'remove_wishlist_cart_item',
         );
 
         foreach ($ajax_nopriv_events as $event) {
@@ -102,7 +101,7 @@ class NMGR_Ajax
          * Remove woocommerce's add to cart action when running our own so that the add to cart action
          * runs only once for us
          */
-        if (is_ajax() && isset($_REQUEST[ 'action' ]) && ('nmgr_add_to_cart' === $_REQUEST[ 'action' ])) { // phpcs:ignore WordPress.Security.NonceVerification
+        if (wp_doing_ajax() && isset($_REQUEST[ 'action' ]) && ('nmgr_add_to_cart' === $_REQUEST[ 'action' ])) { // phpcs:ignore WordPress.Security.NonceVerification
             remove_action('wp_loaded', array( 'WC_Form_Handler', 'add_to_cart_action' ), 20);
         }
     }
@@ -130,29 +129,48 @@ class NMGR_Ajax
 
     public static function add_to_cart()
     {
-        // phpcs:disable WordPress.Security.NonceVerification
-        if (!isset($_POST[ 'add-to-cart' ])) {
+        if (!isset($_POST[ 'nmgr_items' ]) || empty($_POST[ 'nmgr_items' ])) {
             wp_die(-1);
         }
 
-        $product_id = absint($_POST[ 'add-to-cart' ]);
-        $quantity = empty($_POST[ 'quantity' ]) ? 1 : wc_stock_amount(wp_unslash($_POST[ 'quantity' ]));
-        $variation_id = isset($_POST[ 'variation_id' ]) ? absint($_POST[ 'variation_id' ]) : 0;
-        $variation = nmgr_get_posted_variations($variation_id, $_POST);
+        $items_data = array();
+        $item = reset($_POST[ 'nmgr_items' ]);
+
+        $product_id = ( int ) $item[ 'add-to-cart' ];
+        $quantity = empty($item[ 'quantity' ]) ? 1 : wc_stock_amount(wp_unslash($item[ 'quantity' ]));
+        $variation_id = isset($item[ 'variation_id' ]) ? absint($item[ 'variation_id' ]) : 0;
+        $variation = nmgr_get_posted_variations($variation_id, $item);
+        $wishlist_id = ( int ) $item[ 'nmgr-add-to-cart-wishlist' ];
+        $wishlist_item_id = ( int ) $item[ 'nmgr-add-to-cart-wishlist-item' ];
         $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 
         if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variation)) {
+            // wc filter (check this filter on updates)
+            do_action('woocommerce_ajax_added_to_cart', $product_id);
             wc_add_to_cart_message(array( $product_id => $quantity ), true);
         }
 
-        // We are expecting notices from the add to cart action, so get them
+        $items_data[] = array(
+            'product_id' => $product_id,
+            'quantity' => $quantity,
+            'wishlist_id' => $wishlist_id,
+            'wishlist_item_id' => $wishlist_item_id,
+        );
+
         $success = wc_notice_count('success') ? true : false;
-        $notice = wc_print_notices(true);
+        $redirect_url = false;
+        if ($success && 'yes' === get_option('woocommerce_cart_redirect_after_add')) {
+            // wc filter (check this filter on updates)
+            $redirect_url = apply_filters('woocommerce_add_to_cart_redirect', wc_get_cart_url(), null);
+        }
+
+        // We are expecting notices from the add to cart action, so get them
         wp_send_json(array(
             'success' => $success,
-            'notice' => $notice,
+            'notice' => $success && $redirect_url ? '' : wc_print_notices(true),
+            'items_data' => $items_data,
+            'redirect_url' => esc_url(apply_filters('nmgr_ajax_add_to_cart_redirect_url', $redirect_url, $success, $items_data)),
         ));
-        // phpcs:enable
     }
 
     public static function get_cart_fragments()
@@ -164,7 +182,7 @@ class NMGR_Ajax
 
     public static function send_ajax_response($data = array())
     {
-        if (!is_ajax()) {
+        if (!wp_doing_ajax()) {
             return;
         }
 
@@ -308,10 +326,9 @@ class NMGR_Ajax
         }
     }
 
-    public static function delete_item()
+    public static function delete_items()
     {
-        // check_ajax_referer('nmgr_manage_wishlist');
-        $response_data = array();
+        // check_ajax_referer('nmgr');
 
         try {
             $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
@@ -327,30 +344,55 @@ class NMGR_Ajax
                 throw new Exception($error_msg);
             }
 
-            $wishlist_item_ids = array_map('sanitize_text_field', wp_unslash(( array ) $_POST[ 'wishlist_item_ids' ]));
-
             // If we passed through items it means we need to save first before deleting.
             if (!empty($_POST[ 'items' ])) {
                 $save_items = array();
-                parse_str(wp_unslash($_POST[ 'items' ]), $save_items); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+                parse_str(wp_unslash($_POST[ 'items' ]), $save_items);
                 $wishlist->update_items(wc_clean($save_items));
             }
 
-            if (!empty($wishlist_item_ids)) {
-                foreach ($wishlist_item_ids as $item_id) {
-                    $item_id = absint($item_id);
-                    $wishlist->delete_item($item_id);
-                }
+            $items_data = array();
+            $wishlist_item_ids = array_map('sanitize_text_field', wp_unslash(( array ) $_POST[ 'wishlist_item_ids' ]));
+
+            if (empty($wishlist_item_ids)) {
+                throw new Exception($error_msg);
             }
 
-            $response_data[ 'success' ] = true;
-            $response_data[ 'html' ] = nmgr_get_items_template($wishlist_id);
-            $response_data[ 'wishlist' ] = $wishlist->get_data();
+            foreach ($wishlist_item_ids as $item_id) {
+                $item = $wishlist->get_item($item_id);
+
+                if (!$item) {
+                    continue;
+                }
+
+                $product = wc_get_product($item->get_product_id());
+
+                $item_data = array(
+                    'wishlist_item_id' => $item->get_id(),
+                    'wishlist_id' => $wishlist->get_id(),
+                    'product_id' => $product ? $item->get_product_id() : '',
+                    'variation_id' => $product ? $item->get_variation_id() : '',
+                );
+
+                $wishlist->delete_item($item_id);
+
+                $item_data[ 'product_in_wishlist' ] = $product ? ( int ) nmgr_user_has_product_in_wishlist($product) : '';
+
+                $items_data[] = $item_data;
+            }
+
+            wp_send_json(array(
+                'success' => true,
+                'template' => nmgr_get_items_template($wishlist_id),
+                'wishlist' => $wishlist->get_data(),
+                'items_data' => $items_data
+            ));
         } catch (Exception $e) {
-            $response_data[ 'error' ] = true;
-            $response_data[ 'notice' ] = $e->getMessage();
+            wp_send_json(array(
+                'error' => true,
+                'notice' => $e->getMessage()
+            ));
         }
-        self::send_ajax_response($response_data);
     }
 
     public static function save_items()
@@ -575,7 +617,7 @@ class NMGR_Ajax
         $ids = array();
         // Search by ID.
         if (is_numeric($term)) {
-            $customer = new WC_Customer(intval($term));
+            $customer = new WC_Customer(( int ) $term);
 
             // Customer exists.
             if (0 !== $customer->get_id()) {
@@ -637,34 +679,6 @@ class NMGR_Ajax
         }
 
         self::send_ajax_response(array( 'template' => $template ));
-    }
-
-    public static function remove_wishlist_cart_item()
-    {
-        // check_ajax_referer('nmgr-frontend');
-
-        $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
-        $wishlist_item_id = filter_input(INPUT_POST, 'wishlist_item_id', FILTER_VALIDATE_INT);
-        $wishlist = nmgr_get_wishlist($wishlist_id);
-
-        $item_data = array(
-            'wishlist_item_id' => $wishlist_item_id,
-            'wishlist_id' => $wishlist_id,
-        );
-
-        if ($wishlist) {
-            $item = $wishlist->get_item($wishlist_item_id);
-            $product = wc_get_product($item->get_product_id());
-
-            $item_data[ 'product_id' ] = $product ? $item->get_product_id() : '';
-            $item_data[ 'variation_id' ] = $product ? $item->get_variation_id() : '';
-
-            $wishlist->delete_item($wishlist_item_id);
-        }
-
-        $item_data[ 'product_in_wishlist' ] = $product ? ( int ) nmgr_user_has_product_in_wishlist($product) : '';
-
-        wp_send_json($item_data);
     }
 
     public static function dialog_create_new_wishlist()
@@ -810,7 +824,10 @@ class NMGR_Ajax
                 );
             }
 
-            $template = nmgr_get_template('add-to-wishlist/dialog-content.php', $args);
+            $template = nmgr_get_template(
+                'add-to-wishlist/dialog-content.php',
+                apply_filters('nmgr_add_to_wishlist_dialog_content_args', $args)
+            );
 
             $dialog_args = array(
                 'show_header' => false,

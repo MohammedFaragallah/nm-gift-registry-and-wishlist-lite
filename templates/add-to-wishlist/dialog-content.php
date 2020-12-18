@@ -10,7 +10,7 @@
  * In such case you would need to copy the new template to your theme to maintain compatibility
  *
  * @package NM Gift Registry Lite/Templates
- * @version 2.0.0
+ * @version 2.1.0
  */
 defined('ABSPATH') || exit;
 
@@ -22,14 +22,22 @@ $product_id = absint($product->get_id());
 
 <form class="nmgr-add-to-wishlist-content product-type-<?php echo esc_attr($product->get_type()); ?>">
   <?php
-    do_action('nmgr_before_add_to_wishlist_dialog_content');
+    do_action_deprecated('nmgr_before_add_to_wishlist_dialog_content', array(), '2.1.0', 'nmgr_add_to_wishlist_dialog_content_before');
+    do_action('nmgr_add_to_wishlist_dialog_content_before', $args);
 
     $thumbnail = $product->get_image('nmgr_thumbnail', array(
         'title' => $product->get_name(),
         'alt' => $product->get_name() ));
     ?>
-  <div class="product-thumbnail"><?php echo nmgr_kses_post($thumbnail); ?></div>
-  <div class="product-title nmgr-row"> <?php echo esc_html($product->get_name()); ?> </div>
+  <div class="product-thumbnail">
+    <a href="<?php echo esc_url($product->get_permalink()); ?>"><?php echo nmgr_kses_post($thumbnail); ?></a>
+  </div>
+  <div class="product-title nmgr-row">
+    <?php echo esc_html($product->get_name()); ?>
+    <span class="product-price">(<?php echo $product->get_price_html(); ?>)</span>
+  </div>
+
+  <?php do_action('nmgr_add_to_wishlist_dialog_content_after_title', $args); ?>
 
   <select name="nmgr_wid" class="list-of-wishlists nmgr-row">
     <?php
@@ -55,13 +63,19 @@ $product_id = absint($product->get_id());
         } ?>
   </select>
 
+  <?php do_action('nmgr_add_to_wishlist_dialog_content_after_wishlists', $args); ?>
+
   <?php
     if ($product->is_type('grouped')) {
         nmgr_template('add-to-wishlist/options-grouped.php', $args);
     }
     ?>
 
-  <?php do_action('nmgr_after_add_to_wishlist_dialog_content'); ?>
+  <?php
+    do_action('nmgr_add_to_wishlist_dialog_content_after_options', $args);
+    do_action_deprecated('nmgr_after_add_to_wishlist_dialog_content', array(), '2.1.0', 'nmgr_add_to_wishlist_dialog_content_after');
+    do_action('nmgr_add_to_wishlist_dialog_content_after', $args);
+    ?>
 
   <?php
     foreach ($formdata as $key => $value) {

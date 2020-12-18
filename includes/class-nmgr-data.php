@@ -177,6 +177,7 @@ abstract class NMGR_Data
             } else {
                 $this->db->create($this);
             }
+            do_action('nmgr_data_after_save', $this);
         }
         return $this->get_id();
     }

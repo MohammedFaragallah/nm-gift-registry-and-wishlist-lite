@@ -458,27 +458,58 @@ svg.nmgr-icon.align-with-text {
 	border: none;
 }
 
-#nmgr-modal .modal-body .close {
+.nmgr-modal {
+	/* This style is only necessary for themes that use a version of bootstrap.css which prevents the modal
+dialog from showing by setting the .fade opacity to 0. */
+}
+
+.nmgr-modal .modal-title {
+	line-height: normal;
+	margin: 0;
+	font-size: 1.41575em;
+}
+
+.nmgr-modal .modal-body .close {
 	padding: .36em;
 	position: absolute;
 	right: 8px;
 	top: 3px;
 }
 
-#nmgr-modal.modal.fade .modal-dialog.no-transform {
+.nmgr-modal.modal.fade .modal-dialog.no-transform {
 	/* This class is used mainly to prevent the default bootstrap modal transform which brings down the modal. */
 	-webkit-transform: translate(0, 0);
 	        transform: translate(0, 0);
 }
 
-#nmgr-modal button:disabled, #nmgr-modal input[type='button']:disabled, #nmgr-modal button.disabled {
+.nmgr-modal button:disabled, .nmgr-modal input[type='button']:disabled, .nmgr-modal button.disabled {
 	opacity: 0.5 !important;
 	cursor: not-allowed;
+}
+
+.nmgr-modal.fade.show {
+	opacity: 1 !important;
+}
+
+body.wp-admin .nmgr-modal .modal-title {
+	font-weight: 400;
+}
+
+.nmgr-table.responsive .toggle-edit-delete .edit-delete-wrapper {
+	visibility: hidden;
+}
+
+.nmgr-table.responsive .toggle-edit-delete:hover .edit-delete-wrapper {
+	visibility: visible;
 }
 
 /*
 Classes used on wishlist items template
 */
+.nmgr-items-table .nmgr-select {
+	cursor: pointer;
+}
+
 .nmgr-items-table a:hover svg {
 	fill: #666;
 }
@@ -500,31 +531,6 @@ Classes used on wishlist items template
 .nmgr-items-table tr.item-deleted-notice td {
 	color: #aaa;
 	text-align: left;
-}
-
-.nmgr-items-table tr .edit-delete-wrapper {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-}
-
-.nmgr-items-table tr .edit-delete-wrapper a {
-	color: #ccc;
-	display: inline-block;
-	cursor: pointer;
-	margin: 0 0.75em 0 0;
-	vertical-align: middle;
-	text-decoration: none;
-	line-height: 1em;
-	width: 1em;
-	overflow: hidden;
-}
-
-.nmgr-items-table tr .edit-delete-wrapper a:last-child {
-	margin-right: 0;
 }
 
 .nmgr-items-table tr .actions.add_to_cart form.cart {
@@ -592,6 +598,31 @@ Classes used on wishlist items template
 	opacity: .7;
 }
 
+#nmgr-items .edit-delete-wrapper {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+}
+
+#nmgr-items .edit-delete-wrapper a {
+	color: #ccc;
+	display: inline-block;
+	cursor: pointer;
+	margin: 0 0.75em 0 0;
+	vertical-align: middle;
+	text-decoration: none;
+	line-height: 1em;
+	width: 1em;
+	overflow: hidden;
+}
+
+#nmgr-items .edit-delete-wrapper a:last-child {
+	margin-right: 0;
+}
+
 #nmgr-items .after-table-row {
 	text-align: right;
 }
@@ -599,7 +630,6 @@ Classes used on wishlist items template
 #nmgr-items .after-table-row table.total {
 	margin-left: auto;
 	padding: 0;
-	width: 17em;
 }
 
 #nmgr-items .after-table-row table.total td, #nmgr-items .after-table-row table.total th {
@@ -614,8 +644,12 @@ Classes used on wishlist items template
  * .responsive class is actually for desktop display
  */
 .nmgr-items-table.responsive tbody th,
-.nmgr-items-table.responsive td {
+.nmgr-items-table.responsive td:not(.left-align) {
 	text-align: right;
+}
+
+.nmgr-items-table.responsive th.item_select, .nmgr-items-table.responsive td.nmgr-select {
+	width: 20px;
 }
 
 .nmgr-items-table.responsive .thumbnail img {
@@ -650,74 +684,61 @@ Classes used on wishlist items template
 	visibility: visible;
 }
 
-.nmgr-add-items table.widefat {
+.nmgr-add-items-dialog table.widefat {
 	border: none;
 }
 
-.nmgr-add-items .modal-title {
-	padding: 0;
-	line-height: normal;
-	font-weight: 500;
-	margin: 0;
-	font-size: 19px;
-}
-
-.nmgr-add-items .select2-container,
-.nmgr-add-items select {
+.nmgr-add-items-dialog .select2-container,
+.nmgr-add-items-dialog select {
 	width: 100% !important;
 }
 
 @media screen and (min-width: 786px) {
-	.nmgr-add-items table thead th:last-child,
-	.nmgr-add-items table tbody td:last-child {
+	.nmgr-add-items-dialog table thead th:last-child,
+	.nmgr-add-items-dialog table tbody td:last-child {
 		padding-right: 0;
 	}
-	.nmgr-add-items table thead th:first-child,
-	.nmgr-add-items table tbody td:first-child {
+	.nmgr-add-items-dialog table thead th:first-child,
+	.nmgr-add-items-dialog table tbody td:first-child {
 		padding-left: 0;
 	}
 }
 
 @media screen and (max-width: 785px) {
-	.nmgr-add-items table {
+	.nmgr-add-items-dialog table {
 		display: block;
 	}
-	.nmgr-add-items table tbody {
+	.nmgr-add-items-dialog table tbody {
 		display: block;
 	}
-	.nmgr-add-items table thead {
+	.nmgr-add-items-dialog table thead {
 		display: none;
 	}
-	.nmgr-add-items table tr, .nmgr-add-items table td {
+	.nmgr-add-items-dialog table tr, .nmgr-add-items-dialog table td {
 		display: block;
 	}
-	.nmgr-add-items table tr {
+	.nmgr-add-items-dialog table tr {
 		border: 1px solid #ccc;
 		margin-bottom: 1.5em;
 	}
-	.nmgr-add-items table td {
+	.nmgr-add-items-dialog table td {
 		text-align: right !important;
 	}
-	.nmgr-add-items table tbody td[data-title]:before, .nmgr-add-items table tbody th[data-title]:before {
+	.nmgr-add-items-dialog table tbody td[data-title]:before, .nmgr-add-items-dialog table tbody th[data-title]:before {
 		content: attr(data-title) ": ";
 		font-weight: 600;
 		float: left;
 	}
-	.nmgr-add-items table tbody td:after, .nmgr-add-items table tbody th:after {
+	.nmgr-add-items-dialog table tbody td:after, .nmgr-add-items-dialog table tbody th:after {
 		content: '';
 		clear: both;
 		display: block;
 	}
-	.nmgr-add-items table .select2-container,
-	.nmgr-add-items table select {
+	.nmgr-add-items-dialog table .select2-container,
+	.nmgr-add-items-dialog table select {
 		width: inherit !important;
 		max-width: 70% !important;
 	}
-}
-
-#nmgr-add-items-modal {
-	padding-right: 0 !important;
-	/* remove 15px padding from bootstrap modal*/
 }
 
 .nmgr_add_to_cart_button.disabled {
@@ -811,10 +832,6 @@ list table
 /**------------------------------------------------
 wishlist items metabox
 ----------------------------------------------------*/
-#nm_gift_registry-items.postbox .handlediv, #nm_gift_registry-items.postbox .hndle {
-	display: none;
-}
-
 #nm_gift_registry-items.postbox .inside {
 	margin: 0;
 	padding: 0;

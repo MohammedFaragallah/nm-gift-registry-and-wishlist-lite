@@ -2,9 +2,9 @@
 Contributors: nmerii
 Tags: gift registry, wishlist, gift list, wedding gift registry, wedding, birthday, anniversary, ecommerce, woocommerce
 Requires at least: 4.7
-Tested up to: 5.5.3
+Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 2.0.4
+Stable tag: 2.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -89,6 +89,12 @@ Of course, it is also meant for this. NM Gift Registry and Wishlist can be used 
 
 
 == Changelog ==
+
+= 2.1.0 =
+* Feature - Ability to redirect to cart after adding wishlist items to cart.
+* Feature - Filter to redirect to checkout after adding wishlist items to cart.
+* Improvement - Add to wishlist dialog UX.
+* Improvement - code optimization.
 
 = 2.0.4 =
 * Fix - Conflict between plugin boostrap js and theme bootstrap js.

@@ -10,6 +10,7 @@ class NMGR_Order
 {
     public static function run()
     {
+        add_filter('woocommerce_continue_shopping_redirect', array( __CLASS__, 'continue_shopping_redirect' ));
         add_filter('woocommerce_add_cart_item_data', array( __CLASS__, 'add_wishlist_item_cart_item_data' ), 10, 3);
         add_filter('woocommerce_add_to_cart_validation', array( __CLASS__, 'maybe_add_wishlist_item_to_cart' ), 10, 3);
         add_filter('woocommerce_update_cart_validation', array( __CLASS__, 'maybe_update_cart_item_quantity' ), 10, 4);
@@ -29,6 +30,50 @@ class NMGR_Order
     }
 
     /**
+     * If the product was added to the cart from the wishlist page, return to the wishlist page
+     */
+    public static function continue_shopping_redirect($url)
+    {
+        $item_data = self::get_add_to_cart_item_data();
+
+        if (empty($item_data)) {
+            return $url;
+        }
+
+        $wishlist = nmgr_get_wishlist($item_data[ 'wishlist_id' ]);
+        return $wishlist ? $wishlist->get_permalink() : $url;
+    }
+
+    /**
+     * Get the data of the wishlist items we are adding to the cart from the request array
+     *
+     * This is necessary as the wishlist items can be added to the cart individually or in bulk.
+     * In each of these cases, the request array is different. But we need to make it constistent
+     * in order to apply the same functions to them. Hence this function.
+     * @return array
+     */
+    public static function get_add_to_cart_item_data($product_id = 0)
+    {
+        $item_data = array();
+
+        if (isset($_REQUEST[ 'nmgr-add-to-cart-wishlist' ])) {
+            $item_data = $_REQUEST;
+        } elseif (isset($_REQUEST[ 'nmgr_items' ])) {
+            foreach ($_REQUEST[ 'nmgr_items' ] as $item) {
+                if ($product_id && $product_id == $item[ 'add-to-cart' ]) {
+                    $item_data = $item;
+                    break;
+                }
+            }
+
+            if (empty($item_data)) {
+                $item_data = reset($_REQUEST[ 'items' ]);
+            }
+        }
+        return $item_data;
+    }
+
+    /**
      * Add information about the wishlist to the cart item when it is added to the cart
      *
      * Wishlist information added:
@@ -42,19 +87,20 @@ class NMGR_Order
      */
     public static function add_wishlist_item_cart_item_data($cart_item_data, $product_id, $variation_id)
     {
-        // phpcs:disable WordPress.Security.NonceVerification
-        if (isset($_REQUEST[ 'add-to-cart' ]) &&
-            isset($_REQUEST[ 'nmgr-add-to-cart-wishlist-item' ]) &&
-            isset($_REQUEST[ 'nmgr-add-to-cart-wishlist' ])) {
-            $cart_item_data[ nmgr()->cart_key ] = array(
-                'wishlist_id' => absint($_REQUEST[ 'nmgr-add-to-cart-wishlist' ]),
-                'wishlist_item_id' => absint($_REQUEST[ 'nmgr-add-to-cart-wishlist-item' ]),
-                'product_id' => $product_id,
-                'variation_id' => $variation_id
-            );
+        $item_data = self::get_add_to_cart_item_data($product_id);
+
+        if (empty($item_data)) {
+            return $cart_item_data;
         }
+
+        $cart_item_data[ 'nm_gift_registry' ] = array(
+            'wishlist_id' => ( int ) $item_data[ 'nmgr-add-to-cart-wishlist' ],
+            'wishlist_item_id' => ( int ) $item_data[ 'nmgr-add-to-cart-wishlist-item' ],
+            'product_id' => $product_id,
+            'variation_id' => $variation_id
+        );
+
         return $cart_item_data;
-        // phpcs:enable
     }
 
     /**
@@ -68,27 +114,27 @@ class NMGR_Order
      */
     public static function maybe_add_wishlist_item_to_cart($passed, $product_id, $quantity)
     {
-        // phpcs:disable WordPress.Security.NonceVerification
-        if (isset($_REQUEST[ 'nmgr-add-to-cart-wishlist-item' ]) &&
-            isset($_REQUEST[ 'nmgr-add-to-cart-wishlist' ])) {
-            $wishlist_id = absint($_REQUEST[ 'nmgr-add-to-cart-wishlist' ]);
-            $wishlist_item_id = absint($_REQUEST[ 'nmgr-add-to-cart-wishlist-item' ]);
+        $item_data = self::get_add_to_cart_item_data($product_id);
 
-            // check if the wishlist item is already in the cart
-            $item_in_cart = false;
-            foreach (WC()->cart->get_cart() as $cart_item) {
-                if (isset($cart_item[ nmgr()->cart_key ])) {
-                    if ($cart_item[ nmgr()->cart_key ][ 'wishlist_id' ] === $wishlist_id && $cart_item[ nmgr()->cart_key ][ 'wishlist_item_id' ] === $wishlist_item_id) {
-                        $item_in_cart = $cart_item;
-                        break;
-                    }
+        if (empty($item_data)) {
+            return $passed;
+        }
+
+        $wishlist_id = ( int ) $item_data[ 'nmgr-add-to-cart-wishlist' ];
+        $wishlist_item_id = ( int ) $item_data[ 'nmgr-add-to-cart-wishlist-item' ];
+
+        // check if the wishlist item is already in the cart
+        $item_in_cart = false;
+        foreach (WC()->cart->get_cart() as $cart_item) {
+            if (isset($cart_item[ nmgr()->cart_key ])) {
+                if ($cart_item[ nmgr()->cart_key ][ 'wishlist_id' ] === $wishlist_id && $cart_item[ nmgr()->cart_key ][ 'wishlist_item_id' ] === $wishlist_item_id) {
+                    $item_in_cart = $cart_item;
+                    break;
                 }
             }
-
-            $passed = self::validate_wishlist_item_cart_quantity($passed, $wishlist_id, $wishlist_item_id, $quantity, $item_in_cart);
         }
-        return $passed;
-        // phpcs:enable
+
+        return self::validate_wishlist_item_cart_quantity($passed, $wishlist_id, $wishlist_item_id, $quantity, $item_in_cart);
     }
 
     /**
@@ -235,7 +281,7 @@ class NMGR_Order
             return;
         }
 
-        if (nmgr_cart_has_wishlist()) {
+        if (nmgr_get_wishlist_in_cart()) {
             $item_message = sprintf(
                 /* translators: %s: wishlist type title */
                 __('There are some items in your cart for a specific %s.', 'nm-gift-registry-lite'),
@@ -296,7 +342,7 @@ class NMGR_Order
      */
     public static function notify_wishlist_shipping()
     {
-        if (nmgr_cart_has_wishlist()) {
+        if (nmgr_get_wishlist_in_cart()) {
             wc_print_notice(
                 apply_filters(
                     'nmgr_checkout_shipping_message',
@@ -439,9 +485,10 @@ class NMGR_Order
             return;
         }
 
-        $order_wishlist_data = $order->get_meta(nmgr()->cart_key);
+        $data = $order->get_meta(nmgr()->cart_key);
+        $order_wishlist_data = $data ? $data : array();
 
-        if (!$order_wishlist_data) {
+        if (!$order_wishlist_data && false === apply_filters('nmgr_do_order_payment_actions', false, $order)) {
             return;
         }
 
@@ -505,7 +552,12 @@ class NMGR_Order
             }
 
             // Get the item's quantity reference from the database
-            $quantity_references = ( array ) $wishlist_item_object->get_quantity_reference();
+            $qr_meta = $wishlist_item_object->get_quantity_reference();
+            /**
+             * array_filter was added in 2.1.0 to fix bug present from previous version when there is an empty array.
+             * Should probably remove this function in a later version
+             */
+            $quantity_references = $qr_meta ? array_filter($qr_meta) : array();
 
             // If the quantity reference doesn't exist, flag this as a new order item
             $item_is_new = isset($quantity_references[ $order_id ]) ? false : true;

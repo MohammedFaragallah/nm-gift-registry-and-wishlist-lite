@@ -14,7 +14,7 @@
 defined('ABSPATH') || exit;
 ?>
 
-<div class="after-table-row">
+<div class="after-table-row items-total-cost nmgr-data-row-toggle">
   <table class="total">
     <tr>
       <td class="label"><?php esc_html_e('Total', 'nm-gift-registry-lite'); ?>:</td>

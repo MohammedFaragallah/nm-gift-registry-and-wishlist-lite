@@ -50,11 +50,11 @@ function is_nmgr_admin()
 {
     global $current_screen;
 
-    if (isset($GLOBALS[ 'nmgr' ]->is_admin)) {
+    if (wp_doing_ajax() && isset($GLOBALS[ 'nmgr' ]->is_admin)) {
         return filter_var($GLOBALS[ 'nmgr' ]->is_admin, FILTER_VALIDATE_BOOLEAN);
     }
 
-    if (is_admin() && !is_ajax()) {
+    if (is_admin() && !wp_doing_ajax()) {
         if (!isset($current_screen)) {
             return false;
         }
@@ -449,7 +449,10 @@ function nmgr_get_user_wishlists($user_id = '')
     foreach ($posts as $key => $id) {
         if (!in_array(get_post_status($id), nmgr_get_post_statuses())) {
             unset($posts[ $key ]);
+            continue;
         }
+        $posts[ $id ] = $posts[ $key ];
+        unset($posts[ $key ]);
     }
 
     return !empty($posts) ? array_filter(array_map('nmgr_get_wishlist', $posts)) : array();
@@ -492,6 +495,8 @@ function nmgr_get_user_wishlists_count($user_id = '')
 /**
  * Compose an svg icon using dynamic arguments provided
  *
+ * @since 2.1.0 the path argument was added.
+ *
  * @param string|array $args The name of the svg icon to get or array of icon parameters.
  *
  * If $args is an array, registered array keys needed to compose the svg are:
@@ -504,6 +509,7 @@ function nmgr_get_user_wishlists_count($user_id = '')
  * - style - [optional] string Svg Inline style.
  * - title - [optional] string Svg title attribute.
  * - fill - [optional] string Svg fill attribute.
+ * - path - [optional] path to the single svg icon file. (Usually used if not using the loaded svg sprite file).
  *
  * @return string Svg HTML element
  */
@@ -525,6 +531,7 @@ function nmgr_get_svg($args)
         'class' => 'nmgr-icon ' . $args[ 'icon' ],
         'sprite' => true,
         'role' => 'img',
+        'path' => '',
     );
 
     // Parse args.
@@ -582,7 +589,7 @@ function nmgr_get_svg($args)
          *  we are using a single svg file
          */
         // Get the svg file
-        $svg = nmgr_get_svg_file($args[ 'icon' ]);
+        $svg = nmgr_get_svg_file($args[ 'icon' ], $args[ 'path' ]);
 
         // Remove width and heigh attributes from svg if exists as we are adding our own
         $svg = preg_replace('/(width|height)="\d*"\s/', "", $svg);
@@ -610,7 +617,7 @@ function nmgr_get_svg($args)
  * @param int $wishlist_id The wishlist id used to retrieve the wishlist
  * @param bool $active Whether the wishlist must be active. Default false. (An active wishlist has its
  * post status in the registered post statuses for wishlists. Active wishlists appear on the frontend).
- * @return NMGR_Wishlist|false
+ * @return mixed NMGR_Wishlist | false
  */
 function nmgr_get_wishlist($wishlist_id = 0, $active = false)
 {
@@ -714,13 +721,15 @@ function nmgr_add_to_wishlist_notice($wishlist, $products, $show_qty = false, $r
 
 /**
  * Get all wishlists which are in the cart
- * @return array Array of wishlist ids
+ * @return array Array of unique wishlist ids
  */
 function nmgr_get_wishlists_in_cart()
 {
     $wishlists = array();
     if (!WC()->cart->is_empty()) {
-        foreach (WC()->cart->get_cart() as $cart_item) {
+        $cart = WC()->cart->get_cart();
+
+        foreach ($cart as $cart_item) {
             if (isset($cart_item[ nmgr()->cart_key ])) {
                 $wishlist_id = $cart_item[ nmgr()->cart_key ][ 'wishlist_id' ];
                 if (nmgr_get_wishlist($wishlist_id, true)) {
@@ -728,6 +737,8 @@ function nmgr_get_wishlists_in_cart()
                 }
             }
         }
+
+        $wishlists = apply_filters('nmgr_get_wishlists_in_cart', $wishlists, $cart);
     }
     return array_unique($wishlists);
 }
@@ -999,12 +1010,16 @@ function nmgr_remove_prefix($data)
 /**
  * Get a single svg icon file unmodified from the icon directory
  *
+ * @since 2.1.0 $path parameter was added
+ *
  * @param string $icon_name The name of the icon e.g. user.
+ * @param string $path The path to the icon file.
+ *
  * @return string Icon html
  */
-function nmgr_get_svg_file($icon_name)
+function nmgr_get_svg_file($icon_name, $path = '')
 {
-    $iconfile = nmgr()->path . "assets/svg/{$icon_name}.svg";
+    $iconfile = ($path ? trailingslashit($path) : nmgr()->path . 'assets/svg/') . "{$icon_name}.svg";
     if (file_exists($iconfile)) {
         ob_start();
         include $iconfile;
@@ -2344,28 +2359,50 @@ if (!function_exists('nmgr_maybe_show_required_shipping_address_notice')) {
 /**
  * Check whether the cart has items belonging to a particular wishlist
  *
- * If no wishlist id is supplied, the function checks for the first wishlist that may have an item in it
+ * If no wishlist id is supplied, the function checks for the first wishlist that may have an item in the cart.
  *
  * @since 1.0.3
+ * @deprecated since 2.1.0. Use 'nmgr_get_wishlist_in_cart' instead.
  * @param int $wishlist_id The wishlist id to check for.
- * @return mixed The wishlist id if the cart has the wishlist or false if the cart doesn't have the wishlist. If no wishlist id is supplied, returns the first wishlist id found in the cart.
+ * @return mixed The wishlist id if the cart has the wishlist or 0 if the cart doesn't.
  */
 function nmgr_cart_has_wishlist($wishlist_id = '')
 {
+    _deprecated_function(__FUNCTION__, '2.1.0', 'nmgr_get_wishlist_in_cart');
+    return nmgr_get_wishlist_in_cart($wishlist_id);
+}
+
+/**
+ * Check whether the cart has items belonging to a particular wishlist
+ *
+ * If no wishlist id is supplied, the function checks for the first wishlist that may have an item in the cart.
+ *
+ * @since 2.1.0
+ * @param int $wishlist_id The wishlist id to check for.
+ * @return mixed The wishlist id if the cart has the wishlist or 0 if the cart doesn't.
+ */
+function nmgr_get_wishlist_in_cart($wishlist_id = '')
+{
     if (is_a(wc()->cart, 'WC_Cart') && !WC()->cart->is_empty()) {
-        foreach (WC()->cart->get_cart() as $cart_item) {
+        $id = 0;
+        $cart = WC()->cart->get_cart();
+
+        foreach ($cart as $cart_item) {
             if (isset($cart_item[ 'nm_gift_registry' ])) {
                 if ($wishlist_id &&
                     (absint($wishlist_id) === absint($cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ])) &&
                     nmgr_get_wishlist($wishlist_id, true)) {
-                    return $wishlist_id;
+                    $id = $wishlist_id;
+                    break;
                 } elseif (!$wishlist_id && nmgr_get_wishlist($cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ], true)) {
-                    return $cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ];
+                    $id = $cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ];
+                    break;
                 }
             }
         }
+        return apply_filters('nmgr_get_wishlist_in_cart', $id, $cart);
     }
-    return false;
+    return 0;
 }
 
 if (!function_exists('nmgr_get_search_results_template')) {
@@ -2694,7 +2731,13 @@ if (!function_exists('nmgr_get_cart_template')) {
         $vars[ 'template_data_atts' ] = implode(' ', $template_data_atts);
         $vars[ 'wishlists' ] = nmgr_get_user_wishlists();
         $vars[ 'add_item_to_cart_text' ] = esc_attr__('Add to cart', 'nm-gift-registry-lite');
-        $vars[ 'remove_item_text' ] = esc_attr__('Remove this item', 'nm-gift-registry-lite');
+        $vars[ 'remove_item_text' ] = esc_attr(
+            sprintf(
+                /* translators: %s: wishlist type title */
+                __('Remove from %s', 'nm-gift-registry-lite'),
+                esc_html(nmgr_get_type_title())
+            )
+        );
         $vars[ 'cart_qty' ] = 0;
         $vars[ 'cart_total' ] = 0;
         $vars[ 'items_and_products' ] = array(); // Array of items with their equivalent products
@@ -2802,4 +2845,57 @@ function nmgr_get_dialog_submit_button($args)
         implode(' ', $attributes),
         $text
     );
+}
+
+/**
+ * Columns shows on the wishlist items table
+ *
+ * This function is used to output  the plugin settings for the items table columns
+ */
+function nmgr_items_table_columns()
+{
+    return apply_filters('nmgr_items_table_columns', array(
+        'thumbnail' => __('Thumbnail', 'nm-gift-registry-lite'),
+        'title' => __('Title', 'nm-gift-registry-lite'),
+        'cost' => __('Cost', 'nm-gift-registry-lite'),
+        'quantity' => __('Quantity', 'nm-gift-registry-lite'),
+        'purchased_quantity' => __('Purchased Quantity', 'nm-gift-registry-lite'),
+        'total_cost' => __('Total Cost', 'nm-gift-registry-lite'),
+        'actions' => __('Actions', 'nm-gift-registry-lite')
+        ));
+}
+
+/**
+ * Get a wishlist item by a specified id,
+ *
+ * @since 2.1.0
+ *
+ * @param int $item_id The wishlist item id used to retrieve the wishlist item
+ * @return mixed NMGR_Wishlist_Item | false
+ */
+function nmgr_get_wishlist_item($item_id)
+{
+    if (!$item_id) {
+        return false;
+    }
+
+    /**
+     * try catch statement is used because the wishlist item db class throws an exception
+     * if the wishlist item cannot be read from database
+     */
+    try {
+        $item = new NMGR_Wishlist_Item($item_id);
+        return $item;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function nmgr_get_delete_item_notice($item)
+{
+    return apply_filters('nmgr_delete_item_notice', sprintf(
+            /* translators: %s: wishlist type title */
+            __('Are you sure you want to remove the %s item?', 'nm-gift-registry-lite'),
+        esc_html(nmgr_get_type_title())
+    ), $item);
 }

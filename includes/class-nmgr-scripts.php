@@ -118,12 +118,6 @@ class NMGR_Scripts
         $global_params = array(
             'global' => $nmgr_global,
             'ajax_url' => $ajax_url,
-            'i18n_delete_item_text' => sprintf(
-                /* translators: %s: wishlist type title */
-                esc_attr__('Are you sure you want to remove the %s item?', 'nm-gift-registry-lite'),
-                esc_html(nmgr_get_type_title())
-            ),
-            'i18n_delete_message_text' => esc_attr__('Are you sure you want to delete this message?', 'nm-gift-registry-lite'),
             'nonce' => wp_create_nonce('nmgr'), // Generic nonce for the application,
             'date_format' => apply_filters('nmgr_datepicker_date_format', 'MM d yy'),
             'style_datepicker' => apply_filters('nmgr_style_datepicker', true),

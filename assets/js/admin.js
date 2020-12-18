@@ -148,26 +148,27 @@ jQuery(function($) {
     };
 
     nmgr.tiptip = function() {
-        $('.nmgr-tip').tipTip();
-
-        $('svg.nmgr-tip').each(function() {
+        $('.nmgr-tip').each(function() {
             var $element = $(this),
+                options = {},
                 title = $element.find('title');
 
-            if (!title.length) {
-                return;
+            if ($element.attr('data-tiptip-position')) {
+                options['defaultPosition'] = $element.attr('data-tiptip-position');
             }
 
-            $element.tipTip({
-                content: function() {
+            if ($element.is('svg')) {
+                options['content'] = function() {
                     if (title.length) {
                         if (title.attr('data-title')) {
                             title.text('');
                             return title.attr('data-title');
                         }
                     }
-                }
-            });
+                };
+            }
+
+            $element.tipTip(options);
         });
     };
 
@@ -255,7 +256,6 @@ jQuery(function($) {
         $(idselector).datepicker(datepickerOptions);
     };
 
-
     nmgr.stupidtable = function(selector) {
         $(selector).stupidtable();
         $(selector).on('aftertablesort', this.add_arrow);
@@ -283,6 +283,8 @@ jQuery(function($) {
 
 
 
+    // Event Listeners
+    $(document.body).on('nmgr_added_to_cart nmgr_removed_from_wishlist', nmgr.refresh_cart_fragments);
 
 });
 
@@ -293,12 +295,188 @@ jQuery(function($) {
         return false;
     }
 
+    nmgr.mago = {
+        /**
+         * The id used to identify the modal dialog html
+         * @type String
+         */
+        container: '#nmgr-mago',
+
+        /**
+         * The cloned modal dialog html, used to reset the modal
+         * @type Boolean|DOMString
+         */
+        template: false,
+
+        /**
+         * The BSN Modal object
+         * @type String|BSN.Modal
+         */
+        self: '',
+
+        /**
+         * The dom Element representing the modal
+         * @type String|Element|.el|function(Object, webfont.DomHelper).el|Object.<string, Array.<string>>.el
+         */
+        el: '',
+
+        /**
+         * The class added to the container element which identifies the current modal content being shown
+         * @type String
+         */
+        identifier: '',
+
+        data: {},
+
+        init: function() {
+            this.el = document.querySelector(this.container);
+
+            if (!this.el) {
+                return;
+            }
+
+            if (!this.template) {
+                this.template = this.el.cloneNode(true);
+            }
+
+            this.self = new BSN.Modal(this.container);
+
+            $(document.body).on('click', '[data-dialog-content]', this.showForDataAttr);
+
+            this.el.addEventListener('hidden.bs.modal', this.reset, false);
+        },
+
+        /**
+         * Show the modal for elements with the right data attributes set
+         */
+        showForDataAttr: function(e) {
+            var identifier = e.currentTarget.dataset.dialogContent.replace('#', '');
+            var c = document.getElementById(identifier);
+            if (c) {
+                nmgr.mago.setContent(c.innerHTML, identifier);
+                nmgr.mago.setup(e.target);
+                nmgr.mago.show();
+                e.preventDefault();
+            }
+        },
+
+        /**
+         * Set up the modal appearance before showing it
+         *
+         * @param {type} element The element which has been clicked to show the modal. This element can have data
+         * attributes which are read to set up the modal
+         * @param {object} options The options used to set up the modal. These options can be used in code to set up
+         * the modal instead of reading the element's data attributes in the dom
+         * @returns {undefined}
+         */
+        setup: function(options) {
+            var ops = options instanceof Element ? options.dataset : options;
+
+            if (ops.dialogWidth && 'small' === ops.dialogWidth) {
+                this.el.querySelector('.modal-dialog').classList.remove('modal-lg');
+            }
+
+            if (ops.dialogTitle) {
+                this.setTitle(ops.dialogTitle);
+            }
+
+            if (ops.dialogBody) {
+                this.setBody(ops.dialogBody);
+            }
+
+            if (ops.dialogClass && 'string' === typeof(ops.dialogClass)) {
+                this.el.classList.add(ops.dialogClass);
+            }
+        },
+
+        update: function() {
+            /**
+             * The 'update.bs.modal' event is a custom event created by us. It doesn'e exist
+             * in the BSN.Modal class.
+             */
+            $(this.container).first().trigger('update.bs.modal');
+            this.self.update();
+        },
+
+        show: function() {
+            /**
+             * Although the modal selector '#nmgr-modal' has the 'show.bs.modal' event,
+             * we are triggering this event also on the jquery object of the selector to provide the same
+             * api consistency with the 'update.bs.modal' event on the same selector created by us.
+             */
+            $(this.container).first().trigger('show.bs.modal');
+            this.self.show();
+        },
+
+        hide: function() {
+            this.self.hide();
+        },
+
+        /**
+         * Show or update the modal
+         *
+         * We need to do this to preserve the event bindings on the modal.
+         * If we show the modal when it is already being shown, all the elements such as the close button
+         * and the backdrop would lose their event bindings. So in this case we need to update the modal
+         * instead of showing it.
+         * As a rule, always update the modal if it is already being shown. And only show the modal if it is currently hidden.
+         */
+        showOrUpdate: function() {
+            if (this.hasContent()) {
+                this.update();
+            } else {
+                this.show();
+            }
+        },
+
+        setContent: function(content, identifier) {
+            this.self.setContent(content);
+
+            if ('string' === typeof identifier) {
+                this.el.classList.add(identifier);
+                this.identifier = identifier;
+            }
+
+            $(this.container).first().trigger('set_content.bs.modal');
+        },
+
+        setTitle: function(title) {
+            this.el.querySelector('.modal-title').innerHTML = title;
+        },
+
+        setBody: function(content) {
+            this.el.querySelector('.modal-body').innerHTML = content;
+        },
+
+        /**
+         * Clean up a modal after it has been hidden
+         */
+        reset: function() {
+            this.classList.value = nmgr.mago.template.classList.value;
+            this.innerHTML = nmgr.mago.template.innerHTML;
+        },
+
+        /**
+         * Check if we are in a modal window or a particular element is being show in the modal window
+         * @param {type} element
+         * @returns {Boolean}
+         */
+        hasContent: function(element) {
+            if (element) {
+                return this.el.classList.contains('show') && null !== this.el.querySelector(element);
+            } else {
+                return this.el.classList.contains('show');
+            }
+        }
+    };
+
+    nmgr.mago.init();
     /**
      * Js events related to wishlist items template
      */
 
 
-    var nmgr_items = {
+    nmgr.items = {
         container: '#nmgr-items',
 
         wishlist: {},
@@ -315,20 +493,23 @@ jQuery(function($) {
             $(document.body)
                 .on('change', '#nmgr-items td.quantity input.quantity', this.quantity_changed)
                 .on('click', '#nmgr-items a.edit-wishlist-item', this.edit_item)
-                .on('click', '#nmgr-items a.delete-wishlist-item', this.delete_item)
+                .on('click', '#nmgr-items a.delete-wishlist-item', this.pre_delete_item)
                 .on('click', '#nmgr-items button.save-action', this.save_items)
                 .on('click', '#nmgr-items .nmgr-add-items-action', this.add_items_action)
                 .on('change', '.nmgr-product-search', this.new_add_items_row)
-                .on('click', '.nmgr-add-items .nmgr-add', this.add_items)
+                .on('click', '.nmgr-add-items-dialog .nmgr-add', this.add_items)
                 .on('nmgr_wishlist_created nmgr_shipping_reloaded', this.reload)
                 .on('removed_from_cart', nmgr.remove_notice)
-                .on('click', '.nmgr_add_to_cart_button', this.add_to_cart)
+                .on('click', '.nmgr_add_to_cart_button', this.add_single_product_to_cart)
                 .on('nmgr_added_to_cart nmgr_removed_from_wishlist', nmgr.refresh_cart_fragments)
-                .on('nmgr_tab_shown', this.maybe_make_table_responsive);
+                .on('nmgr_tab_shown', this.maybe_make_table_responsive)
+                .on('nmgr_add_to_cart_response', this.remove_loading_animation);
+
+            nmgr.mago.el.addEventListener('show.bs.modal', this.init_add_items_form, false);
         },
 
         reload: function(e, wishlist) {
-            var this_wishlist_id = parseInt($(nmgr_items.container).attr('data-wishlist-id')),
+            var this_wishlist_id = parseInt($(nmgr.items.container).attr('data-wishlist-id')),
                 wishlist_id = ('undefined' !== typeof wishlist) && wishlist.id ? wishlist.id : this_wishlist_id;
 
             if (0 !== this_wishlist_id && ('undefined' !== typeof wishlist) && wishlist.id && this_wishlist_id !== parseInt(wishlist.id)) {
@@ -339,15 +520,15 @@ jQuery(function($) {
                 action: 'nmgr_load_items',
                 wishlist_id: parseInt(wishlist_id),
                 nmgr_global: JSON.stringify(nmgr_global_params.global),
-                _wpnonce: $(nmgr_items.container).attr('data-nonce')
+                _wpnonce: $(nmgr.items.container).attr('data-nonce')
             };
 
-            nmgr.block(nmgr_items.container);
+            nmgr.block(nmgr.items.container);
 
             $.post(nmgr_global_params.ajax_url, data, function(response) {
-                $(nmgr_items.container).replaceWith(response);
-                nmgr_items.wishlist = wishlist;
-                nmgr_items.reloaded();
+                $(nmgr.items.container).replaceWith(response);
+                nmgr.items.wishlist = wishlist;
+                nmgr.items.reloaded();
             });
         },
 
@@ -381,37 +562,42 @@ jQuery(function($) {
             return false;
         },
 
-        delete_item: function() {
-            var answer = window.confirm(nmgr_global_params.i18n_delete_item_text);
-            if (answer) {
-
-                nmgr.block(nmgr_items.container);
-
-                var $item = $(this).closest('tr.item'),
-                    data = {
-                        wishlist_item_ids: $item.attr('data-wishlist_item_id'),
-                        action: 'nmgr_delete_item',
-                        wishlist_id: $(nmgr_items.container).attr('data-wishlist-id'),
-                        _wpnonce: $(nmgr_items.container).attr('data-nonce'),
-                        nmgr_global: JSON.stringify(nmgr_global_params.global)
-                    };
-
-                // Check if items have changed, if so pass them through so we can save them before adding a new item.
-                if ('true' === $('#nmgr-items button.save-action').attr('data-reload')) {
-                    data.items = $('.nmgr-items-table :input[name]').serialize();
-                }
-
-                $.post(nmgr_global_params.ajax_url, data, function(response) {
-                    if (response.success) {
-                        nmgr_items.wishlist = response.data.wishlist;
-                        $(nmgr_items.container).replaceWith($(response.data.html));
-                        nmgr_items.reloaded();
-                        $(document.body).trigger('nmgr_removed_from_wishlist');
-                    } else if (response.error) {
-                        window.alert(response.data.notice);
-                    }
-                });
+        pre_delete_item: function(e) {
+            e.preventDefault();
+            if (window.confirm($(this).attr('data-notice'))) {
+                var item_id = [$(this).closest('tr.item').attr('data-wishlist_item_id')],
+                    wishlist_id = $(nmgr.items.container).attr('data-wishlist-id');
+                nmgr.items.delete_items(item_id, wishlist_id);
             }
+        },
+
+        delete_items: function(item_ids, wishlist_id) {
+            nmgr.block(nmgr.items.container);
+
+            var data = {
+                wishlist_item_ids: item_ids,
+                action: 'nmgr_delete_items',
+                wishlist_id: wishlist_id,
+                _wpnonce: nmgr_global_params.nonce,
+                nmgr_global: JSON.stringify(nmgr_global_params.global)
+            };
+
+            // Check if items have changed, if so pass them through so we can save them before adding a new item.
+            if ('true' === $('#nmgr-items button.save-action').attr('data-reload')) {
+                data.items = $('.nmgr-items-table :input[name]').serialize();
+            }
+
+            $.post(nmgr_global_params.ajax_url, data, function(response) {
+                if (response.success) {
+                    nmgr.items.wishlist = response.wishlist;
+                    $(nmgr.items.container).replaceWith($(response.template));
+                    nmgr.items.reloaded();
+                    $(document.body).trigger('nmgr_removed_from_wishlist', response);
+                } else if (response.error && response.notice) {
+                    window.alert(response.notice);
+                }
+            });
+
             return false;
         },
 
@@ -419,20 +605,20 @@ jQuery(function($) {
             var data = {
                 items: $('.nmgr-items-table :input[name]').serialize(),
                 action: 'nmgr_save_items',
-                wishlist_id: $(nmgr_items.container).attr('data-wishlist-id'),
-                _wpnonce: $(nmgr_items.container).attr('data-nonce'),
+                wishlist_id: $(nmgr.items.container).attr('data-wishlist-id'),
+                _wpnonce: $(nmgr.items.container).attr('data-nonce'),
                 nmgr_global: JSON.stringify(nmgr_global_params.global)
             };
 
-            nmgr.block(nmgr_items.container);
+            nmgr.block(nmgr.items.container);
 
             $.post(nmgr_global_params.ajax_url, data, function(response) {
                 if (response.success) {
-                    nmgr_items.wishlist = response.data.wishlist;
-                    $(nmgr_items.container).replaceWith($(response.data.html));
-                    nmgr_items.reloaded();
+                    nmgr.items.wishlist = response.data.wishlist;
+                    $(nmgr.items.container).replaceWith($(response.data.html));
+                    nmgr.items.reloaded();
                 }
-                nmgr.unblock(nmgr_items.container);
+                nmgr.unblock(nmgr.items.container);
             });
             return false;
         },
@@ -440,12 +626,15 @@ jQuery(function($) {
         add_items_action: function() {
             if ($(this).attr('data-url')) {
                 nmgr.go_to($(this).attr('data-url'));
-            } else if ($(this).attr('data-target')) {
-                // Initialize bootstrap native modal
-                new BSN.Modal($(this).attr('data-target')).show();
+            }
+        },
 
+        init_add_items_form: function() {
+            var identifier = 'nmgr-add-items-dialog';
+
+            if (this.classList.contains(identifier)) {
                 // reset the modal content form
-                nmgr_items.reset_add_items_form($(this).attr('data-target'));
+                nmgr.items.reset_add_items_form('.' + identifier);
 
                 // initialize select2 on the select field in the modal
                 $(document.body).trigger('nmgr-select2-init');
@@ -479,7 +668,7 @@ jQuery(function($) {
         },
 
         add_items: function() {
-            var table_body = $(this).closest('.nmgr-add-items').find('table tbody'),
+            var table_body = $(this).closest('.nmgr-add-items-dialog').find('table tbody'),
                 rows = table_body.find('tr'),
                 add_items = [];
 
@@ -495,15 +684,12 @@ jQuery(function($) {
                 });
             });
 
-            var modal_id = '#' + $(this).closest('.modal').attr('id');
-            // Initializing the modal if it is already open hides it. We don't need to explicitly call hide()
-            new BSN.Modal(modal_id);
-
-            nmgr.block(nmgr_items.container);
+            nmgr.mago.self.hide();
+            nmgr.block(nmgr.items.container);
 
             var data = {
                 action: 'nmgr_add_item',
-                wishlist_id: $(nmgr_items.container).attr('data-wishlist-id'),
+                wishlist_id: $(nmgr.items.container).attr('data-wishlist-id'),
                 nmgr_global: JSON.stringify(nmgr_global_params.global),
                 data: add_items
             };
@@ -520,18 +706,19 @@ jQuery(function($) {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        $(nmgr_items.container).replaceWith(response.data.html);
-                        nmgr_items.reloaded();
+                        $(nmgr.items.container).replaceWith(response.data.html);
+                        nmgr.items.reloaded();
                     } else {
-                        nmgr.unblock(nmgr_items.container);
+                        nmgr.unblock(nmgr.items.container);
                         window.alert(response.data.error);
                     }
                 }
             });
         },
 
-        add_to_cart: function(e) {
+        add_single_product_to_cart: function(e) {
             var $thisbutton = $(this),
+                item = {},
                 $form = $thisbutton.closest('.nmgr-add-to-cart-form');
             /**
              *  If we are not adding to cart via ajax, we are supposed to return here
@@ -545,44 +732,69 @@ jQuery(function($) {
 
             e.preventDefault();
 
+            $($form.serializeArray()).each(function(index, obj) {
+                item[obj.name] = obj.value;
+            });
+            $thisbutton.removeClass('added').addClass('loading');
+
+            nmgr.items.add_to_cart([item]);
+        },
+
+        /**
+         * Add single or multiple products to cart
+         *
+         * @param {array} items (product data to add to cart e.g. product_id, quantity, variation_id)
+         */
+        add_to_cart: function(items) {
             var data = {
-                action: 'nmgr_add_to_cart'
+                action: 'nmgr_add_to_cart',
+                nmgr_items: items,
+                nmgr_global: JSON.stringify(nmgr_global_params.global)
             };
 
-            var formdata = $form.serializeArray();
-
-            $(formdata).each(function(index, obj) {
-                data[obj.name] = obj.value;
-            });
-
-            $thisbutton.removeClass('added');
-            $thisbutton.addClass('loading');
-
             $.post(nmgr_global_params.ajax_url, data, function(response) {
-                if (!response) {
+                if (response.success && response.redirect_url) {
+                    window.location = response.redirect_url;
                     return;
                 }
 
                 $('.woocommerce-error, .woocommerce-message, .woocommerce-info').remove();
-                $thisbutton.removeClass('loading');
+                $(document.body).trigger('nmgr_add_to_cart_response', response);
 
                 if (response.notice) {
-                    nmgr.show_notice(response.notice);
+                    nmgr.show_notice(response.notice, true);
                 }
 
                 if (response.success) {
-                    $(document.body).trigger('nmgr_added_to_cart', [$form]);
+                    $(document.body).trigger('nmgr_added_to_cart', [response.items_data ? response.items_data : '']);
                 }
             });
         },
 
+        /**
+         * Remove the loading animation on the add to cart button on the items table after the ajax action
+         * has been completed.
+         *
+         * It is necessary to do this here rather than in the add_to_cart function because the add_to_cart function
+         * is used in various ways (to add single, multiple products, and products from the wishlist cart). For this reason
+         * it is less effiicient to code for removing the icon animation in the add_to_cart function.
+         */
+        remove_loading_animation: function(e, response) {
+            if ('undefined' !== typeof response && response.items_data && $(nmgr.items.container)) {
+                response.items_data.forEach(function(item) {
+                    $(nmgr.items.container)
+                        .find('tr[data-wishlist_item_id="' + item.wishlist_item_id + '"] .nmgr_add_to_cart_button')
+                        .removeClass('loading');
+                });
+            }
+        },
         maybe_make_table_responsive: function(e, tab) {
             if ($(tab).is('#nmgr-tab-items')) {
                 nmgr.make_table_responsive('.nmgr-items-table');
             }
         }
     };
-    nmgr_items.init();
+    nmgr.items.init();
 
     /**
      * Initializes all select2 elements used by plugin and retrieves their data

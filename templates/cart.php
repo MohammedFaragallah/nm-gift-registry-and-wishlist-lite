@@ -121,8 +121,9 @@ defined('ABSPATH') || exit;
 
       <div class="nmgr-cart-item-actions">
         <a href="#" class="nmgr-cart-item-remove" data-wishlist-id="<?php echo $item->get_wishlist()->get_id(); ?>"
-          data-wishlist-item-id="<?php echo $item->get_id(); ?>" aria-label="<?php echo $remove_item_text; ?>"
-          title="<?php echo $remove_item_text; ?>">
+          data-wishlist-item-id="<?php echo $item->get_id(); ?>"
+          data-notice="<?php echo esc_attr(nmgr_get_delete_item_notice($item)); ?>"
+          aria-label="<?php echo $remove_item_text; ?>" title="<?php echo $remove_item_text; ?>">
           <?php
                                      echo nmgr_get_svg(array(
                                          'icon' => 'trash-can',
