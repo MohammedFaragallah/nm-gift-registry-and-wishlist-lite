@@ -694,8 +694,8 @@ function nmgr_add_to_wishlist_notice($wishlist, $products, $show_qty = false, $r
     }
 
     $titles = array_filter($titles);
-    /* translators: 1: item names, 2: wishlist type title */
     $added_text = sprintf(
+        /* translators: 1: item names, 2: wishlist type title */
         _n('%1$s has been added to your %2$s.', '%1$s have been added to your %2$s.', $count, 'nm-gift-registry-lite'),
         wc_format_list_of_items($titles),
         esc_html(nmgr_get_type_title())
@@ -760,8 +760,8 @@ function nmgr_get_product_in_wishlist_title_attribute($product)
 
     switch ($type) {
         case 'variable':
-            /* translators: 1: wishlist type title, 2: wishlist type title plural form */
             return sprintf(
+                /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                 _n(
                     'This product has variations in your %s',
                     'This product has variations in one or more of your %s',
@@ -772,8 +772,8 @@ function nmgr_get_product_in_wishlist_title_attribute($product)
                 esc_html(nmgr_get_type_title('', 1))
             );
         case 'grouped':
-            /* translators: 1: wishlist type title, 2: wishlist type title plural form */
             return sprintf(
+                /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                 _n(
                     'This product has child products in your %s',
                     'This product has child products in one or more of your %s',
@@ -784,17 +784,17 @@ function nmgr_get_product_in_wishlist_title_attribute($product)
                 esc_html(nmgr_get_type_title('', 1))
             );
         default:
-            /* translators: 1: wishlist type title, 2: wishlist type title plural form */
-            return sprintf(
-                _n(
+        return sprintf(
+            _n(
+                    /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                     'This product is in your %s',
-                    'This product is in one or more of your %s',
-                    $count,
-                    'nm-gift-registry-lite'
-                ),
-                esc_html(nmgr_get_type_title()),
-                esc_html(nmgr_get_type_title('', 1))
-            );
+                'This product is in one or more of your %s',
+                $count,
+                'nm-gift-registry-lite'
+            ),
+            esc_html(nmgr_get_type_title()),
+            esc_html(nmgr_get_type_title('', 1))
+        );
     }
 }
 
@@ -1723,8 +1723,8 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
 
     // The product is not purchasable
     if (!$product->is_purchasable()) {
-        /* translators: 1: product name, 2: wishlist type title */
         throw new Exception(sprintf(
+            /* translators: 1: product name, 2: wishlist type title */
             __('Sorry &quot;%1$s&quot; cannot be added to your %2$s as it is not purchasable.', 'nm-gift-registry-lite'),
             $product->get_name(),
             esc_html(nmgr_get_type_title())
@@ -1733,8 +1733,8 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
 
     // The product is not in stock
     if (!$product->is_in_stock()) {
-        /* translators: 1: product name, 2: wishlist type title */
         throw new Exception(sprintf(
+            /* translators: 1: product name, 2: wishlist type title */
             __('You cannot add &quot;%s&quot; to your %2$a because the item is out of stock.', 'nm-gift-registry-lite'),
             $product->get_name(),
             esc_html(nmgr_get_type_title())
@@ -1743,8 +1743,8 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
 
     // The quantity added exceeds the product stock
     if (!$product->has_enough_stock($quantity)) {
-        /* translators: 1: product name, 2: wishlist type title, 3: product quantity */
         throw new Exception(sprintf(
+            /* translators: 1: product name, 2: wishlist type title, 3: product quantity */
             __('You cannot add that amount of &quot;%1$s&quot; to your %2$s because there is not enough stock (%3$s remaining).', 'nm-gift-registry-lite'),
             $product->get_name(),
             esc_html(nmgr_get_type_title()),
@@ -1783,8 +1783,8 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
         do_action('nmgr_added_to_wishlist', $product, $quantity, $favourite, $variations, $wishlist);
         return array( $product->get_id() => $quantity );
     } else {
-        /* translators: 1: product name, 2: wishlist type title */
         throw new Exception(sprintf(
+            /* translators: 1: product name, 2: wishlist type title */
             __('%1$s could not be added to your %2$s', 'nm-gift-registry-lite'),
             $product->get_name(),
             esc_html(nmgr_get_type_title())

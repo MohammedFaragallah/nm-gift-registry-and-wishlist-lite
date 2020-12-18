@@ -258,8 +258,8 @@ class NMGR_Ajax
                 }
 
                 wc_add_notice(
-                    /* translators: %s: wishlist type title */
                     sprintf(
+                        /* translators: %s: wishlist type title */
                         __('Your %s details have been saved', 'nm-gift-registry-lite'),
                         nmgr_get_type_title()
                     ),

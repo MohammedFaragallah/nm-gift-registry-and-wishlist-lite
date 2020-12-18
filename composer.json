@@ -1,0 +1,13 @@
+{
+  "name": "o0fre/nm-gift-registry-and-wishlist-lite",
+  "authors": [
+    {
+      "name": "Mohammed Faragallah",
+      "email": "o0frego0o@hotmail.com"
+    }
+  ],
+  "scripts": {
+    "pot": "wp i18n make-pot ."
+  },
+  "require": {}
+}

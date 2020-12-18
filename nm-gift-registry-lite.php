@@ -17,13 +17,12 @@
  * WC requires at least: 3.6.5
  * WC tested up to: 4.8
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-define( 'NMGRLITE_FILE', __FILE__ );
+define('NMGRLITE_FILE', __FILE__);
 
-if ( !class_exists( 'NMGR_Lite_Install' ) ) {
-	include_once 'includes/class-nmgr-lite-install.php';
+if (!class_exists('NMGR_Lite_Install')) {
+    include_once 'includes/class-nmgr-lite-install.php';
 
-	NMGR_Lite_Install::load();
+    NMGR_Lite_Install::load();
 }
-

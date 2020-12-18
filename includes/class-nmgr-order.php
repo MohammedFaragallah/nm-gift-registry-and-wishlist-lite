@@ -260,8 +260,8 @@ class NMGR_Order
         $product_cart_quantity = $products_cart_quantities[ $product->get_stock_managed_by_id() ];
 
         if ($product->get_stock_quantity() < ($product_cart_quantity + $quantity)) {
-            /* translators: %1$s: product stock quantity, %2$s: product quantity in cart */
             $message = sprintf(
+                /* translators: %1$s: product stock quantity, %2$s: product quantity in cart */
                 __('You cannot add that amount to the cart &mdash; we have %1$s in stock and you already have %2$s in your cart.', 'nm-gift-registry-lite'),
                 $product->get_stock_quantity(),
                 $product_cart_quantity
@@ -346,8 +346,8 @@ class NMGR_Order
             wc_print_notice(
                 apply_filters(
                     'nmgr_checkout_shipping_message',
-                    /* translators: %1$s: wishlist type title, %2$s: wishlist type title */
                     sprintf(
+                        /* translators: %1$s: wishlist type title, %2$s: wishlist type title */
                         __('Items in your order which are for a %1$s would be shipped separately to the owner of the %2$s.', 'nm-gift-registry-lite'),
                         esc_html(nmgr_get_type_title()),
                         esc_html(nmgr_get_type_title())
