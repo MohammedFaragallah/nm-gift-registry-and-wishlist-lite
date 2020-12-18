@@ -9,5 +9,8 @@
   "scripts": {
     "pot": "wp i18n make-pot ."
   },
-  "require": {}
+  "require": {},
+  "require-dev": {
+    "php-stubs/woocommerce-stubs": "^4.7"
+  }
 }
