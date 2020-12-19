@@ -71,6 +71,7 @@ class NMGR_Wordpress
                         ],
                     ]
                 );
+
                 register_rest_route(
                     $namespace,
                     '/' . $base .'/add-item',
@@ -97,6 +98,30 @@ class NMGR_Wordpress
                                 'variation' => [
                                     'required'    => false,
                                     'type'        => 'mixed'
+                                ],
+                            ],
+                            'permission_callback' => '__return_true',
+                        ],
+                    ]
+                );
+
+                register_rest_route(
+                    $namespace,
+                    '/' . $base .'/remove-item',
+                    [
+                        [
+                            'methods'             => WP_REST_Server::CREATABLE,
+                            'callback'            => 'remove_item',
+                            'args'                => [
+                                'item_id' => [
+                                    'required'    => false,
+                                    'type'        => 'integer',
+                                    'description' => 'Item ID to delete.',
+                                ],
+                                'clear' => [
+                                    'required'    => false,
+                                    'type'        => 'boolean',
+                                    'description' => 'delete all items',
                                 ],
                             ],
                             'permission_callback' => '__return_true',
@@ -155,6 +180,33 @@ class NMGR_Wordpress
                         $params['quantity'],
                         $params['favourite'],
                         $params['variation'],
+                    );
+                } catch (Exception $e) {
+                    return rest_ensure_response($e);
+                }
+            }
+
+            return rest_ensure_response($wishlist_id);
+        }
+
+
+        function remove_item(WP_REST_Request $request)
+        {
+            $params      = $request->get_params();
+            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+
+            if ($wishlist_id > 0) {
+                try {
+                    $wishlist_class = new NMGR_Wishlist($wishlist_id);
+
+                    if (!$wishlist_class->is_active()) {
+                        return false;
+                    }
+
+                    if ($params['clear'])  return $wishlist_class->delete_items();
+
+                    return $wishlist_class->delete_item(
+                        $params['item_id'],
                     );
                 } catch (Exception $e) {
                     return rest_ensure_response($e);
