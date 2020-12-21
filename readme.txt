@@ -4,7 +4,7 @@ Tags: gift registry, wishlist, gift list, wedding gift registry, wedding, birthd
 Requires at least: 4.7
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,6 +44,7 @@ The free lite version of NM Gift Registry and Wishlist provides these features:
 The paid full version of NM Gift Registry and Wishlist offers these additional features:
 
 * Ability for each customer to have multiple gift registries or wishlists.
+* Add multiple wishlist items to the cart at once.
 * WooCommerce-like emails configurable to be sent to custom recipients and the wishlist owner at various stages such as when a wishlist is created, fulfilled and deleted, and when a wishlist item is ordered, purchased and refunded.
 * Featured and background images for each gift registry or wishlist with various display styles.
 * Ability to send custom messages to the gift registry or wishlist owner from the checkout page.
@@ -89,6 +90,11 @@ Of course, it is also meant for this. NM Gift Registry and Wishlist can be used 
 
 
 == Changelog ==
+
+= 2.1.1 =
+* Improvement - Added settings to toggle display of add to cart and edit delete columns on items table.
+* Fix - Improved ability to detect user's wishlist id in global context.
+* Fix - Improved plugin management of the 'allow_multiple_wishlists' settings.
 
 = 2.1.0 =
 * Feature - Ability to redirect to cart after adding wishlist items to cart.

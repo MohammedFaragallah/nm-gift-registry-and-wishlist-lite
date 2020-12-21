@@ -7,7 +7,7 @@
     }
   ],
   "scripts": {
-    "pot": "wp i18n make-pot ."
+    "pot": "wp i18n make-pot . languages/nm-gift-registry-lite.pot"
   },
   "require": {},
   "require-dev": {

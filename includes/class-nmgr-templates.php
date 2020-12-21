@@ -793,7 +793,9 @@ class NMGR_Templates
 
     public static function maybe_show_item_add_to_cart_button($bool, $items_args)
     {
-        $value = is_nmgr_wishlist() || $items_args['add_to_cart'] || $bool;
+        $pre_value = is_nmgr_wishlist() || $items_args['add_to_cart'] || $bool;
+
+        $value = $pre_value && nmgr_get_option('display_item_add_to_cart', 1);
 
         if (!$value) {
             if (has_action('nmgr_after_items', array(__CLASS__, 'after_items_show_add_to_cart_notice'))) {
@@ -806,7 +808,9 @@ class NMGR_Templates
 
     public static function maybe_show_item_edit_delete_buttons($bool, $items_args)
     {
-        $value = $bool || is_nmgr_account() || (!is_nmgr_wishlist() && $items_args['editable']);
+        $pre_value = $bool || is_nmgr_account() || (!is_nmgr_wishlist() && $items_args['editable']);
+
+        $value = $pre_value && nmgr_get_option('display_item_edit_delete', 1);
 
         if (!$value) {
             if (has_action('nmgr_after_items_actions', array(__CLASS__, 'after_items_actions_show_save_items_button'))) {
@@ -884,7 +888,8 @@ class NMGR_Templates
         $is_admin = is_nmgr_admin();
         $title = $is_admin ? '' : esc_attr__('Go shopping for items to add to your wishlist', 'nm-gift-registry-lite');
         $data_url = $is_admin ? '' : esc_attr(nmgr_get_add_items_url());
-        $data_content = $is_admin ? '#nmgr-add-items-dialog' : ''; ?>
+        $data_content = $is_admin ? '#nmgr-add-items-dialog' : '';
+?>
 <button type="button" title="<?php echo $title; ?>" class="button nmgr-add-items-action nmgr-tip"
   data-url="<?php echo $data_url; ?>" data-dialog-width="small" data-dialog-content="<?php echo $data_content; ?>">
   <?php esc_html_e('Add item(s)', 'nm-gift-registry-lite'); ?>
@@ -901,7 +906,8 @@ class NMGR_Templates
             !$items_args['editable']
         ) {
             return;
-        } ?>
+        }
+    ?>
 <button type="button" class="button button-primary save-action" data-reload="false">
   <?php esc_html_e('Save changes', 'nm-gift-registry-lite'); ?>
 </button>
@@ -974,7 +980,8 @@ class NMGR_Templates
 
         if (!$wishlist) {
             return;
-        } ?>
+        }
+    ?>
 <meta property="og:url" content="<?php echo esc_html($wishlist->get_permalink()); ?>" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="<?php esc_html($wishlist->get_title()); ?>" />
@@ -1231,7 +1238,8 @@ class NMGR_Templates
 
         if (!isset($args['show_title'], $args['show_post_count']) || (!$args['show_title'] && !$args['show_post_count'])) {
             return;
-        } ?>
+        }
+        ?>
 <header class="nmgr-search-header nmgr-text-center">
   <?php
             if ($args['show_title']) {
@@ -1246,7 +1254,8 @@ class NMGR_Templates
                 /* translators: %d: total results */
                 printf(_n('%d result found', '%d results found', $wp_query->found_posts, 'nm-gift-registry-lite'), absint($wp_query->found_posts));
                 echo '</p>';
-            } ?>
+            }
+            ?>
 </header>
 <?php
     }

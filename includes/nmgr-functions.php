@@ -385,17 +385,7 @@ function nmgr_get_current_wishlist_id()
         return absint($the_post->ID);
     }
 
-    if (is_user_logged_in()) {
-        return absint(get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true));
-    } elseif (nmgr_get_current_user_id()) {
-        /**
-         * This code snippet could be used for logged in users also but we have used it here for now
-         * as guest wishlists are always considered to be active for simplicity sake and the code does
-         * not allow us to detect the status of the wishlist, whether trash or pending, etc, before returning
-         * it as the current wishlist id.
-         */
-        return (int) $wpdb->get_var($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' AND meta_value = %s ORDER BY meta_id DESC LIMIT 1", nmgr_get_current_user_id()));
-    }
+    return nmgr_get_user_default_wishlist_id();
 }
 
 /**
@@ -1770,9 +1760,9 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
         throw new Exception(
             sprintf(
                 /* translators:
-                 * 1: quantity to add, 2: product name, 3: wishlist type title,
-                 * 4: product quantity, 5: product quantity in wishlist, 6: wishlist type title
-                 */
+				 * 1: quantity to add, 2: product name, 3: wishlist type title,
+				 * 4: product quantity, 5: product quantity in wishlist, 6: wishlist type title
+				 */
                 __('You cannot add %1$s of &quot;%2$s&quot; to your %3$s &mdash; we have %4$s in stock and you already have %5$s in your %6$s.', 'nm-gift-registry-lite'),
                 $quantity,
                 $product->get_name(),
@@ -2869,7 +2859,8 @@ function nmgr_items_table_columns()
         'quantity' => __('Quantity', 'nm-gift-registry-lite'),
         'purchased_quantity' => __('Purchased Quantity', 'nm-gift-registry-lite'),
         'total_cost' => __('Total Cost', 'nm-gift-registry-lite'),
-        'actions' => __('Actions', 'nm-gift-registry-lite')
+        'edit_delete' => __('Edit / delete', 'nm-gift-registry-lite'),
+        'add_to_cart' => __('Add to cart', 'nm-gift-registry-lite'),
     ));
 }
 
@@ -2906,4 +2897,39 @@ function nmgr_get_delete_item_notice($item)
         __('Are you sure you want to remove the %s item?', 'nm-gift-registry-lite'),
         esc_html(nmgr_get_type_title())
     ), $item);
+}
+
+/**
+ * Get the default wishlist id for a user
+ *
+ * This is the wishlist id that is set for the user when he's allowed to have only one wishlist.
+ * It should typically be the users latest wishlist which is in an active state.
+ *
+ * This function is different from 'nmgr_get_current_wishlist_id' because that function gets
+ * the current wishlist id being viewed or operated on depending on the context. This function
+ * does not depend on any context.
+ *
+ * @since 2.1.1
+ * @global wpdb $wpdb
+ * @param int $user_id The user id. Defaults to the current wishlist user id if no user id is supplied.
+ * @return int
+ */
+function nmgr_get_user_default_wishlist_id($user_id = 0)
+{
+    global $wpdb;
+
+    $current_user_id = $user_id ? $user_id : nmgr_get_current_user_id();
+
+    if ($current_user_id) {
+        $wishlist_ids = $wpdb->get_col($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' AND meta_value = %s ORDER BY meta_id DESC", $current_user_id));
+
+        if (!empty($wishlist_ids)) {
+            foreach ($wishlist_ids as $wishlist_id) {
+                if (in_array(get_post_status($wishlist_id), nmgr_get_post_statuses())) {
+                    return (int) $wishlist_id;
+                }
+            }
+        }
+    }
+    return 0;
 }

@@ -190,12 +190,12 @@ class NMGR_Order
                     $passed = false;
                     $message = apply_filters('nmgr_validate_wishlist_item_in_cart_quantity_message', sprintf(
                         /* translators:
-                             * 1: item quantity to add to cart,
-                             * 2: item title,
-                             * 3: item quantity in cart,
-                             * 4: item quantity requested in wishlist,
-                             * 5: wishlist type title
-                             */
+							 * 1: item quantity to add to cart,
+							 * 2: item title,
+							 * 3: item quantity in cart,
+							 * 4: item quantity requested in wishlist,
+							 * 5: wishlist type title
+							 */
                         __('You cannot add %1$d of %2$s to the cart as you have %3$d already in the cart with %4$d requested in the %5$s.', 'nm-gift-registry-lite'),
                         $quantity,
                         $item_title,

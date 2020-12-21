@@ -37,7 +37,6 @@ class NMGR_Admin_Post
         add_filter('nmgr_fields', array(__CLASS__, 'modify_fields_args'));
         add_action('add_meta_boxes', array(__CLASS__, 'remove_meta_boxes'), 10);
         add_action('add_meta_boxes', array(__CLASS__, 'add_meta_boxes'), 20);
-        add_filter('wp_insert_post_data', array(__CLASS__, 'insert_post_data'), 10, 2);
         add_action('save_post_' . nmgr()->post_type, array(__CLASS__, 'save_meta_boxes'), 1, 2);
         add_action('admin_init', array(__CLASS__, 'maybe_output_notices'));
         add_action('shutdown', array(__CLASS__, 'save_notices'));
@@ -212,7 +211,7 @@ class NMGR_Admin_Post
      * @param string $text The notice
      * @param string $notice_type The type of notice. Should be success, error, or notice. Default is notice.
      */
-    private static function add_notice($text, $notice_type = 'notice')
+    public static function add_notice($text, $notice_type = 'notice')
     {
         global $pagenow;
 
@@ -353,10 +352,10 @@ class NMGR_Admin_Post
 
 <p class="nmgr-user">
   <label for="nmgr_user_id"> <?php esc_html_e('User:', 'nm-gift-registry-lite'); ?> </label>
-  <select class="nmgr-user-search" id="nmgr_user_id" name="nmgr_user_id"
-    data-placeholder="<?php
+  <select class="nmgr-user-search" id="nmgr_user_id" name="nmgr_user_id" data-placeholder="<?php
                                                                                                         /* translators: %s: wishlist type title */
-                                                                                                        printf(esc_attr__('Enter name of %s owner', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title())); ?>"
+                                                                                                        printf(esc_attr__('Enter name of %s owner', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
+                                                                                                        ?>"
     data-allow_clear="true">
     <option value="<?php echo esc_attr($user_id); ?>" selected="selected">
       <?php echo htmlspecialchars(wp_kses_post($user_string)); ?></option>
@@ -367,8 +366,7 @@ class NMGR_Admin_Post
 
   <?php if ($has_profile_fields) : ?>
   <div class='column'><?php echo $profile_fields; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                    ?>
-  </div>
+                                    ?></div>
   <?php endif; ?>
 
   <?php if ($enable_shipping && ($has_ship_to_account || $has_wishlist_shipping)) : ?>
@@ -403,7 +401,8 @@ class NMGR_Admin_Post
 
         if (is_nmgr_admin() && 'edit.php' !== $pagenow) :
             $prod_text = esc_html__('Product', 'nm-gift-registry-lite');
-            $qty_text = esc_html__('Quantity', 'nm-gift-registry-lite'); ?>
+            $qty_text = esc_html__('Quantity', 'nm-gift-registry-lite');
+        ?>
 <template id="nmgr-add-items-dialog">
   <div class="modal-header">
     <h4 class="modal-title"><?php esc_html_e('Add item(s)', 'nm-gift-registry-lite'); ?></h4>
@@ -422,7 +421,8 @@ class NMGR_Admin_Post
         <?php
                             $row = '
 									<td data-title="' . $prod_text . '"><select class="nmgr-product-search" name="item_id" data-allow_clear="true" data-display_stock="true" data-placeholder="' . esc_attr__('Search for a product or variation&hellip;', 'nm-gift-registry-lite') . '"></select></td>
-									<td data-title="' . $qty_text . '"><input type="number" step="1" min="0" max="9999" autocomplete="off" name="item_qty" placeholder="1" size="4" class="quantity" /></td>'; ?>
+									<td data-title="' . $qty_text . '"><input type="number" step="1" min="0" max="9999" autocomplete="off" name="item_qty" placeholder="1" size="4" class="quantity" /></td>';
+                            ?>
         <tbody data-row="<?php echo esc_attr($row); ?>">
           <tr>
             <?php echo $row; ?>
@@ -439,70 +439,6 @@ class NMGR_Admin_Post
 </template>
 <?php
         endif;
-    }
-
-    public static function insert_post_data($data, $postarr)
-    {
-        global $post;
-
-        if (nmgr()->post_type !== $data['post_type']) {
-            return $data;
-        }
-
-        if (!$data['post_title']) {
-            $data['post_title'] = sprintf('%1$s #%2$s', nmgr_get_type_title('c'), $post->ID);
-        }
-
-        /**
-         * The post author should be the admin submitted user id (if the user id belongs to a registered user).
-         * If this is not available, we default to zero
-         */
-        $post_author_username = '';
-        if (isset($_REQUEST['nmgr_user_id'])) {
-            if (is_numeric($_REQUEST['nmgr_user_id'])) {
-                $data['post_author'] = absint(wp_unslash($_REQUEST['nmgr_user_id']));
-                $post_author_username = get_the_author_meta('user_login', $data['post_author']);
-            } else {
-                $data['post_author'] = 0;
-            }
-        } elseif (0 < $data['post_author'] && !is_numeric(get_post_meta($postarr['ID'], '_nmgr_user_id', true))) {
-            /**
-             * Make sure we don't set a post author for guest wishlists
-             * (This particular code snippet is necessary for when the post is updated via 'quick edit' in the list table.
-             */
-            $data['post_author'] = 0;
-        }
-
-        /**
-         * Users are allowed to have one wishlist. If this user already has,
-         * update the user_id, set the post status to pending, and add error message
-         */
-        if (is_int($data['post_author']) && 0 < $data['post_author']) {
-            $wishlist_id = get_user_meta(absint($data['post_author']), 'nmgr_wishlist_id', true);
-
-            /**
-             * If the submitted user already has a wishlist and his wishlist is not
-             * the same as this wishlist being saved, set this wishlist author as 0 and
-             * status as pending.
-             */
-            if ($wishlist_id && absint($postarr['ID']) !== absint($wishlist_id)) {
-                $data['post_author'] = 0;
-                $data['post_status'] = 'pending';
-
-                // inform the admin that the submitted user can only have one wishlist
-                self::add_notice(sprintf(
-                    /* translators: %1$s: username, %2$s: %3$s: %5$s: wishlist type title, %4$s: line break */
-                    __('The user %1$s already has one %2$s. Users are allowed to have only one %3$s.%4$sThe status of this %5$s has been set to pending.', 'nm-gift-registry-lite'),
-                    '<strong>' . $post_author_username . '</strong>',
-                    esc_html(nmgr_get_type_title()),
-                    esc_html(nmgr_get_type_title()),
-                    '<br>',
-                    esc_html(nmgr_get_type_title())
-                ), 'error');
-            }
-        }
-
-        return $data;
     }
 
     public static function save_meta_boxes($post_id, $post)

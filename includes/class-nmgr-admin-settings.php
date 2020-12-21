@@ -194,63 +194,6 @@ class NMGR_Admin_Settings
                 ));
             }
         }
-
-        if (
-            isset($old_value['allow_multiple_wishlists']) &&
-            $old_value['allow_multiple_wishlists'] != $new_value['allow_multiple_wishlists']
-        ) {
-            // if the setting has changed from users having  a single wishlist to having multiple wishlists
-            if (!$new_value['allow_multiple_wishlists']) {
-                // Get all the users that have wishlists (registered users and guests)
-                $meta_rows = $wpdb->get_results("SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' ORDER BY meta_id DESC ");
-
-                $user_ids_as_keys = wp_list_pluck($meta_rows, 'meta_value', 'meta_value');
-
-                $user_ids_to_post_ids = array_map(function () {
-                    return array();
-                }, $user_ids_as_keys);
-
-                foreach ($user_ids_to_post_ids as $value => $array) {
-                    foreach ($meta_rows as $row) {
-                        if ($value == $row->meta_value) {
-                            // Add post ids as indexed array
-                            $user_ids_to_post_ids[$value][] = $row->post_id;
-                        }
-                    }
-                }
-
-                /**
-                 *  @todo check if it is necessary to remove this filter as this code has been refactored
-                 * not to use get_posts which was used originally
-                 */
-                remove_filter('wp_insert_post_data', array('NMGR_Admin_Post', 'insert_post_data'), 10);
-
-                // Delete all wishlists of all users except the most recent
-                foreach ($user_ids_to_post_ids as $user_id => $post_ids) {
-                    foreach ($post_ids as $index => $post_id) {
-                        /**
-                         * Post ids are added as indexed array above so we expect the index 0 to exist at least.4
-                         * This should also be the lastest post as the posts were retrieved by descending meta_id values above.
-                         */
-                        if ($index == 0) {
-                            if (is_numeric($user_id)) {
-                                // Set the latest wishlist as the user's current wishlist if the user is not a guest
-                                update_user_meta($user_id, 'nmgr_wishlist_id', $post_id);
-                            }
-                            continue;
-                        }
-                        // Trash all the user's other wishlists
-                        wp_trash_post($post_id);
-                    }
-                }
-
-                /**
-                 *  @todo check if it is necessary to add this filter as this code has been refactored
-                 * not to use get_posts which was used originally
-                 */
-                add_filter('wp_insert_post_data', array('NMGR_Admin_Post', 'insert_post_data'), 10, 2);
-            }
-        }
     }
 
     /**
@@ -372,7 +315,8 @@ class NMGR_Admin_Settings
                         ), nmgr_get_admin_url());
 
                         echo '<a href="' . esc_html($tab_url) . '" class="nav-tab ' . (self::$current_tab === $slug ? 'nav-tab-active' : '') . '">' . esc_html($tab_title) . '</a>';
-                    } ?>
+                    }
+                    ?>
     </nav>
 
     <?php
@@ -392,7 +336,8 @@ class NMGR_Admin_Settings
                                 'section' => sanitize_title($key)
                             ), nmgr_get_admin_url());
                             echo '<li><a href="' . esc_html($section_url) . '" class="' . (self::$current_section == $key ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($section_keys) == $key ? '' : '|') . ' </li>';
-                        } ?>
+                        }
+                        ?>
 
     </ul><br class="clear" />
     <?php
@@ -424,7 +369,8 @@ class NMGR_Admin_Settings
                     (isset($args['submit_button']) && $args['submit_button'])
                 ) {
                     submit_button();
-                } ?>
+                }
+                ?>
   </form>
 </div>
 <?php
@@ -973,8 +919,12 @@ class NMGR_Admin_Settings
                     $args['custom_attributes']['disabled'] = nmgr_get_option('display_item_quantity', 1) ? false : 'disabled';
                     break;
 
-                case 'actions':
-                    $args['desc_tip'] = __('This column allows action such as add to cart, edit, and delete to be performed on the wishlist items from the frontend. Unchecking it would prevent these actions from being able to be performed from the frontend.', 'nm-gift-registry-lite');
+                case 'edit_delete':
+                    $args['desc_tip'] = __('This column allows actions such as editing and deleting to be performed on the wishlist items from the frontend. Unchecking it would prevent these actions from being able to be performed.', 'nm-gift-registry-lite');
+                    break;
+
+                case 'add_to_cart':
+                    $args['desc_tip'] = __('This column allows the items to be added to the cart from the frontend as wishlist items. Unchecking it would prevent this action from being able to be performed.', 'nm-gift-registry-lite');
                     break;
             }
 
@@ -1067,10 +1017,10 @@ class NMGR_Admin_Settings
                     'default' => __('Gift Registry', 'nm-gift-registry-lite'),
                     'desc_tip' => sprintf(
                         /* translators:
-                         * 1: woocommerce account page url,
-                         * 2: plugin wishlist account page slug,
-                         * 3: plugin wishlist account page name
-                         */
+						 * 1: woocommerce account page url,
+						 * 2: plugin wishlist account page slug,
+						 * 3: plugin wishlist account page name
+						 */
                         __('This is for logged-in users only. It covers the menu title, page title and slug for the wishlist management page on the my-account page. With this you can manage your wishlist at %1$s%2$s/, and the title of the page would be "%3$s". It is best to set this only once to keep the name consistent for users. Leave empty if you do not want to manage wishlists in the my-account page, for example when you want to manage wishlists only through a custom page.', 'nm-gift-registry-lite'),
                         get_permalink(get_option('woocommerce_myaccount_page_id')),
                         nmgr_get_account_details('slug'),
@@ -1454,7 +1404,8 @@ class NMGR_Admin_Settings
                     'fill' => 'orangered'
                 )),
             ),
-        ); ?>
+        );
+        ?>
 <div class="nmgr-full-version">
   <div class="nmgr-text-center">
     <a class="nmgr-buy-btn" href="https://nmgiftregistry.com/product/nm-gift-registry" rel="noopener noreferrer"
@@ -1469,9 +1420,8 @@ class NMGR_Admin_Settings
   <div class="nmgr-features">
     <?php foreach ($features as $feature) : ?>
     <div class="nmgr-feature">
-      <div class="nmgr-image">
-        <?php echo $feature['image']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                            ?></div>
+      <div class="nmgr-image"><?php echo $feature['image']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                ?></div>
       <div class="nmgr-info">
         <h2><?php echo esc_html($feature['title']); ?></h2>
         <p><?php echo wp_kses_post($feature['desc']); ?></p>

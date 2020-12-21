@@ -743,12 +743,6 @@ class NMGR_Ajax
     {
         // check_ajax_referer('nmgr-frontend');
 
-        $default_title = nmgr_get_option('default_wishlist_title');
-
-        if (empty($default_title)) {
-            wp_die();
-        }
-
         $wishlist_id = wp_insert_post(
             array(
                 'post_title' => 'Auto Draft',
@@ -760,15 +754,13 @@ class NMGR_Ajax
         $title = str_replace(
             array('{wishlist_type_title}', '{site_title}', '{wishlist_id}'),
             array(nmgr_get_type_title('c'), get_bloginfo('name'), $wishlist_id),
-            $default_title
+            nmgr_get_option('default_wishlist_title')
         );
 
         $wishlist = nmgr_get_wishlist($wishlist_id);
         $wishlist->set_title($title);
         $wishlist->set_status('publish');
-
-        $user_id = nmgr_get_current_user_id();
-        $wishlist->set_user_id(esc_html($user_id));
+        $wishlist->set_user_id(esc_html(nmgr_get_current_user_id()));
 
         if (is_user_logged_in()) {
             $user = wp_get_current_user();

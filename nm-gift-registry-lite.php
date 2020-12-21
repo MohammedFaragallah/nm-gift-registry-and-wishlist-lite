@@ -5,7 +5,7 @@
  * Plugin URI: nmgiftregistry.com
  * Description: Advanced and highly customizable gift registry and wishlist plugin for your woocommerce store.
  * Author: Nmeri Ibeawuchi
- * Version: 2.1.0
+ * Version: 2.1.1
  * Text Domain: nm-gift-registry-lite
  * Domain Path: /languages/
  * NMGR documentation uri: nmgiftregistry.com/category/documentation
@@ -22,7 +22,7 @@ defined('ABSPATH') || exit;
 define('NMGRLITE_FILE', __FILE__);
 
 if (!class_exists('NMGR_Lite_Install')) {
-    include_once 'includes/class-nmgr-lite-install.php';
+	include_once 'includes/class-nmgr-lite-install.php';
 
-    NMGR_Lite_Install::load();
+	NMGR_Lite_Install::load();
 }

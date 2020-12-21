@@ -50,20 +50,22 @@ $product_id = absint($product->get_id());
         /* translators: %s: wishlist type title */
         __('This product is in this %s', 'nm-gift-registry-lite'),
         esc_html(nmgr_get_type_title())
-      ); ?>
+      );
+    ?>
     <option value="<?php echo $wishlist_id; ?>"
       data-shipping-address-required="<?php echo $shipping_address_required; ?>"
       <?php
                                                                                                                               if (isset($selected_wishlist_id) && absint($selected_wishlist_id) === $wishlist_id) {
                                                                                                                                 echo 'selected="selected"';
-                                                                                                                              } ?> title="<?php echo esc_attr($title); ?>">
+                                                                                                                              }
+                                                                                                                              ?> title="<?php echo esc_attr($title); ?>">
       <?php
         echo esc_html($wishlist->get_title());
 
-        echo $wishlist->has_product($product) ? '  &hearts;' : ''; ?>
+        echo $wishlist->has_product($product) ? '  &hearts;' : '';
+        ?>
     </option>
-    <?php
-    } ?>
+    <?php } ?>
   </select>
 
   <?php do_action('nmgr_add_to_wishlist_dialog_content_after_wishlists', $args); ?>

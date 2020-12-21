@@ -25,7 +25,8 @@ defined('ABSPATH') || exit;
                                                     /* translators %s: wishlist type title */
                                                     esc_attr__('View your %s items', 'nm-gift-registry-lite'),
                                                     nmgr_get_type_title()
-                                                  ); ?>"
+                                                  );
+                                                  ?>"
     class="nmgr-show-cart-contents <?php echo $redirect ? 'redirect' : ''; ?>">
     <span class="nmgr-icon-toggle <?php echo 0 < (int) $cart_qty ? 'active' : ''; ?>">
       <?php
@@ -41,12 +42,12 @@ defined('ABSPATH') || exit;
           'size' => 2,
           'fill' => 'currentColor',
           'class' => 'active',
-        ))); ?>
+        )));
+        ?>
     </span>
     <span class="count"><?php echo absint($cart_qty); ?></span>
   </a>
-  <?php
-  } ?>
+  <?php } ?>
 
   <?php if ($show_cart_contents_only) : ?>
   <div class="nmgr-cart-contents">
@@ -72,7 +73,8 @@ defined('ABSPATH') || exit;
 
           if (0 < $number_of_items && $number_of_items < $wishlists_displayed) {
             break;
-          } ?>
+          }
+      ?>
 
     <li class="nmgr-cart-item">
 
@@ -84,7 +86,8 @@ defined('ABSPATH') || exit;
                   echo $product->get_image($img_size, array(
                     'title' => $product->get_name(),
                     'alt' => $product->get_name(),
-                  )); ?>
+                  ));
+                  ?>
         </a>
       </div>
       <?php endif; ?>
@@ -110,7 +113,8 @@ defined('ABSPATH') || exit;
 
               if ($show_item_rating && wc_review_ratings_enabled()) {
                 echo wc_get_rating_html($product->get_average_rating(), $product->get_rating_count());
-              } ?>
+              }
+              ?>
 
         <?php if (nmgr_get_option('allow_guest_wishlists')) : ?>
         <span class="nmgr-cart-item-in-wishlist-text">
@@ -132,7 +136,8 @@ defined('ABSPATH') || exit;
                   'fill' => '#ddd',
                   'sprite' => false,
                   'size' => 1.3,
-                )); ?>
+                ));
+                ?>
         </a>
 
         <?php if ($show_item_add_to_cart_button) : ?>
@@ -147,14 +152,16 @@ defined('ABSPATH') || exit;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       foreach ($item->get_variation() as $attribute_key => $value) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         echo 'data-' . esc_attr($attribute_key) . '="' . esc_attr($value) . '"';
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } ?>>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ?>>
           <?php
                   echo nmgr_get_svg(array(
                     'icon' => 'cart-full',
                     'fill' => '#ddd',
                     'sprite' => false,
                     'size' => 1.48,
-                  )); ?>
+                  ));
+                  ?>
         </a>
         <?php endif; ?>
       </div>
@@ -162,7 +169,8 @@ defined('ABSPATH') || exit;
     </li>
     <?php
         }
-        echo '</ul>'; ?>
+        echo '</ul>';
+        ?>
 
     <div class="nmgr-cart-info">
 
@@ -173,7 +181,8 @@ defined('ABSPATH') || exit;
                 /* translators: %d: quantity of items in wishlist cart */
                 _n('%d item', '%d items in total', $cart_qty, 'nm-gift-registry-lite'),
                 $cart_qty
-              ); ?>
+              );
+              ?>
       </p>
       <?php endif; ?>
 

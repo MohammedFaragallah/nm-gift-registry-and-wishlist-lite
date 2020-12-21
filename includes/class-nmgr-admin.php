@@ -117,7 +117,8 @@ class NMGR_Admin
     {
         if (!nmgr_get_option('user_enable_wishlist') || !current_user_can('edit_' . nmgr()->post_type_plural)) {
             return;
-        } ?>
+        }
+?>
 <h2 id="user-nm-gift-registry"> <?php echo esc_html(nmgr()->name); ?></h2>
 <table class="form-table" role="presentation">
   <tbody>

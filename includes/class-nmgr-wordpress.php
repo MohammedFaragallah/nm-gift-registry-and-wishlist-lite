@@ -19,11 +19,6 @@ class NMGR_Wordpress
         add_action('untrashed_post', array(__CLASS__, 'setup_untrashed_action'), -1);
 
         add_action('nmgr_before_delete_wishlist', array(__CLASS__, 'before_delete_wishlist'));
-        add_action('nmgr_delete_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
-        add_action('nmgr_trashed_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
-        add_action('nmgr_untrashed_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
-        add_action('nmgr_created_wishlist', array(__CLASS__, 'update_wishlist_data_on_save'));
-        add_action('nmgr_updated_wishlist', array(__CLASS__, 'update_wishlist_data_on_save'));
 
         // Add to template_redirect hook so that it occurs only on frontend (non-ajax) requests
         add_action('template_redirect', array(__CLASS__, 'add_to_wishlist_action'), 20);
@@ -43,7 +38,7 @@ class NMGR_Wordpress
         add_action('admin_footer', array(__CLASS__, 'add_modal_template'));
         add_filter('nmgr_account_tabs', array(__CLASS__, 'filter_account_sections'));
         add_action('nmgr_before_shipping', array(__CLASS__, 'show_shipping_address_required_notice'));
-        add_filter('wp_insert_post_data', array(__CLASS__, 'insert_post_data'), 1, 2);
+        add_filter('wp_insert_post_data', array(__CLASS__, 'insert_post_data'), 10, 2);
 
         add_action(
             'rest_api_init',
@@ -1073,7 +1068,8 @@ class NMGR_Wordpress
 
     public static function add_modal_template()
     {
-        $close_button = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'; ?>
+        $close_button = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>';
+?>
 <div id="nmgr-modal" class="nmgr-modal modal fade" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg no-transform">
     <div class="modal-content">
@@ -1163,8 +1159,88 @@ class NMGR_Wordpress
             return $data;
         }
 
+        if ('trash' === $data['post_status']) {
+            return $data;
+        }
+
+        // Make sure the wishlist has a post title
         if (!$data['post_title']) {
-            $data['post_title'] = sprintf('%1$s #%2$s', nmgr_get_type_title('c'), $post->ID);
+            $default_title = nmgr_get_option('default_wishlist_title');
+
+            if ($default_title) {
+                $data['post_title'] = str_replace(
+                    array('{wishlist_type_title}', '{site_title}', '{wishlist_id}'),
+                    array(nmgr_get_type_title('c'), get_bloginfo('name'), $post->ID),
+                    $default_title
+                );
+            } else {
+                $data['post_title'] = sprintf('%1$s #%2$s', nmgr_get_type_title('c'), $post->ID);
+            }
+        }
+
+        $is_admin = is_nmgr_admin_request();
+
+        /**
+         * On the wishlist edit post in admin area we are expecting the 'nmgr_user_id request
+         * parameter which tells us who owns the wishlist. Set the wishlist post_author based on
+         * this parameter.
+         */
+        if ($is_admin && isset($_REQUEST['nmgr_user_id'])) {
+            if (is_numeric($_REQUEST['nmgr_user_id'])) {
+                // If the user id belongs to a registered user, set it as the post author
+                $data['post_author'] = (int) wp_unslash($_REQUEST['nmgr_user_id']);
+            } else {
+                // For guests, set post author as 0.
+                $data['post_author'] = 0;
+            }
+        } elseif ($is_admin && !is_numeric(get_post_meta($postarr['ID'], '_nmgr_user_id', true))) {
+            /**
+             * When updating a post, make sure we don't set a post author for guest wishlists.
+             * In the admin area $postarr['ID'] is always set so we don't need to check for it since the code
+             * is already running in the admin area with is_nmgr_admin_request.
+             * (This particular code snippet is necessary for when the post is updated via 'quick edit' in the list table.
+             */
+            $data['post_author'] = 0;
+        }
+
+        /**
+         * Users are allowed to have one wishlist.
+         * If this user already has, set the post status to auto-draft, and add error message.
+         *
+         * This code only runs in the admin area so $postarr['ID'] is always set which allows us to compare the
+         * current wishlist being saved with the user's default wishlist if any. It is not designed to run on the frontend as
+         * the frontend is already set up in a structured way to prevent users from saving multiple wishlists and that should
+         * be enough.
+         *
+         * This code also runs only for registered users. It does not prevent multiple wishlists from being created for guests in
+         * the admin as this is pointless since the guest cookies cannot be generated as there is a logged in user.
+         */
+        if ($is_admin && $data['post_author']) {
+            $wishlist_id = nmgr_get_user_default_wishlist_id($data['post_author']);
+
+            /**
+             * If the submitted user already has a wishlist and his wishlist is not the same as this wishlist being saved,
+             * do not publish this wishlist but leave it at it's previous post status.
+             * Using 'get_post_field' is a clever way to see the previous post status of the wishlist (not the one currently being
+             * set) and it allow us to keep the wishlist as an auto-draft (if it is a new wishlist), or trashed (if it is an already trashed
+             * wishlist). This allows for a smoother user experience in the admin area rather than explicitly setting the post_status
+             * as auto-draft or trashed.
+             */
+            if ($wishlist_id && isset($postarr['ID']) && (int) $postarr['ID'] !== $wishlist_id) {
+                $data['post_status'] = get_post_field('post_status', $postarr['ID']);
+
+                $wishlist_type_title = esc_html(nmgr_get_type_title());
+
+                // inform the admin that the submitted user can only have one wishlist
+                NMGR_Admin_Post::add_notice(sprintf(
+                    /* translators: %1$s: username, %2$s: %3$s: %4$s: wishlist type title */
+                    __('The user %1$s already has one %2$s. Users are allowed to have only one %3$s. This %4$s has not been published.', 'nm-gift-registry'),
+                    '<strong>' . esc_html(get_the_author_meta('user_login', $data['post_author'])) . '</strong>',
+                    $wishlist_type_title,
+                    $wishlist_type_title,
+                    $wishlist_type_title
+                ), 'error');
+            }
         }
 
         return $data;
