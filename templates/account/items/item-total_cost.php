@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist item cost of all quantities
  *
@@ -17,7 +18,8 @@ defined('ABSPATH') || exit;
 <td class="total-cost" data-title="<?php esc_attr_e('Total cost', 'nm-gift-registry-lite'); ?>"
   data-sort-value="<?php echo esc_attr($item->get_total()); ?>">
   <div class="view nmgr-tip" title="<?php esc_attr_e('Total cost', 'nm-gift-registry-lite'); ?>">
-    <?php echo $item->get_total(true); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
+    <?php echo $item->get_total(true); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    ?>
   </div>
   <div class="edit" style="display: none;">
     <div class="split-input">

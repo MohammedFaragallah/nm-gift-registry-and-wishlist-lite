@@ -10,23 +10,23 @@ class NMGR_Order
 {
     public static function run()
     {
-        add_filter('woocommerce_continue_shopping_redirect', array( __CLASS__, 'continue_shopping_redirect' ));
-        add_filter('woocommerce_add_cart_item_data', array( __CLASS__, 'add_wishlist_item_cart_item_data' ), 10, 3);
-        add_filter('woocommerce_add_to_cart_validation', array( __CLASS__, 'maybe_add_wishlist_item_to_cart' ), 10, 3);
-        add_filter('woocommerce_update_cart_validation', array( __CLASS__, 'maybe_update_cart_item_quantity' ), 10, 4);
-        add_action('woocommerce_before_cart', array( __CLASS__, 'notify_if_cart_has_wishlist' ));
-        add_filter('woocommerce_get_item_data', array( __CLASS__, 'show_wishlist_item_cart_item_data' ), 50, 2);
-        add_action('woocommerce_before_checkout_shipping_form', array( __CLASS__, 'notify_wishlist_shipping' ));
-        add_action('woocommerce_checkout_create_order_line_item', array( __CLASS__, 'add_wishlist_data_as_order_item_meta_data' ), 10, 4);
-        add_action('woocommerce_checkout_update_order_meta', array( __CLASS__, 'add_wishlist_data_as_order_meta_data' ));
-        add_action('woocommerce_order_item_meta_start', array( __CLASS__, 'display_wishlist_data_in_order_itemmeta_table' ), 10, 2);
-        add_action('woocommerce_before_order_itemmeta', array( __CLASS__, 'display_wishlist_data_in_order_itemmeta_table' ), 10, 2);
-        add_action('woocommerce_payment_complete', array( __CLASS__, 'process_wishlist_item_payment' ), 10);
-        add_action('woocommerce_order_status_changed', array( __CLASS__, 'process_wishlist_item_payment' ), 10);
-        add_action('woocommerce_order_refunded', array( __CLASS__, 'process_wishlist_item_payment' ), 10);
-        add_action('woocommerce_refund_deleted', array( __CLASS__, 'process_wishlist_item_payment_for_deleted_refunds' ), 10, 2);
-        add_action('nmgr_order_payment_complete', array( __CLASS__, 'update_wishlist_item_purchased_quantity' ), 10, 3);
-        add_action('nmgr_order_payment_complete', array( __CLASS__, 'maybe_set_wishlist_as_fulfilled' ), 99, 2);
+        add_filter('woocommerce_continue_shopping_redirect', array(__CLASS__, 'continue_shopping_redirect'));
+        add_filter('woocommerce_add_cart_item_data', array(__CLASS__, 'add_wishlist_item_cart_item_data'), 10, 3);
+        add_filter('woocommerce_add_to_cart_validation', array(__CLASS__, 'maybe_add_wishlist_item_to_cart'), 10, 3);
+        add_filter('woocommerce_update_cart_validation', array(__CLASS__, 'maybe_update_cart_item_quantity'), 10, 4);
+        add_action('woocommerce_before_cart', array(__CLASS__, 'notify_if_cart_has_wishlist'));
+        add_filter('woocommerce_get_item_data', array(__CLASS__, 'show_wishlist_item_cart_item_data'), 50, 2);
+        add_action('woocommerce_before_checkout_shipping_form', array(__CLASS__, 'notify_wishlist_shipping'));
+        add_action('woocommerce_checkout_create_order_line_item', array(__CLASS__, 'add_wishlist_data_as_order_item_meta_data'), 10, 4);
+        add_action('woocommerce_checkout_update_order_meta', array(__CLASS__, 'add_wishlist_data_as_order_meta_data'));
+        add_action('woocommerce_order_item_meta_start', array(__CLASS__, 'display_wishlist_data_in_order_itemmeta_table'), 10, 2);
+        add_action('woocommerce_before_order_itemmeta', array(__CLASS__, 'display_wishlist_data_in_order_itemmeta_table'), 10, 2);
+        add_action('woocommerce_payment_complete', array(__CLASS__, 'process_wishlist_item_payment'), 10);
+        add_action('woocommerce_order_status_changed', array(__CLASS__, 'process_wishlist_item_payment'), 10);
+        add_action('woocommerce_order_refunded', array(__CLASS__, 'process_wishlist_item_payment'), 10);
+        add_action('woocommerce_refund_deleted', array(__CLASS__, 'process_wishlist_item_payment_for_deleted_refunds'), 10, 2);
+        add_action('nmgr_order_payment_complete', array(__CLASS__, 'update_wishlist_item_purchased_quantity'), 10, 3);
+        add_action('nmgr_order_payment_complete', array(__CLASS__, 'maybe_set_wishlist_as_fulfilled'), 99, 2);
     }
 
     /**
@@ -40,7 +40,7 @@ class NMGR_Order
             return $url;
         }
 
-        $wishlist = nmgr_get_wishlist($item_data[ 'wishlist_id' ]);
+        $wishlist = nmgr_get_wishlist($item_data['wishlist_id']);
         return $wishlist ? $wishlist->get_permalink() : $url;
     }
 
@@ -56,18 +56,18 @@ class NMGR_Order
     {
         $item_data = array();
 
-        if (isset($_REQUEST[ 'nmgr-add-to-cart-wishlist' ])) {
+        if (isset($_REQUEST['nmgr-add-to-cart-wishlist'])) {
             $item_data = $_REQUEST;
-        } elseif (isset($_REQUEST[ 'nmgr_items' ])) {
-            foreach ($_REQUEST[ 'nmgr_items' ] as $item) {
-                if ($product_id && $product_id == $item[ 'add-to-cart' ]) {
+        } elseif (isset($_REQUEST['nmgr_items'])) {
+            foreach ($_REQUEST['nmgr_items'] as $item) {
+                if ($product_id && $product_id == $item['add-to-cart']) {
                     $item_data = $item;
                     break;
                 }
             }
 
             if (empty($item_data)) {
-                $item_data = reset($_REQUEST[ 'items' ]);
+                $item_data = reset($_REQUEST['items']);
             }
         }
         return $item_data;
@@ -93,9 +93,9 @@ class NMGR_Order
             return $cart_item_data;
         }
 
-        $cart_item_data[ 'nm_gift_registry' ] = array(
-            'wishlist_id' => ( int ) $item_data[ 'nmgr-add-to-cart-wishlist' ],
-            'wishlist_item_id' => ( int ) $item_data[ 'nmgr-add-to-cart-wishlist-item' ],
+        $cart_item_data['nm_gift_registry'] = array(
+            'wishlist_id' => (int) $item_data['nmgr-add-to-cart-wishlist'],
+            'wishlist_item_id' => (int) $item_data['nmgr-add-to-cart-wishlist-item'],
             'product_id' => $product_id,
             'variation_id' => $variation_id
         );
@@ -120,14 +120,14 @@ class NMGR_Order
             return $passed;
         }
 
-        $wishlist_id = ( int ) $item_data[ 'nmgr-add-to-cart-wishlist' ];
-        $wishlist_item_id = ( int ) $item_data[ 'nmgr-add-to-cart-wishlist-item' ];
+        $wishlist_id = (int) $item_data['nmgr-add-to-cart-wishlist'];
+        $wishlist_item_id = (int) $item_data['nmgr-add-to-cart-wishlist-item'];
 
         // check if the wishlist item is already in the cart
         $item_in_cart = false;
         foreach (WC()->cart->get_cart() as $cart_item) {
-            if (isset($cart_item[ nmgr()->cart_key ])) {
-                if ($cart_item[ nmgr()->cart_key ][ 'wishlist_id' ] === $wishlist_id && $cart_item[ nmgr()->cart_key ][ 'wishlist_item_id' ] === $wishlist_item_id) {
+            if (isset($cart_item[nmgr()->cart_key])) {
+                if ($cart_item[nmgr()->cart_key]['wishlist_id'] === $wishlist_id && $cart_item[nmgr()->cart_key]['wishlist_item_id'] === $wishlist_item_id) {
                     $item_in_cart = $cart_item;
                     break;
                 }
@@ -151,8 +151,8 @@ class NMGR_Order
     {
         $passed = self::validate_product_is_wishlist_item_cart_quantity($passed, $values, $quantity);
 
-        if ($passed && isset($values[ nmgr()->cart_key ])) {
-            $passed = self::validate_wishlist_item_cart_quantity($passed, $values[ nmgr()->cart_key ][ 'wishlist_id' ], $values[ nmgr()->cart_key ][ 'wishlist_item_id' ], $quantity);
+        if ($passed && isset($values[nmgr()->cart_key])) {
+            $passed = self::validate_wishlist_item_cart_quantity($passed, $values[nmgr()->cart_key]['wishlist_id'], $values[nmgr()->cart_key]['wishlist_item_id'], $quantity);
         }
 
         return $passed;
@@ -184,19 +184,19 @@ class NMGR_Order
                 $item->get_unpurchased_quantity() : $item->get_quantity();
 
             if ($item_in_cart) {
-                $item_cart_quantity = $item_in_cart[ 'quantity' ]; // the current quantity of the item in the cart
+                $item_cart_quantity = $item_in_cart['quantity']; // the current quantity of the item in the cart
 
                 if (($quantity + $item_cart_quantity) > $desired_item_qty) {
                     $passed = false;
                     $message = apply_filters('nmgr_validate_wishlist_item_in_cart_quantity_message', sprintf(
-                            /* translators:
+                        /* translators:
                              * 1: item quantity to add to cart,
                              * 2: item title,
                              * 3: item quantity in cart,
                              * 4: item quantity requested in wishlist,
                              * 5: wishlist type title
                              */
-                            __('You cannot add %1$d of %2$s to the cart as you have %3$d already in the cart with %4$d requested in the %5$s.', 'nm-gift-registry-lite'),
+                        __('You cannot add %1$d of %2$s to the cart as you have %3$d already in the cart with %4$d requested in the %5$s.', 'nm-gift-registry-lite'),
                         $quantity,
                         $item_title,
                         $item_cart_quantity,
@@ -209,8 +209,8 @@ class NMGR_Order
                 if ($quantity > $desired_item_qty) {
                     $passed = false;
                     $message = apply_filters('nmgr_validate_wishlist_item_cart_quantity_message', sprintf(
-                            /* translators: 1: item title, 2: wishlist type title */
-                            __('Please choose a quantity of %1$s that is not greater than the quantity requested in the %2$s.', 'nm-gift-registry-lite'),
+                        /* translators: 1: item title, 2: wishlist type title */
+                        __('Please choose a quantity of %1$s that is not greater than the quantity requested in the %2$s.', 'nm-gift-registry-lite'),
                         $item_title,
                         nmgr_get_type_title()
                     ), $quantity, $item, $wishlist);
@@ -232,7 +232,7 @@ class NMGR_Order
      */
     public static function validate_product_is_wishlist_item_cart_quantity($passed, $values, $quantity)
     {
-        $product = $values[ 'data' ];
+        $product = $values['data'];
 
         if (!$product->managing_stock() || $product->backorders_allowed()) {
             return $passed;
@@ -242,9 +242,9 @@ class NMGR_Order
         $product_is_wishlist_item_in_cart = false;
 
         foreach (WC()->cart->get_cart() as $cart_item) {
-            if (isset($cart_item[ nmgr()->cart_key ])) {
-                $variation_id = $cart_item[ nmgr()->cart_key ][ 'variation_id' ];
-                if (($variation_id && $variation_id == $values[ 'variation_id' ]) || $cart_item[ nmgr()->cart_key ][ 'product_id' ] == $values[ 'product_id' ]) {
+            if (isset($cart_item[nmgr()->cart_key])) {
+                $variation_id = $cart_item[nmgr()->cart_key]['variation_id'];
+                if (($variation_id && $variation_id == $values['variation_id']) || $cart_item[nmgr()->cart_key]['product_id'] == $values['product_id']) {
                     $product_is_wishlist_item_in_cart = true;
                     break;
                 }
@@ -257,7 +257,7 @@ class NMGR_Order
 
         // Check that the overall cart stock for the product is not greater than the product stock
         $products_cart_quantities = wc()->cart->get_cart_item_quantities();
-        $product_cart_quantity = $products_cart_quantities[ $product->get_stock_managed_by_id() ];
+        $product_cart_quantity = $products_cart_quantities[$product->get_stock_managed_by_id()];
 
         if ($product->get_stock_quantity() < ($product_cart_quantity + $quantity)) {
             $message = sprintf(
@@ -305,20 +305,22 @@ class NMGR_Order
      */
     public static function show_wishlist_item_cart_item_data($item_data, $cart_item_data)
     {
-        if (!nmgr_get_option('show_cart_item', 1) ||
-            !isset($cart_item_data[ nmgr()->cart_key ]) ||
-            empty($cart_item_data[ nmgr()->cart_key ]) ||
-            empty(array_filter($cart_item_data[ nmgr()->cart_key ]))) {
+        if (
+            !nmgr_get_option('show_cart_item', 1) ||
+            !isset($cart_item_data[nmgr()->cart_key]) ||
+            empty($cart_item_data[nmgr()->cart_key]) ||
+            empty(array_filter($cart_item_data[nmgr()->cart_key]))
+        ) {
             return $item_data;
         }
 
-        $wishlist = nmgr_get_wishlist($cart_item_data[ nmgr()->cart_key ][ 'wishlist_id' ], true);
+        $wishlist = nmgr_get_wishlist($cart_item_data[nmgr()->cart_key]['wishlist_id'], true);
 
         if (!$wishlist) {
             return $item_data;
         }
 
-        $item = $wishlist->get_item($cart_item_data[ nmgr()->cart_key ][ 'wishlist_item_id' ]);
+        $item = $wishlist->get_item($cart_item_data[nmgr()->cart_key]['wishlist_item_id']);
 
         if (!$item) {
             return $item_data;
@@ -329,7 +331,7 @@ class NMGR_Order
         $data = array(
             /* translators: %s: wishlist type title */
             'key' => sprintf(__('For %s', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title())),
-            'value' => nmgr_get_wishlist_link($wishlist, array( 'title' => $title )),
+            'value' => nmgr_get_wishlist_link($wishlist, array('title' => $title)),
             'display' => '',
         );
         $item_data[] = apply_filters('nmgr_get_item_data_content', $data, $item, $wishlist);
@@ -363,9 +365,9 @@ class NMGR_Order
      */
     public static function add_wishlist_data_as_order_item_meta_data($item, $cart_item_key, $values, $order)
     {
-        if (isset($values[ nmgr()->cart_key ]) && !empty(array_filter($values[ nmgr()->cart_key ]))) {
-            $cart_value = $values[ nmgr()->cart_key ];
-            $wishlist = nmgr_get_wishlist($cart_value[ 'wishlist_id' ], true);
+        if (isset($values[nmgr()->cart_key]) && !empty(array_filter($values[nmgr()->cart_key]))) {
+            $cart_value = $values[nmgr()->cart_key];
+            $wishlist = nmgr_get_wishlist($cart_value['wishlist_id'], true);
             if (!$wishlist) {
                 return;
             }
@@ -395,21 +397,21 @@ class NMGR_Order
             $meta = $order_item->get_meta(nmgr()->cart_key);
 
             if ($meta) {
-                $wishlist = nmgr_get_wishlist($meta[ 'wishlist_id' ], true);
+                $wishlist = nmgr_get_wishlist($meta['wishlist_id'], true);
                 if (!$wishlist) {
                     continue;
                 }
 
-                $wishlist_item = $wishlist->get_item($meta[ 'wishlist_item_id' ]);
+                $wishlist_item = $wishlist->get_item($meta['wishlist_item_id']);
                 if (!$wishlist_item) {
                     continue;
                 }
 
                 $arr = array(
-                    'wishlist_item_id' => $meta[ 'wishlist_item_id' ], // wishlist_item_id
+                    'wishlist_item_id' => $meta['wishlist_item_id'], // wishlist_item_id
                     'order_item_quantity' => $order_item->get_quantity(), // quantity of item ordered
                     'order_item_id' => $order_item->get_id(), // order item id
-                    'wishlist_id' => $meta[ 'wishlist_id' ], // id of wishlist the item belongs to
+                    'wishlist_id' => $meta['wishlist_id'], // id of wishlist the item belongs to
                 );
                 $wishlist_items_data[] = $arr;
             }
@@ -418,10 +420,10 @@ class NMGR_Order
         if (!empty($wishlist_items_data)) {
             $order_meta = array();
             foreach ($wishlist_items_data as $data) {
-                $order_meta[ $data[ 'wishlist_id' ] ][ 'wishlist_id' ] = $data[ 'wishlist_id' ];
-                $order_meta[ $data[ 'wishlist_id' ] ][ 'wishlist_item_ids' ][] = $data[ 'wishlist_item_id' ];
-                $order_meta[ $data[ 'wishlist_id' ] ][ 'order_item_ids' ][ $data[ 'wishlist_item_id' ] ] = $data[ 'order_item_id' ];
-                $order_meta[ $data[ 'wishlist_id' ] ][ 'sent_customer_purchased_items_email' ] = 'no';
+                $order_meta[$data['wishlist_id']]['wishlist_id'] = $data['wishlist_id'];
+                $order_meta[$data['wishlist_id']]['wishlist_item_ids'][] = $data['wishlist_item_id'];
+                $order_meta[$data['wishlist_id']]['order_item_ids'][$data['wishlist_item_id']] = $data['order_item_id'];
+                $order_meta[$data['wishlist_id']]['sent_customer_purchased_items_email'] = 'no';
             }
             $order->add_meta_data(nmgr()->cart_key, $order_meta);
             $order->save();
@@ -440,7 +442,7 @@ class NMGR_Order
 
         $meta = $item->get_meta(nmgr()->cart_key);
         if ($meta) {
-            $wishlist = nmgr_get_wishlist($meta[ 'wishlist_id' ], true);
+            $wishlist = nmgr_get_wishlist($meta['wishlist_id'], true);
 
             if (!$wishlist) {
                 return;
@@ -448,7 +450,7 @@ class NMGR_Order
 
             /* translators: %s: wishlist type title */
             $title = sprintf(__('This item is bought for this %s', 'nm-gift-registry-lite'), nmgr_get_type_title());
-            $link = nmgr_get_wishlist_link($wishlist, array( 'title' => $title ));
+            $link = nmgr_get_wishlist_link($wishlist, array('title' => $title));
 
             echo nmgr_kses_post('<div class="nmgr-order-item-wishlist">' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 /* translators: %s: wishlist type title */
@@ -498,11 +500,12 @@ class NMGR_Order
          */
         $payment_cancelled_statuses = nmgr_get_payment_cancelled_order_statuses();
 
-        if ($order->get_date_paid() &&
+        if (
+            $order->get_date_paid() &&
             ($order->is_paid() ||
-            $order->has_status($payment_cancelled_statuses) ||
-            doing_action('woocommerce_order_refunded') ||
-            doing_action('woocommerce_refund_deleted'))
+                $order->has_status($payment_cancelled_statuses) ||
+                doing_action('woocommerce_order_refunded') ||
+                doing_action('woocommerce_refund_deleted'))
         ) {
             do_action('nmgr_order_payment_complete', $order_id, $order_wishlist_data, $order);
         } else {
@@ -529,7 +532,7 @@ class NMGR_Order
 
         $order_item_ids = array();
         foreach ($order_wishlist_data as $wishlist_data) {
-            $ids = isset($wishlist_data[ 'order_item_ids' ]) ? $wishlist_data[ 'order_item_ids' ] : array();
+            $ids = isset($wishlist_data['order_item_ids']) ? $wishlist_data['order_item_ids'] : array();
             $order_item_ids = $order_item_ids + $ids;
         }
 
@@ -560,7 +563,7 @@ class NMGR_Order
             $quantity_references = $qr_meta ? array_filter($qr_meta) : array();
 
             // If the quantity reference doesn't exist, flag this as a new order item
-            $item_is_new = isset($quantity_references[ $order_id ]) ? false : true;
+            $item_is_new = isset($quantity_references[$order_id]) ? false : true;
 
             // Get the order item object
             $order_item_object = $order->get_item($order_item_id);
@@ -572,8 +575,8 @@ class NMGR_Order
              * update its purchased quantity, and return
              */
             if (!$order_item_object) {
-                if (isset($quantity_references[ $order_id ])) {
-                    unset($quantity_references[ $order_id ]);
+                if (isset($quantity_references[$order_id])) {
+                    unset($quantity_references[$order_id]);
 
                     $original_purchased_qty = $wishlist_item_object->get_purchased_quantity();
 
@@ -590,7 +593,7 @@ class NMGR_Order
                      * So we add the item to the refunded_items array.
                      */
                     if ($new_purchased_qty < $original_purchased_qty) {
-                        $refunded_items[ $wishlist_item_object->get_id() ] = $original_purchased_qty - $new_purchased_qty;
+                        $refunded_items[$wishlist_item_object->get_id()] = $original_purchased_qty - $new_purchased_qty;
                     }
                 }
                 continue;
@@ -607,7 +610,7 @@ class NMGR_Order
              * If this item's quantity reference has not be set for this order, set the new one
              * else get the one set for this order
              */
-            $qr = $item_is_new ? $default_qr : $quantity_references[ $order_id ];
+            $qr = $item_is_new ? $default_qr : $quantity_references[$order_id];
 
             // Set a new quantity reference for the item for this order based on current item quantity properties
             $ordered_qty = absint($order_item_object->get_quantity());
@@ -620,7 +623,7 @@ class NMGR_Order
 
             // If the order payment is cancelled, update the quantity reference and purchased quantity for the wishlist item
             if ($order->has_status(nmgr_get_payment_cancelled_order_statuses())) {
-                $new_qr[ 'purchased_quantity' ] = 0;
+                $new_qr['purchased_quantity'] = 0;
             }
 
             /**
@@ -628,8 +631,8 @@ class NMGR_Order
              * we assume the item is refunded  (or the order payment is cancelled)
              * so we add it to the refunded_items array
              */
-            if (!$item_is_new && ($new_qr[ 'purchased_quantity' ] < $qr[ 'purchased_quantity' ])) {
-                $refunded_items[ $wishlist_item_object->get_id() ] = $qr[ 'purchased_quantity' ] - $new_qr[ 'purchased_quantity' ];
+            if (!$item_is_new && ($new_qr['purchased_quantity'] < $qr['purchased_quantity'])) {
+                $refunded_items[$wishlist_item_object->get_id()] = $qr['purchased_quantity'] - $new_qr['purchased_quantity'];
             }
 
             /**
@@ -637,7 +640,7 @@ class NMGR_Order
              * the item purchased quantity might have changed, so update it
              */
             if ($qr !== $new_qr) {
-                $quantity_references[ $order_id ] = $new_qr;
+                $quantity_references[$order_id] = $new_qr;
 
                 $wishlist_item_object->set_quantity_reference($quantity_references);
 

@@ -32,8 +32,8 @@ function is_nmgr_post($post = null)
  */
 function is_nmgr_wishlist()
 {
-    if (isset($GLOBALS[ 'nmgr' ]->is_wishlist)) {
-        return filter_var($GLOBALS[ 'nmgr' ]->is_wishlist, FILTER_VALIDATE_BOOLEAN);
+    if (isset($GLOBALS['nmgr']->is_wishlist)) {
+        return filter_var($GLOBALS['nmgr']->is_wishlist, FILTER_VALIDATE_BOOLEAN);
     }
     return is_singular(nmgr()->post_type) ||
         defined('NMGR_WISHLIST') ||
@@ -50,8 +50,8 @@ function is_nmgr_admin()
 {
     global $current_screen;
 
-    if (wp_doing_ajax() && isset($GLOBALS[ 'nmgr' ]->is_admin)) {
-        return filter_var($GLOBALS[ 'nmgr' ]->is_admin, FILTER_VALIDATE_BOOLEAN);
+    if (wp_doing_ajax() && isset($GLOBALS['nmgr']->is_admin)) {
+        return filter_var($GLOBALS['nmgr']->is_admin, FILTER_VALIDATE_BOOLEAN);
     }
 
     if (is_admin() && !wp_doing_ajax()) {
@@ -71,8 +71,8 @@ function is_nmgr_admin()
  */
 function is_nmgr_account()
 {
-    if (isset($GLOBALS[ 'nmgr' ]->is_account)) {
-        return filter_var($GLOBALS[ 'nmgr' ]->is_account, FILTER_VALIDATE_BOOLEAN);
+    if (isset($GLOBALS['nmgr']->is_account)) {
+        return filter_var($GLOBALS['nmgr']->is_account, FILTER_VALIDATE_BOOLEAN);
     }
 
     return is_wc_endpoint_url(nmgr_get_account_details('slug')) ||
@@ -89,10 +89,10 @@ function is_nmgr_search()
 {
     global $wp_query;
     return (is_search() &&
-        isset($wp_query->query_vars[ 'post_type' ]) &&
-        nmgr()->post_type === $wp_query->query_vars[ 'post_type' ]) ||
-        isset($wp_query->query_vars[ 'nmgr_s' ]) ||
-        nmgr_post_content_has_shortcodes(array( 'nmgr_search', 'nmgr_search_results' ));
+        isset($wp_query->query_vars['post_type']) &&
+        nmgr()->post_type === $wp_query->query_vars['post_type']) ||
+        isset($wp_query->query_vars['nmgr_s']) ||
+        nmgr_post_content_has_shortcodes(array('nmgr_search', 'nmgr_search_results'));
 }
 
 /**
@@ -102,8 +102,8 @@ function is_nmgr_search()
  */
 function is_nmgr_account_tab()
 {
-    if (isset($GLOBALS[ 'nmgr' ]->is_account_tab)) {
-        return filter_var($GLOBALS[ 'nmgr' ]->is_account_tab, FILTER_VALIDATE_BOOLEAN);
+    if (isset($GLOBALS['nmgr']->is_account_tab)) {
+        return filter_var($GLOBALS['nmgr']->is_account_tab, FILTER_VALIDATE_BOOLEAN);
     }
     return false;
 }
@@ -115,8 +115,8 @@ function is_nmgr_account_tab()
  */
 function is_nmgr_modal()
 {
-    if (isset($GLOBALS[ 'nmgr' ]->is_modal)) {
-        return filter_var($GLOBALS[ 'nmgr' ]->is_modal, FILTER_VALIDATE_BOOLEAN);
+    if (isset($GLOBALS['nmgr']->is_modal)) {
+        return filter_var($GLOBALS['nmgr']->is_modal, FILTER_VALIDATE_BOOLEAN);
     }
     return false;
 }
@@ -147,11 +147,11 @@ function is_nmgr()
     return apply_filters(
         'is_nmgr',
         is_nmgr_wishlist() ||
-        is_nmgr_admin() ||
-        is_nmgr_account() ||
-        is_nmgr_search() ||
-        is_nmgr_account_section() ||
-        is_nmgr_account_tab()
+            is_nmgr_admin() ||
+            is_nmgr_account() ||
+            is_nmgr_search() ||
+            is_nmgr_account_section() ||
+            is_nmgr_account_tab()
     );
 }
 
@@ -200,7 +200,7 @@ function is_nmgr_shop_loop()
         'woocommerce_shop_loop_item_title',
         'woocommerce_after_shop_loop_item_title',
         'woocommerce_after_shop_loop_item'
-        ));
+    ));
 
     foreach ($actions as $action) {
         if (doing_action($action)) {
@@ -218,7 +218,7 @@ function nmgr_get_search_form()
     return nmgr_get_search_template(array(
         'show_results' => false,
         'form_action' => home_url(),
-        ));
+    ));
 }
 
 /**
@@ -231,7 +231,7 @@ function nmgr_paging_nav()
     $args = apply_filters('nmgr_paging_nav_args', array(
         'next_text' => _x('Next', 'Next wishlist', 'nm-gift-registry-lite'),
         'prev_text' => _x('Previous', 'Previous wishlist', 'nm-gift-registry-lite'),
-        ));
+    ));
     $pagination = apply_filters('nmgr_paging_nav', get_the_posts_pagination($args));
     echo $pagination;
 }
@@ -269,7 +269,7 @@ function nmgr_get_option($option_key = '', $default_value = null)
 {
     $options = get_option(nmgr()->option_name, array());
     if ($option_key) {
-        return array_key_exists($option_key, $options) ? $options[ $option_key ] : $default_value;
+        return array_key_exists($option_key, $options) ? $options[$option_key] : $default_value;
     }
     return $options;
 }
@@ -298,7 +298,7 @@ function nmgr_get_verified_wishlist_id($posted_data = '')
 {
     _deprecated_function(__FUNCTION__, '2.0.0', 'nmgr_verify_request');
 
-    $wishlist_id = isset($_REQUEST[ 'wishlist_id' ]) ? ( int ) $_REQUEST[ 'wishlist_id' ] : 0;
+    $wishlist_id = isset($_REQUEST['wishlist_id']) ? (int) $_REQUEST['wishlist_id'] : 0;
     if (0 === $wishlist_id && nmgr_user_has_wishlist($wishlist_id)) {
         return $wishlist_id;
     }
@@ -352,8 +352,8 @@ function nmgr_get_wishlist_link($wishlist, $args = array())
 {
     if ($wishlist) {
         $url = !is_admin() ? esc_url($wishlist->get_permalink()) : admin_url('post.php?post=' . $wishlist->get_id() . '&action=edit');
-        $title = isset($args[ 'title' ]) ? esc_attr($args[ 'title' ]) : '';
-        $content = nmgr_kses_post(isset($args[ 'content' ]) ? $args[ 'content' ] : $wishlist->get_title());
+        $title = isset($args['title']) ? esc_attr($args['title']) : '';
+        $content = nmgr_kses_post(isset($args['content']) ? $args['content'] : $wishlist->get_title());
         return sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $content);
     }
 }
@@ -373,7 +373,7 @@ function nmgr_get_current_wishlist_id()
         if (is_nmgr_post($nmgr->wishlist_id)) {
             return absint($nmgr->wishlist_id);
         } else {
-            unset($GLOBALS[ 'nmgr' ]->wishlist_id);
+            unset($GLOBALS['nmgr']->wishlist_id);
         }
     }
 
@@ -394,7 +394,7 @@ function nmgr_get_current_wishlist_id()
          * not allow us to detect the status of the wishlist, whether trash or pending, etc, before returning
          * it as the current wishlist id.
          */
-        return ( int ) $wpdb->get_var($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' AND meta_value = %s ORDER BY meta_id DESC LIMIT 1", nmgr_get_current_user_id()));
+        return (int) $wpdb->get_var($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' AND meta_value = %s ORDER BY meta_id DESC LIMIT 1", nmgr_get_current_user_id()));
     }
 }
 
@@ -448,11 +448,11 @@ function nmgr_get_user_wishlists($user_id = '')
 
     foreach ($posts as $key => $id) {
         if (!in_array(get_post_status($id), nmgr_get_post_statuses())) {
-            unset($posts[ $key ]);
+            unset($posts[$key]);
             continue;
         }
-        $posts[ $id ] = $posts[ $key ];
-        unset($posts[ $key ]);
+        $posts[$id] = $posts[$key];
+        unset($posts[$key]);
     }
 
     return !empty($posts) ? array_filter(array_map('nmgr_get_wishlist', $posts)) : array();
@@ -485,7 +485,7 @@ function nmgr_get_user_wishlists_count($user_id = '')
 
     foreach ($post_ids as $key => $id) {
         if (!is_nmgr_post($id) || !in_array(get_post_status($id), nmgr_get_post_statuses())) {
-            unset($post_ids[ $key ]);
+            unset($post_ids[$key]);
         }
     }
 
@@ -521,14 +521,14 @@ function nmgr_get_svg($args)
         return __('Please define the name of the svg icon to get.', 'nm-gift-registry-lite');
     } elseif (is_string($args)) {
         //if a string argument is given, assume it is the icon name and set it in the array
-        $args = array( 'icon' => $args );
+        $args = array('icon' => $args);
     }
 
     // Set defaults.
     $defaults = array(
         'icon' => '',
         'size' => 1,
-        'class' => 'nmgr-icon ' . $args[ 'icon' ],
+        'class' => 'nmgr-icon ' . $args['icon'],
         'sprite' => true,
         'role' => 'img',
         'path' => '',
@@ -538,12 +538,12 @@ function nmgr_get_svg($args)
     $args = wp_parse_args($args, $defaults);
 
     // Make sure default classes are present
-    if ($args[ 'class' ] !== $defaults[ 'class' ]) {
-        $args[ 'class' ] = $defaults[ 'class' ] . ' ' . $args[ 'class' ];
+    if ($args['class'] !== $defaults['class']) {
+        $args['class'] = $defaults['class'] . ' ' . $args['class'];
     }
 
     // Make sure the size has units (default em)
-    $size = is_numeric($args[ 'size' ]) ? "{$args[ 'size' ]}em" : $args[ 'size' ];
+    $size = is_numeric($args['size']) ? "{$args['size']}em" : $args['size'];
 
     // Get extra svg parameters set by user that are not in the default expected arguments
     // e.g 'style', 'title' and 'fill'
@@ -552,10 +552,10 @@ function nmgr_get_svg($args)
 
     // extract the title attribute if it exists so that we can add it separately to the svg
     $title = '';
-    if (isset($extra_params[ 'title' ]) && !empty($extra_params[ 'title' ])) {
-        $string = htmlspecialchars(wp_kses_post($extra_params[ 'title' ]));
+    if (isset($extra_params['title']) && !empty($extra_params['title'])) {
+        $string = htmlspecialchars(wp_kses_post($extra_params['title']));
         $title = sprintf("<title data-title='%s'>%s</title>", $string, $string);
-        unset($extra_params[ 'title' ]);
+        unset($extra_params['title']);
     }
 
     // Create new indexed array from extra svg parameters
@@ -571,25 +571,25 @@ function nmgr_get_svg($args)
     // Compose svg with the given attributes
     $composed_svg = sprintf(
         '<svg role="%s" width="%s" height="%s" class="%s" %s ',
-        esc_attr($args[ 'role' ]),
+        esc_attr($args['role']),
         esc_attr($size),
         esc_attr($size),
-        esc_attr($args[ 'class' ]),
+        esc_attr($args['class']),
         $extra_params_string
     );
 
 
-    if ($args[ 'sprite' ]) {
+    if ($args['sprite']) {
         /**
          * we are using a sprite file
          */
-        $svg = sprintf('%s>%s<use xlink:href="#nmgr-icon-%s"></use></svg>', $composed_svg, $title, esc_html($args[ 'icon' ]));
+        $svg = sprintf('%s>%s<use xlink:href="#nmgr-icon-%s"></use></svg>', $composed_svg, $title, esc_html($args['icon']));
     } else {
         /**
          *  we are using a single svg file
          */
         // Get the svg file
-        $svg = nmgr_get_svg_file($args[ 'icon' ], $args[ 'path' ]);
+        $svg = nmgr_get_svg_file($args['icon'], $args['path']);
 
         // Remove width and heigh attributes from svg if exists as we are adding our own
         $svg = preg_replace('/(width|height)="\d*"\s/', "", $svg);
@@ -652,9 +652,9 @@ function nmgr_get_account_details($param)
     $options = nmgr_get_option();
     switch ($param) {
         case 'name':
-            return isset($options[ 'my_account_name' ]) ? esc_html($options[ 'my_account_name' ]) : false;
+            return isset($options['my_account_name']) ? esc_html($options['my_account_name']) : false;
         case 'slug':
-            $slug = isset($options[ 'my_account_name' ]) ? $options[ 'my_account_name' ] : null;
+            $slug = isset($options['my_account_name']) ? $options['my_account_name'] : null;
             return $slug ? strtolower(str_replace(' ', '-', esc_html($slug))) : false;
     }
 }
@@ -675,7 +675,7 @@ function nmgr_add_to_wishlist_notice($wishlist, $products, $show_qty = false, $r
     $count = 0;
 
     if (!is_array($products)) {
-        $products = array( $products => 1 );
+        $products = array($products => 1);
         $show_qty = false;
     }
 
@@ -686,8 +686,8 @@ function nmgr_add_to_wishlist_notice($wishlist, $products, $show_qty = false, $r
     foreach ($products as $product_id => $qty) {
         $titles[] = apply_filters('nmgr_add_to_wishlist_qty_html', ($qty > 1 ? absint($qty) . ' &times; ' : ''), $product_id) .
             apply_filters('nmgr_add_to_wishlist_item_name_in_quotes', sprintf(
-                    /* translators: %s: item name */
-                    _x('&ldquo;%s&rdquo;', 'Item name in quotes', 'nm-gift-registry-lite'),
+                /* translators: %s: item name */
+                _x('&ldquo;%s&rdquo;', 'Item name in quotes', 'nm-gift-registry-lite'),
                 strip_tags(get_the_title($product_id))
             ), $product_id);
         $count += $qty;
@@ -730,8 +730,8 @@ function nmgr_get_wishlists_in_cart()
         $cart = WC()->cart->get_cart();
 
         foreach ($cart as $cart_item) {
-            if (isset($cart_item[ nmgr()->cart_key ])) {
-                $wishlist_id = $cart_item[ nmgr()->cart_key ][ 'wishlist_id' ];
+            if (isset($cart_item[nmgr()->cart_key])) {
+                $wishlist_id = $cart_item[nmgr()->cart_key]['wishlist_id'];
                 if (nmgr_get_wishlist($wishlist_id, true)) {
                     $wishlists[] = $wishlist_id;
                 }
@@ -784,17 +784,17 @@ function nmgr_get_product_in_wishlist_title_attribute($product)
                 esc_html(nmgr_get_type_title('', 1))
             );
         default:
-        return sprintf(
-            _n(
+            return sprintf(
+                _n(
                     /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                     'This product is in your %s',
-                'This product is in one or more of your %s',
-                $count,
-                'nm-gift-registry-lite'
-            ),
-            esc_html(nmgr_get_type_title()),
-            esc_html(nmgr_get_type_title('', 1))
-        );
+                    'This product is in one or more of your %s',
+                    $count,
+                    'nm-gift-registry-lite'
+                ),
+                esc_html(nmgr_get_type_title()),
+                esc_html(nmgr_get_type_title('', 1))
+            );
     }
 }
 
@@ -836,7 +836,7 @@ function nmgr_query_key($name = '')
         'wishlist' => 'nmgr_w', // accepts wishlist id or slug.
     );
 
-    return $name ? (isset($query_keys[ $name ]) ? $query_keys[ $name ] : null) : $query_keys;
+    return $name ? (isset($query_keys[$name]) ? $query_keys[$name] : null) : $query_keys;
 }
 
 /**
@@ -853,7 +853,7 @@ function nmgr_query_key($name = '')
  */
 function nmgr_get_post_statuses()
 {
-    return apply_filters('nmgr_post_statuses', array( 'publish', 'private' ));
+    return apply_filters('nmgr_post_statuses', array('publish', 'private'));
 }
 
 /**
@@ -937,23 +937,23 @@ function nmgr_get_posted_variations($variation_id, $post = '')
 
     foreach ($posted_data as $key => $value) {
         if (false === strpos($key, 'attribute_')) {
-            unset($posted_data[ $key ]);
+            unset($posted_data[$key]);
         }
     }
 
     foreach ($product_parent->get_attributes() as $attribute) {
-        if (!$attribute[ 'is_variation' ]) {
+        if (!$attribute['is_variation']) {
             continue;
         }
-        $attribute_key = 'attribute_' . sanitize_title($attribute[ 'name' ]);
+        $attribute_key = 'attribute_' . sanitize_title($attribute['name']);
 
-        if (isset($posted_data[ $attribute_key ])) {
-            if ($attribute[ 'is_taxonomy' ]) {
-                $value = sanitize_title(wp_unslash($posted_data[ $attribute_key ]));
+        if (isset($posted_data[$attribute_key])) {
+            if ($attribute['is_taxonomy']) {
+                $value = sanitize_title(wp_unslash($posted_data[$attribute_key]));
             } else {
-                $value = html_entity_decode(wc_clean(wp_unslash($posted_data[ $attribute_key ])), ENT_QUOTES, get_bloginfo('charset'));
+                $value = html_entity_decode(wc_clean(wp_unslash($posted_data[$attribute_key])), ENT_QUOTES, get_bloginfo('charset'));
             }
-            $variations[ $attribute_key ] = $value;
+            $variations[$attribute_key] = $value;
         }
     }
 
@@ -971,11 +971,11 @@ function nmgr_add_prefix($fields)
 {
     $prefixed = array();
     foreach ($fields as $name => $args) {
-        if ((isset($args[ 'prefix' ]) && !$args[ 'prefix' ]) || false !== strpos($name, nmgr()->prefix)) {
-            $prefixed[ $name ] = $args;
+        if ((isset($args['prefix']) && !$args['prefix']) || false !== strpos($name, nmgr()->prefix)) {
+            $prefixed[$name] = $args;
             continue;
         }
-        $prefixed[ nmgr()->prefix . $name ] = $args;
+        $prefixed[nmgr()->prefix . $name] = $args;
     }
     return $prefixed;
 }
@@ -990,7 +990,7 @@ function nmgr_add_prefix($fields)
  */
 function nmgr_remove_prefix($data)
 {
-    $data_array = ( array ) $data;
+    $data_array = (array) $data;
     $new_data = array();
 
     foreach ($data_array as $key => $value) {
@@ -1002,7 +1002,7 @@ function nmgr_remove_prefix($data)
                 return is_string($val) ? str_replace(nmgr()->prefix, '', $val) : $val;
             }, $value);
         }
-        $new_data[ $key ] = $value;
+        $new_data[$key] = $value;
     }
     return $new_data;
 }
@@ -1051,7 +1051,7 @@ function nmgr_include_sprite_file()
  */
 function nmgr_post_content_has_shortcodes($tags)
 {
-    foreach (( array ) $tags as $tag) {
+    foreach ((array) $tags as $tag) {
         if (wc_post_content_has_shortcode($tag)) {
             return true;
         }
@@ -1108,7 +1108,7 @@ if (!function_exists('nmgr_get_no_wishlist_placeholder')) {
                 'icon' => $icon,
                 'size' => nmgr()->post_thumbnail_size / 16, // convert px to em
                 'fill' => '#f8f8f8',
-                ), $tab);
+            ), $tab);
         }
 
         if ($svg_args) {
@@ -1118,7 +1118,7 @@ if (!function_exists('nmgr_get_no_wishlist_placeholder')) {
             );
         }
 
-        $call_to_action = apply_filters('nmgr_no_wishlist_call_to_action', nmgr_get_template('account/call-to-action-no-wishlist.php', array( 'tab' => $tab )));
+        $call_to_action = apply_filters('nmgr_no_wishlist_call_to_action', nmgr_get_template('account/call-to-action-no-wishlist.php', array('tab' => $tab)));
 
         $content = apply_filters('nmgr_no_wishlist_placeholder', $svg . $call_to_action, $tab);
 
@@ -1159,14 +1159,14 @@ if (!function_exists('nmgr_get_account_template')) {
 
         $wishlist_id = 0;
 
-        if (is_numeric($args[ 'id' ])) {
-            $wishlist_id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $wishlist_id = $args[ 'id' ]->get_id();
-        } elseif (is_string($args[ 'id' ]) && !empty($args[ 'id' ])) {
-            $wishlist_post = get_page_by_path(sanitize_text_field(wp_unslash($args[ 'id' ])), OBJECT, nmgr()->post_type);
+        if (is_numeric($args['id'])) {
+            $wishlist_id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $wishlist_id = $args['id']->get_id();
+        } elseif (is_string($args['id']) && !empty($args['id'])) {
+            $wishlist_post = get_page_by_path(sanitize_text_field(wp_unslash($args['id'])), OBJECT, nmgr()->post_type);
             $wishlist_id = isset($wishlist_post->ID) ? absint($wishlist_post->ID) : $wishlist_id;
-        } elseif (empty($args[ 'id' ])) {
+        } elseif (empty($args['id'])) {
             $wishlist_id = nmgr_get_current_wishlist_id();
         }
 
@@ -1180,8 +1180,8 @@ if (!function_exists('nmgr_get_account_template')) {
 
         $tabs = apply_filters('nmgr_account_tabs', nmgr_get_account_tabs());
 
-        if (!empty($tabs) && isset($GLOBALS[ 'nmgr' ])) {
-            $GLOBALS[ 'nmgr' ]->is_account_tab = true;
+        if (!empty($tabs) && isset($GLOBALS['nmgr'])) {
+            $GLOBALS['nmgr']->is_account_tab = true;
         }
 
         $vars = array(
@@ -1222,7 +1222,7 @@ if (!function_exists('nmgr_get_account_wishlist_template')) {
     function nmgr_get_account_wishlist_template($atts = '', $echo = false)
     {
         if (!is_array($atts)) {
-            $atts = ( array ) $atts;
+            $atts = (array) $atts;
         }
 
         $template = nmgr_get_account_template($atts, false);
@@ -1266,11 +1266,11 @@ if (!function_exists('nmgr_get_overview_template')) {
         );
 
         $id = 0;
-        if (is_numeric($args[ 'id' ])) {
-            $id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $id = $args[ 'id' ]->get_id();
-        } elseif (empty($args[ 'id' ])) {
+        if (is_numeric($args['id'])) {
+            $id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $id = $args['id']->get_id();
+        } elseif (empty($args['id'])) {
             $id = nmgr_get_current_wishlist_id();
         }
 
@@ -1284,7 +1284,7 @@ if (!function_exists('nmgr_get_overview_template')) {
 
         $vars = array(
             'wishlist' => $wishlist,
-            'title' => apply_filters('nmgr_overview_template_title', $args[ 'title' ]),
+            'title' => apply_filters('nmgr_overview_template_title', $args['title']),
             'class' => 'woocommerce',
             'nonce' => wp_create_nonce('nmgr_manage_wishlist'),
         );
@@ -1294,7 +1294,7 @@ if (!function_exists('nmgr_get_overview_template')) {
             if ($event_date) {
                 $current_time = current_time('Y-m-d');
                 $diff = date_diff(new DateTime($current_time), new DateTime($event_date->format('Y-m-d')));
-                $days = ( int ) $diff->format("%R%a");
+                $days = (int) $diff->format("%R%a");
                 $abs_days = absint($days);
                 $days_notice = '';
 
@@ -1310,8 +1310,8 @@ if (!function_exists('nmgr_get_overview_template')) {
                 $days_notice = __('days to your event', 'nm-gift-registry-lite');
             }
 
-            $vars[ 'days_notice' ] = $days_notice;
-            $vars[ 'days' ] = $abs_days;
+            $vars['days_notice'] = $days_notice;
+            $vars['days'] = $abs_days;
         }
 
         $template = apply_filters('nmgr_overview_template', nmgr_get_template('account/overview.php', $vars), $vars);
@@ -1355,11 +1355,11 @@ if (!function_exists('nmgr_get_profile_template')) {
         );
 
         $id = 0;
-        if (is_numeric($args[ 'id' ])) {
-            $id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $id = $args[ 'id' ]->get_id();
-        } elseif (empty($args[ 'id' ])) {
+        if (is_numeric($args['id'])) {
+            $id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $id = $args['id']->get_id();
+        } elseif (empty($args['id'])) {
             $id = nmgr_get_current_wishlist_id();
         }
 
@@ -1375,7 +1375,7 @@ if (!function_exists('nmgr_get_profile_template')) {
         $vars = array(
             'wishlist' => $wishlist,
             'form' => new NMGR_Form($wishlist->get_id()),
-            'title' => apply_filters('nmgr_profile_template_title', $args[ 'title' ]),
+            'title' => apply_filters('nmgr_profile_template_title', $args['title']),
             'class' => 'woocommerce',
             'nonce' => wp_create_nonce('nmgr_manage_wishlist'),
         );
@@ -1420,20 +1420,22 @@ if (!function_exists('nmgr_get_items_template')) {
         );
 
         $id = 0;
-        if (is_numeric($args[ 'id' ])) {
-            $id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $id = $args[ 'id' ]->get_id();
-        } elseif (empty($args[ 'id' ])) {
+        if (is_numeric($args['id'])) {
+            $id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $id = $args['id']->get_id();
+        } elseif (empty($args['id'])) {
             $id = nmgr_get_current_wishlist_id();
         }
 
-        $editable = filter_var($args[ 'editable' ], FILTER_VALIDATE_BOOLEAN);
+        $editable = filter_var($args['editable'], FILTER_VALIDATE_BOOLEAN);
         $wishlist = nmgr_get_wishlist($id, true);
 
-        if (!is_admin() &&
+        if (
+            !is_admin() &&
             ((!$editable && !$wishlist && !is_nmgr_enabled()) ||
-            ($editable && (!is_nmgr_enabled() || (0 < $id && !nmgr_user_has_wishlist($id)))))) {
+                ($editable && (!is_nmgr_enabled() || (0 < $id && !nmgr_user_has_wishlist($id)))))
+        ) {
             return;
         }
 
@@ -1451,10 +1453,10 @@ if (!function_exists('nmgr_get_items_template')) {
         $vars = array(
             'wishlist' => $wishlist,
             'items' => $wishlist ? $wishlist->get_items() : '',
-            'title' => apply_filters('nmgr_items_template_title', $args[ 'title' ]),
+            'title' => apply_filters('nmgr_items_template_title', $args['title']),
             'items_args' => array(
                 'editable' => $editable,
-                'add_to_cart' => filter_var($args[ 'add_to_cart' ], FILTER_VALIDATE_BOOLEAN),
+                'add_to_cart' => filter_var($args['add_to_cart'], FILTER_VALIDATE_BOOLEAN),
             ),
             'class' => implode(' ', array_filter($class)),
             'nonce' => wp_create_nonce('nmgr_manage_wishlist'),
@@ -1501,11 +1503,11 @@ if (!function_exists('nmgr_get_shipping_template')) {
         );
 
         $id = 0;
-        if (is_numeric($args[ 'id' ])) {
-            $id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $id = $args[ 'id' ]->get_id();
-        } elseif (empty($args[ 'id' ])) {
+        if (is_numeric($args['id'])) {
+            $id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $id = $args['id']->get_id();
+        } elseif (empty($args['id'])) {
             $id = nmgr_get_current_wishlist_id();
         }
 
@@ -1519,7 +1521,7 @@ if (!function_exists('nmgr_get_shipping_template')) {
 
         $vars = array(
             'wishlist' => $wishlist,
-            'title' => apply_filters('nmgr_shipping_template_title', $args[ 'title' ]),
+            'title' => apply_filters('nmgr_shipping_template_title', $args['title']),
             'class' => 'woocommerce',
             'form' => $wishlist ? new NMGR_Form($wishlist->get_id()) : '',
             'customer' => $wishlist ? new WC_Customer($wishlist->get_user_id()) : '',
@@ -1559,11 +1561,11 @@ function nmgr_get_wishlist_template($atts = '', $echo = false)
     );
 
     $id = 0;
-    if (is_numeric($args[ 'id' ])) {
-        $id = absint($args[ 'id' ]);
-    } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-        $id = $args[ 'id' ]->get_id();
-    } elseif (empty($args[ 'id' ])) {
+    if (is_numeric($args['id'])) {
+        $id = absint($args['id']);
+    } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+        $id = $args['id']->get_id();
+    } elseif (empty($args['id'])) {
         $id = nmgr_get_current_wishlist_id();
     }
 
@@ -1580,10 +1582,11 @@ function nmgr_get_wishlist_template($atts = '', $echo = false)
 
     $single = new WP_Query($query_args);
 
-    if (!$single->have_posts() ||
+    if (
+        !$single->have_posts() ||
         !is_nmgr_enabled($single->post->post_author) ||
         ('private' === $single->post->post_status &&
-        absint(get_current_user_id()) !== absint($single->post->post_author))
+            absint(get_current_user_id()) !== absint($single->post->post_author))
     ) {
         return;
     }
@@ -1639,11 +1642,11 @@ if (!function_exists('nmgr_get_share_template')) {
         );
 
         $id = 0;
-        if (is_numeric($args[ 'id' ])) {
-            $id = absint($args[ 'id' ]);
-        } elseif (is_a($args[ 'id' ], 'NMGR_Wishlist')) {
-            $id = $args[ 'id' ]->get_id();
-        } elseif (empty($args[ 'id' ])) {
+        if (is_numeric($args['id'])) {
+            $id = absint($args['id']);
+        } elseif (is_a($args['id'], 'NMGR_Wishlist')) {
+            $id = $args['id']->get_id();
+        } elseif (empty($args['id'])) {
             $id = nmgr_get_current_wishlist_id();
         }
 
@@ -1670,7 +1673,7 @@ if (!function_exists('nmgr_get_share_template')) {
 
         $vars = array(
             'wishlist' => $wishlist,
-            'title' => apply_filters('nmgr_share_template_title', $args[ 'title' ]),
+            'title' => apply_filters('nmgr_share_template_title', $args['title']),
         );
 
         $template = apply_filters('nmgr_share_template', nmgr_get_template('account/sharing.php', $vars), $vars);
@@ -1760,8 +1763,10 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
      * If the wishlist already has the item with quantity equal to the stock quantity
      * let the user know he cannot add the item again
      */
-    if ($wishlist->has_item($unique_id) &&
-        $product->get_stock_quantity() === $wishlist->get_item($unique_id)->get_quantity()) {
+    if (
+        $wishlist->has_item($unique_id) &&
+        $product->get_stock_quantity() === $wishlist->get_item($unique_id)->get_quantity()
+    ) {
         throw new Exception(
             sprintf(
                 /* translators:
@@ -1781,7 +1786,7 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
 
     if ($wishlist->add_item($product, $quantity, $favourite, $variations)) {
         do_action('nmgr_added_to_wishlist', $product, $quantity, $favourite, $variations, $wishlist);
-        return array( $product->get_id() => $quantity );
+        return array($product->get_id() => $quantity);
     } else {
         throw new Exception(sprintf(
             /* translators: 1: product name, 2: wishlist type title */
@@ -1812,8 +1817,8 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
 
     if (!is_array($atts) && !empty($atts)) {
         $product = wc_get_product($atts);
-    } elseif (is_array($atts) && isset($atts[ 'id' ])) {
-        $product = wc_get_product($atts[ 'id' ]);
+    } elseif (is_array($atts) && isset($atts['id'])) {
+        $product = wc_get_product($atts['id']);
     } else {
         $product = wc_get_product($product);
     }
@@ -1838,7 +1843,7 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
     }
 
     // Don't show the button for simple or variable products that are out of stock or not purchasable
-    if ($product->is_type(array( 'simple', 'variable' )) && (!$product->is_purchasable() || !$product->is_in_stock())) {
+    if ($product->is_type(array('simple', 'variable')) && (!$product->is_purchasable() || !$product->is_in_stock())) {
         $show_button = false;
     }
 
@@ -1861,7 +1866,7 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
             }
         }
 
-        $show_button = ( bool ) $maybe_show;
+        $show_button = (bool) $maybe_show;
     }
 
     // Should we show the add to wishlist button
@@ -1889,7 +1894,7 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
 
     // Set class for the add to wishlist button position on single and archive pages
     $wrapper_class = array();
-    $thumbnail_positions = array( 'thumbnail_top_left', 'thumbnail_top_right', 'thumbnail_bottom_left', 'thumbnail_bottom_right' );
+    $thumbnail_positions = array('thumbnail_top_left', 'thumbnail_top_right', 'thumbnail_bottom_left', 'thumbnail_bottom_right');
     $archive_position = nmgr_get_option('add_to_wishlist_button_position_archive');
     $single_position = nmgr_get_option('add_to_wishlist_button_position_single');
     $button_location = is_product() ? $single_position : (is_nmgr_shop_loop() ? $archive_position : null);
@@ -1965,10 +1970,10 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
     // if we don't have a valid user but we are showing the wishlist button, redirect to login page with notice
     if (!is_nmgr_user() && nmgr_get_option('add_to_wishlist_guests')) {
         $redirect = true;
-        $defaults[ 'permalink' ] = wc_get_page_permalink('myaccount');
-        $defaults[ 'permalink_args' ] = array(
+        $defaults['permalink'] = wc_get_page_permalink('myaccount');
+        $defaults['permalink_args'] = array(
             'nmgr-notice' => 'require-login',
-            'nmgr-redirect' => $_SERVER[ 'REQUEST_URI' ],
+            'nmgr-redirect' => $_SERVER['REQUEST_URI'],
         );
     } else {
         /**
@@ -1977,46 +1982,46 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
          */
         if ('redirect' === $create_wishlist) {
             $redirect = true;
-            $defaults[ 'permalink' ] = nmgr_get_account_url();
-            $defaults[ 'permalink_args' ] = array(
+            $defaults['permalink'] = nmgr_get_account_url();
+            $defaults['permalink_args'] = array(
                 'nmgr-notice' => 'create-wishlist',
             );
-        } elseif (is_nmgr_shop_loop() && $product->is_type(array( 'variable' ))) {
+        } elseif (is_nmgr_shop_loop() && $product->is_type(array('variable'))) {
             /**
              * The user is logged in and if he has wishlists to add products to
              * For variable and grouped products on archive pages redirect to actual product page with notice
              */
             $redirect = true;
-            $defaults[ 'permalink' ] = $product->get_permalink();
-            $defaults[ 'permalink_args' ] = array(
+            $defaults['permalink'] = $product->get_permalink();
+            $defaults['permalink_args'] = array(
                 'nmgr-notice' => 'select-product',
                 'nmgr-pt' => $product->get_type(),
             );
         }
     }
 
-    if (is_nmgr_shop_loop() && $product->is_type(array( 'variable' ))) {
-        $defaults[ 'button_text' ] .= ' *';
+    if (is_nmgr_shop_loop() && $product->is_type(array('variable'))) {
+        $defaults['button_text'] .= ' *';
     }
 
-    $defaults[ 'form_class' ][] = $redirect ? 'redirect' : '';
-    $defaults[ 'button_text' ] = apply_filters('nmgr_add_to_wishlist_button_text', $defaults[ 'button_text' ]);
+    $defaults['form_class'][] = $redirect ? 'redirect' : '';
+    $defaults['button_text'] = apply_filters('nmgr_add_to_wishlist_button_text', $defaults['button_text']);
     $args = wp_parse_args(apply_filters('nmgr_add_to_wishlist_button_args', $defaults, $product), $defaults);
 
-    $args[ 'wrapper_class' ] = isset($args[ 'wrapper_class' ]) ? implode(' ', array_filter(( array ) $args[ 'wrapper_class' ])) : '';
-    $args[ 'form_class' ] = isset($args[ 'form_class' ]) ? implode(' ', array_filter(( array ) $args[ 'form_class' ])) : '';
-    $args[ 'form_attributes' ] = isset($args[ 'form_attributes' ]) ? wc_implode_html_attributes(( array ) $args[ 'form_attributes' ]) : '';
-    $args[ 'button_class' ] = isset($args[ 'button_class' ]) ? implode(' ', array_filter(( array ) $args[ 'button_class' ])) : '';
+    $args['wrapper_class'] = isset($args['wrapper_class']) ? implode(' ', array_filter((array) $args['wrapper_class'])) : '';
+    $args['form_class'] = isset($args['form_class']) ? implode(' ', array_filter((array) $args['form_class'])) : '';
+    $args['form_attributes'] = isset($args['form_attributes']) ? wc_implode_html_attributes((array) $args['form_attributes']) : '';
+    $args['button_class'] = isset($args['button_class']) ? implode(' ', array_filter((array) $args['button_class'])) : '';
 
-    if (isset($args[ 'button_attributes' ][ 'aria-label' ])) {
-        $args[ 'button_attributes' ][ 'aria-label' ] = wp_strip_all_tags($args[ 'button_attributes' ][ 'aria-label' ]);
+    if (isset($args['button_attributes']['aria-label'])) {
+        $args['button_attributes']['aria-label'] = wp_strip_all_tags($args['button_attributes']['aria-label']);
     }
 
     $button_params = array(
-        'class' => esc_attr($args[ 'button_class' ]),
-        'attributes' => wc_implode_html_attributes(( array ) $args[ 'button_attributes' ]),
-        'text' => isset($args[ 'button_text' ]) ? esc_html($args[ 'button_text' ]) : '',
-        'icon' => isset($args[ 'button_icon' ]) ? $args[ 'button_icon' ] : null
+        'class' => esc_attr($args['button_class']),
+        'attributes' => wc_implode_html_attributes((array) $args['button_attributes']),
+        'text' => isset($args['button_text']) ? esc_html($args['button_text']) : '',
+        'icon' => isset($args['button_icon']) ? $args['button_icon'] : null
     );
 
     // Get the add-to-wishlist button type
@@ -2028,18 +2033,18 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
             $not_in_wishlist_svg_args = array_merge(array(
                 'icon' => 'heart-empty',
                 'size' => 2,
-                'class' => 'not-in-wishlist ' . $button_params[ 'class' ],
+                'class' => 'not-in-wishlist ' . $button_params['class'],
                 'fill' => 'currentColor',
                 'title' => nmgr_get_option('add_to_wishlist_button_text'),
-                ), $args[ 'button_attributes' ]);
+            ), $args['button_attributes']);
 
             $in_wishlist_svg_args = array_merge(array(
                 'icon' => 'heart',
                 'size' => 2,
-                'class' => 'nmgr-animate in-wishlist ' . $button_params[ 'class' ],
+                'class' => 'nmgr-animate in-wishlist ' . $button_params['class'],
                 'fill' => 'currentColor',
                 'title' => nmgr_get_product_in_wishlist_title_attribute($product),
-                ), $args[ 'button_attributes' ]);
+            ), $args['button_attributes']);
 
             $button_html = nmgr_get_svg($not_in_wishlist_svg_args) . nmgr_get_svg($in_wishlist_svg_args);
             break;
@@ -2049,16 +2054,16 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
         if (is_nmgr_shop_loop()) {
             $button_html = sprintf(
                 "<a href='#' class='button %s' %s>%s</a>",
-                $button_params[ 'class' ],
-                $button_params[ 'attributes' ],
-                $button_params[ 'text' ] . $button_params[ 'icon' ]
+                $button_params['class'],
+                $button_params['attributes'],
+                $button_params['text'] . $button_params['icon']
             );
         } else {
             $button_html = sprintf(
                 "<button type='submit' class='button %s' %s>%s</button>",
-                $button_params[ 'class' ],
-                $button_params[ 'attributes' ],
-                $button_params[ 'text' ] . $button_params[ 'icon' ]
+                $button_params['class'],
+                $button_params['attributes'],
+                $button_params['text'] . $button_params['icon']
             );
         }
     }
@@ -2071,9 +2076,9 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
      * 					and their values. Default parameters: id, class, attributes, text, icon
      * @param array $args Arguments used to compose the overall button template
      */
-    $args[ 'button' ] = apply_filters('nmgr_add_to_wishlist_button', $button_html, $button_params, $args);
+    $args['button'] = apply_filters('nmgr_add_to_wishlist_button', $button_html, $button_params, $args);
 
-    $template = !empty($args[ 'button' ]) ? nmgr_get_template('add-to-wishlist/form.php', $args) : '';
+    $template = !empty($args['button']) ? nmgr_get_template('add-to-wishlist/form.php', $args) : '';
 
     if ($echo) {
         echo $template; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -2143,9 +2148,9 @@ function nmgr_get_type_title($formatting = '', $pluralize = false)
     $key = nmgr_get_option('type_title', 'gift_registry');
     $type_titles = nmgr_get_type_titles();
 
-    if (isset($type_titles[ $key ])) {
-        $singular = isset($type_titles[ $key ][ 'singular' ]) ? $type_titles[ $key ][ 'singular' ] : '';
-        $plural = isset($type_titles[ $key ][ 'plural' ]) ? $type_titles[ $key ][ 'plural' ] : '';
+    if (isset($type_titles[$key])) {
+        $singular = isset($type_titles[$key]['singular']) ? $type_titles[$key]['singular'] : '';
+        $plural = isset($type_titles[$key]['plural']) ? $type_titles[$key]['plural'] : '';
         $type_title = !$pluralize ? $singular : $plural;
     }
 
@@ -2198,7 +2203,7 @@ function nmgr_get_help_tip($title)
         'style' => 'margin-left:7px;',
         'size' => 0.75,
         'class' => 'nmgr-tip nmgr-help-tip nmgr-cursor-help',
-        ));
+    ));
 }
 
 /**
@@ -2215,7 +2220,7 @@ function nmgr_get_help_tip($title)
  */
 function nmgr_get_payment_cancelled_order_statuses()
 {
-    return apply_filters('nmgr_payment_cancelled_order_statuses', array( 'cancelled', 'pending' ));
+    return apply_filters('nmgr_payment_cancelled_order_statuses', array('cancelled', 'pending'));
 }
 
 /**
@@ -2388,14 +2393,16 @@ function nmgr_get_wishlist_in_cart($wishlist_id = '')
         $cart = WC()->cart->get_cart();
 
         foreach ($cart as $cart_item) {
-            if (isset($cart_item[ 'nm_gift_registry' ])) {
-                if ($wishlist_id &&
-                    (absint($wishlist_id) === absint($cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ])) &&
-                    nmgr_get_wishlist($wishlist_id, true)) {
+            if (isset($cart_item['nm_gift_registry'])) {
+                if (
+                    $wishlist_id &&
+                    (absint($wishlist_id) === absint($cart_item['nm_gift_registry']['wishlist_id'])) &&
+                    nmgr_get_wishlist($wishlist_id, true)
+                ) {
                     $id = $wishlist_id;
                     break;
-                } elseif (!$wishlist_id && nmgr_get_wishlist($cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ], true)) {
-                    $id = $cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ];
+                } elseif (!$wishlist_id && nmgr_get_wishlist($cart_item['nm_gift_registry']['wishlist_id'], true)) {
+                    $id = $cart_item['nm_gift_registry']['wishlist_id'];
                     break;
                 }
             }
@@ -2439,15 +2446,15 @@ if (!function_exists('nmgr_get_search_results_template')) {
             'show_title' => FILTER_VALIDATE_BOOLEAN,
             'show_post_count' => FILTER_VALIDATE_BOOLEAN,
             'show_results_if_empty' => FILTER_VALIDATE_BOOLEAN,
-            ));
+        ));
 
         $query_args = is_nmgr_search() ? $wp_query->query_vars : array();
 
-        if (isset($query_args[ 'nmgr_s' ]) || (!isset($query_args[ 'nmgr_s' ]) && $template_args[ 'show_results_if_empty' ])) {
+        if (isset($query_args['nmgr_s']) || (!isset($query_args['nmgr_s']) && $template_args['show_results_if_empty'])) {
             $query_args = array();
-            $query_args[ 's' ] = get_query_var('nmgr_s');
-            $query_args[ 'post_type' ] = 'nm_gift_registry';
-            $query_args[ 'paged' ] = get_query_var('paged') ? get_query_var('paged') : 1;
+            $query_args['s'] = get_query_var('nmgr_s');
+            $query_args['post_type'] = 'nm_gift_registry';
+            $query_args['paged'] = get_query_var('paged') ? get_query_var('paged') : 1;
         }
 
         ob_start();
@@ -2462,10 +2469,11 @@ if (!function_exists('nmgr_get_search_results_template')) {
 
                 $wp_query->the_post();
 
-        nmgr_template('content-search-nm_gift_registry.php');
+                nmgr_template('content-search-nm_gift_registry.php');
 
-        endwhile;
-        nmgr_paging_nav(); else:
+            endwhile;
+            nmgr_paging_nav();
+        else :
             do_action('nmgr_no_search_results', $template_args);
         endif;
 
@@ -2512,16 +2520,16 @@ function nmgr_get_search_template($atts = '', $echo = false)
         'show_results_title' => FILTER_VALIDATE_BOOLEAN,
         'show_post_count' => FILTER_VALIDATE_BOOLEAN,
         'show_results_if_empty' => FILTER_VALIDATE_BOOLEAN,
-        ));
+    ));
 
     $template = '';
 
     // Whether we are using the default wordpress search that uses 's' query var on the home_url permalink
-    $using_wp_search = untrailingslashit(home_url()) === untrailingslashit(esc_url($args[ 'form_action' ]));
+    $using_wp_search = untrailingslashit(home_url()) === untrailingslashit(esc_url($args['form_action']));
 
-    if ($args[ 'show_form' ]) {
+    if ($args['show_form']) {
         $vars = array(
-            'form_action' => $args[ 'form_action' ],
+            'form_action' => $args['form_action'],
             'input_name' => $using_wp_search ? 's' : 'nmgr_s',
             'input_value' => is_nmgr_search() ? ($using_wp_search ? get_query_var('s') : get_query_var('nmgr_s')) : '',
             'using_wp_search' => $using_wp_search
@@ -2530,8 +2538,8 @@ function nmgr_get_search_template($atts = '', $echo = false)
         $template .= apply_filters('nmgr_search_form', nmgr_get_template('form-search-wishlist.php', $vars), $vars);
     }
 
-    if ($args[ 'show_results' ]) {
-        $args[ 'show_title' ] = $args[ 'show_results_title' ];
+    if ($args['show_results']) {
+        $args['show_title'] = $args['show_results_title'];
         $template .= nmgr_get_search_results_template($args);
     }
 
@@ -2595,7 +2603,7 @@ function is_nmgr_user()
  */
 function is_nmgr_guest()
 {
-    return ( bool ) !is_user_logged_in() && nmgr_get_option('allow_guest_wishlists');
+    return (bool) !is_user_logged_in() && nmgr_get_option('allow_guest_wishlists');
 }
 
 /**
@@ -2621,7 +2629,7 @@ function nmgr_get_current_user_id()
          * Always return logged in user id as a string so that it can be compatible with the guest
          * user id cookie value type and be tested with ===
          */
-        return ( string ) get_current_user_id();
+        return (string) get_current_user_id();
     }
 
     if (is_nmgr_guest()) {
@@ -2638,7 +2646,7 @@ function nmgr_get_current_user_id()
  */
 function nmgr_get_user_id_cookie()
 {
-    return isset($_COOKIE[ 'nmgr_user_id' ]) ? wp_unslash($_COOKIE[ 'nmgr_user_id' ]) : 0;
+    return isset($_COOKIE['nmgr_user_id']) ? wp_unslash($_COOKIE['nmgr_user_id']) : 0;
 }
 
 /**
@@ -2715,42 +2723,42 @@ if (!function_exists('nmgr_get_cart_template')) {
         );
 
         foreach ($args as $key => $val) {
-            if (is_bool($val) && isset($vars[ $key ])) {
-                $vars[ $key ] = ( int ) $vars[ $key ];
+            if (is_bool($val) && isset($vars[$key])) {
+                $vars[$key] = (int) $vars[$key];
             }
         }
 
-        $vars[ 'number_of_items' ] = ( int ) $vars[ 'number_of_items' ];
+        $vars['number_of_items'] = (int) $vars['number_of_items'];
 
         $template_data_atts = array();
         foreach ($vars as $key => $value) {
             $template_data_atts[] = 'data-' . $key . '="' . $value . '"';
         }
 
-        $vars[ 'template_args' ] = $vars; // pass this on for reference before it is modified below.
-        $vars[ 'template_data_atts' ] = implode(' ', $template_data_atts);
-        $vars[ 'wishlists' ] = nmgr_get_user_wishlists();
-        $vars[ 'add_item_to_cart_text' ] = esc_attr__('Add to cart', 'nm-gift-registry-lite');
-        $vars[ 'remove_item_text' ] = esc_attr(
+        $vars['template_args'] = $vars; // pass this on for reference before it is modified below.
+        $vars['template_data_atts'] = implode(' ', $template_data_atts);
+        $vars['wishlists'] = nmgr_get_user_wishlists();
+        $vars['add_item_to_cart_text'] = esc_attr__('Add to cart', 'nm-gift-registry-lite');
+        $vars['remove_item_text'] = esc_attr(
             sprintf(
                 /* translators: %s: wishlist type title */
                 __('Remove from %s', 'nm-gift-registry-lite'),
                 esc_html(nmgr_get_type_title())
             )
         );
-        $vars[ 'cart_qty' ] = 0;
-        $vars[ 'cart_total' ] = 0;
-        $vars[ 'items_and_products' ] = array(); // Array of items with their equivalent products
-        $vars[ 'redirect' ] = false;
-        $vars[ 'url' ] = nmgr_get_account_url();
+        $vars['cart_qty'] = 0;
+        $vars['cart_total'] = 0;
+        $vars['items_and_products'] = array(); // Array of items with their equivalent products
+        $vars['redirect'] = false;
+        $vars['url'] = nmgr_get_account_url();
 
-        foreach ($vars[ 'wishlists' ] as $wishlist) {
+        foreach ($vars['wishlists'] as $wishlist) {
             foreach ($wishlist->get_items() as $item) {
                 $product = $item->get_product();
                 if ($product) {
-                    $vars[ 'cart_qty' ] = $vars[ 'cart_qty' ] + $item->get_quantity();
-                    $vars[ 'cart_total' ] = $vars[ 'cart_total' ] + $product->get_price();
-                    $vars[ 'items_and_products' ][] = array(
+                    $vars['cart_qty'] = $vars['cart_qty'] + $item->get_quantity();
+                    $vars['cart_total'] = $vars['cart_total'] + $product->get_price();
+                    $vars['items_and_products'][] = array(
                         'item' => $item,
                         'product' => $product
                     );
@@ -2759,11 +2767,11 @@ if (!function_exists('nmgr_get_cart_template')) {
         }
 
         if (!is_nmgr_user() && nmgr_get_option('add_to_wishlist_guests')) {
-            $vars[ 'redirect' ] = true;
-            $vars[ 'url' ] = add_query_arg(array(
+            $vars['redirect'] = true;
+            $vars['url'] = add_query_arg(array(
                 'nmgr-notice' => 'require-login',
-                'nmgr-redirect' => $_SERVER[ 'REQUEST_URI' ],
-                ), wc_get_page_permalink('myaccount'));
+                'nmgr-redirect' => $_SERVER['REQUEST_URI'],
+            ), wc_get_page_permalink('myaccount'));
         }
 
         $template = apply_filters('nmgr_cart_template', nmgr_get_template('cart.php', $vars), $vars);
@@ -2829,12 +2837,12 @@ function nmgr_get_datetime($date)
 
 function nmgr_get_dialog_submit_button($args)
 {
-    $class = isset($args[ 'class' ]) ? esc_attr(implode(' ', ( array ) $args[ 'class' ])) : '';
-    $text = isset($args[ 'text' ]) ? nmgr_kses_post($args[ 'text' ]) : esc_html__('Done', 'nm-gift-registry-lite');
+    $class = isset($args['class']) ? esc_attr(implode(' ', (array) $args['class'])) : '';
+    $text = isset($args['text']) ? nmgr_kses_post($args['text']) : esc_html__('Done', 'nm-gift-registry-lite');
     $attributes = array();
 
-    if (isset($args[ 'attributes' ]) && is_array($args[ 'attributes' ])) {
-        foreach ($args[ 'attributes' ] as $attribute => $attribute_value) {
+    if (isset($args['attributes']) && is_array($args['attributes'])) {
+        foreach ($args['attributes'] as $attribute => $attribute_value) {
             $attributes[] = esc_attr($attribute) . '="' . esc_attr($attribute_value) . '"';
         }
     }
@@ -2862,7 +2870,7 @@ function nmgr_items_table_columns()
         'purchased_quantity' => __('Purchased Quantity', 'nm-gift-registry-lite'),
         'total_cost' => __('Total Cost', 'nm-gift-registry-lite'),
         'actions' => __('Actions', 'nm-gift-registry-lite')
-        ));
+    ));
 }
 
 /**
@@ -2894,8 +2902,8 @@ function nmgr_get_wishlist_item($item_id)
 function nmgr_get_delete_item_notice($item)
 {
     return apply_filters('nmgr_delete_item_notice', sprintf(
-            /* translators: %s: wishlist type title */
-            __('Are you sure you want to remove the %s item?', 'nm-gift-registry-lite'),
+        /* translators: %s: wishlist type title */
+        __('Are you sure you want to remove the %s item?', 'nm-gift-registry-lite'),
         esc_html(nmgr_get_type_title())
     ), $item);
 }

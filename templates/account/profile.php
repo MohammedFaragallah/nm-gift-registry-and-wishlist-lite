@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist profile form
  *
@@ -19,25 +20,25 @@ defined('ABSPATH') || exit;
   data-nonce="<?php echo esc_attr($nonce); ?>">
 
   <?php
-    do_action('nmgr_before_profile', $wishlist);
+  do_action('nmgr_before_profile', $wishlist);
 
-    if ($title) {
-        printf('<div class="nmgr-template-title profile">%s</div>', nmgr_kses_post($title));
-    }
-    ?>
+  if ($title) {
+    printf('<div class="nmgr-template-title profile">%s</div>', nmgr_kses_post($title));
+  }
+  ?>
 
   <form class="nmgr-profile-form" method="POST">
 
     <?php
-        // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $form->get_fields_html('profile');
+    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo $form->get_fields_html('profile');
 
-        if ($form->has_fields()) {
-            echo $form->get_hidden_fields();
-            echo $form->get_submit_button();
-        }
-        // phpcs:enable
-        ?>
+    if ($form->has_fields()) {
+      echo $form->get_hidden_fields();
+      echo $form->get_submit_button();
+    }
+    // phpcs:enable
+    ?>
 
   </form>
 

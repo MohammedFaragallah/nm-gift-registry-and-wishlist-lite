@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist items total cost
  *
@@ -20,7 +21,8 @@ defined('ABSPATH') || exit;
       <td class="label"><?php esc_html_e('Total', 'nm-gift-registry-lite'); ?>:</td>
       <td width="1%"></td>
       <td class="total">
-        <?php echo $wishlist->get_total('true'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
+        <?php echo $wishlist->get_total('true'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        ?>
       </td>
     </tr>
   </table>

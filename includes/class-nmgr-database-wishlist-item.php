@@ -21,17 +21,17 @@ class NMGR_Database_Wishlist_Item
         $wpdb->insert(
             $wpdb->prefix . 'nmgr_wishlist_items',
             array(
-            'name' => $item->get_name(),
-            'wishlist_id' => $item->get_wishlist_id(),
-            'date_created' => current_time('mysql', 1),
-            'date_modified' => current_time('mysql', 1),
+                'name' => $item->get_name(),
+                'wishlist_id' => $item->get_wishlist_id(),
+                'date_created' => current_time('mysql', 1),
+                'date_modified' => current_time('mysql', 1),
             )
         );
         $item->set_id($wpdb->insert_id);
         $this->update_meta_data($item, true);
         $item->apply_changes();
 
-        do_action_deprecated('nmgr_new_wishlist_item', array( $item->get_id(), $item, $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_created');
+        do_action_deprecated('nmgr_new_wishlist_item', array($item->get_id(), $item, $item->get_wishlist_id()), '2.1.0', 'nmgr_wishlist_item_created');
         do_action('nmgr_wishlist_item_created', $item, $item->get_wishlist());
     }
 
@@ -83,18 +83,18 @@ class NMGR_Database_Wishlist_Item
             $wpdb->update(
                 $wpdb->prefix . 'nmgr_wishlist_items',
                 array(
-                'name' => $item->get_name(),
-                'wishlist_id' => $item->get_wishlist_id(),
-                'date_modified' => current_time('mysql', 1),
+                    'name' => $item->get_name(),
+                    'wishlist_id' => $item->get_wishlist_id(),
+                    'date_modified' => current_time('mysql', 1),
                 ),
-                array( 'wishlist_item_id' => $item->get_id() )
+                array('wishlist_item_id' => $item->get_id())
             );
         }
 
         $this->update_meta_data($item);
         $item->apply_changes();
 
-        do_action_deprecated('nmgr_update_wishlist_item', array( $item->get_id(), $item, $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_updated');
+        do_action_deprecated('nmgr_update_wishlist_item', array($item->get_id(), $item, $item->get_wishlist_id()), '2.1.0', 'nmgr_wishlist_item_updated');
         do_action('nmgr_wishlist_item_updated', $item, $item->get_wishlist());
     }
 
@@ -117,10 +117,10 @@ class NMGR_Database_Wishlist_Item
 
             do_action('nmgr_before_delete_wishlist_item', $item->get_id());
 
-            $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_items', array( 'wishlist_item_id' => $id ));
-            $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_itemmeta', array( 'wishlist_item_id' => $id ));
+            $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_items', array('wishlist_item_id' => $id));
+            $wpdb->delete($wpdb->prefix . 'nmgr_wishlist_itemmeta', array('wishlist_item_id' => $id));
 
-            do_action_deprecated('nmgr_delete_wishlist_item', array( $item->get_id(), $item->get_wishlist_id() ), '2.1.0', 'nmgr_wishlist_item_deleted');
+            do_action_deprecated('nmgr_delete_wishlist_item', array($item->get_id(), $item->get_wishlist_id()), '2.1.0', 'nmgr_wishlist_item_deleted');
             do_action('nmgr_wishlist_item_deleted', $item, $item->get_wishlist());
         }
     }
@@ -151,7 +151,7 @@ class NMGR_Database_Wishlist_Item
         $props_to_meta_keys = $item->get_internal_meta_keys($props_to_update);
 
         foreach ($props_to_meta_keys as $prop => $meta_key) {
-            if (is_callable(array( $item, "get_$prop" ))) {
+            if (is_callable(array($item, "get_$prop"))) {
                 $value = $item->{"get_$prop"}();
             } else {
                 $value = $item->get_prop($prop);

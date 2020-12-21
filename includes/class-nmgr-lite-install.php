@@ -17,15 +17,15 @@ class NMGR_Lite_Install
 
     public static function load()
     {
-        spl_autoload_register(array( __CLASS__, 'autoload' ));
+        spl_autoload_register(array(__CLASS__, 'autoload'));
 
-        register_activation_hook(NMGRLITE_FILE, array( __CLASS__, 'activate' ));
-        register_deactivation_hook(NMGRLITE_FILE, array( __CLASS__, 'deactivate' ));
-        add_filter('extra_plugin_headers', array( __CLASS__, 'extra_plugin_headers' ));
-        add_action('plugins_loaded', array( __CLASS__, 'maybe_install_and_run' ));
-        add_action('nmgrlite_install', array( __CLASS__, 'install' ));
-        add_action('nmgrlite_run', array( __CLASS__, 'run' ));
-        add_filter('cron_schedules', array( __CLASS__, 'cron_schedules' ));
+        register_activation_hook(NMGRLITE_FILE, array(__CLASS__, 'activate'));
+        register_deactivation_hook(NMGRLITE_FILE, array(__CLASS__, 'deactivate'));
+        add_filter('extra_plugin_headers', array(__CLASS__, 'extra_plugin_headers'));
+        add_action('plugins_loaded', array(__CLASS__, 'maybe_install_and_run'));
+        add_action('nmgrlite_install', array(__CLASS__, 'install'));
+        add_action('nmgrlite_run', array(__CLASS__, 'run'));
+        add_filter('cron_schedules', array(__CLASS__, 'cron_schedules'));
     }
 
     public static function extra_plugin_headers($headers)
@@ -51,86 +51,86 @@ class NMGR_Lite_Install
 
         $plugin_data = get_plugin_data(NMGRLITE_FILE);
 
-        return ( object ) array(
-                /**
+        return (object) array(
+            /**
                  * Full file path to the root plugin file
                  */
-                'file' => NMGRLITE_FILE,
-                /**
+            'file' => NMGRLITE_FILE,
+            /**
                  * Name of the root plugin file without the php extension
                  * e.g. nm-gift-registry
                  */
-                'slug' => pathinfo(NMGRLITE_FILE, PATHINFO_FILENAME),
-                /**
+            'slug' => pathinfo(NMGRLITE_FILE, PATHINFO_FILENAME),
+            /**
                  * Name of the root plugin file prefixed with the root plugin folder if available
                  * e.g. nm-gift-registry/nm-gift-registry.php
                  */
-                'basename' => plugin_basename(NMGRLITE_FILE),
-                /**
+            'basename' => plugin_basename(NMGRLITE_FILE),
+            /**
                  * Plugin url
                  */
-                'url' => plugin_dir_url(NMGRLITE_FILE),
-                /**
+            'url' => plugin_dir_url(NMGRLITE_FILE),
+            /**
                  * The path to the plugin
                  */
-                'path' => plugin_dir_path(NMGRLITE_FILE),
-                /**
+            'path' => plugin_dir_path(NMGRLITE_FILE),
+            /**
                  * The path to the templates folder of the plugin
                  */
-                'template_path' => plugin_dir_path(NMGRLITE_FILE) . 'templates/',
-                /**
+            'template_path' => plugin_dir_path(NMGRLITE_FILE) . 'templates/',
+            /**
                  * The theme folder from which the plugin's template flies can be overridden
                  */
-                'theme_path' => apply_filters('nmgr_theme_path', 'nm-gift-registry-lite/'),
-                /**
+            'theme_path' => apply_filters('nmgr_theme_path', 'nm-gift-registry-lite/'),
+            /**
                  * Plugin name
                  */
-                'name' => $plugin_data[ 'Name' ],
-                /**
+            'name' => $plugin_data['Name'],
+            /**
                  * Plugin version
                  */
-                'version' => $plugin_data[ 'Version' ],
-                /**
+            'version' => $plugin_data['Version'],
+            /**
                  * Minimum php version required for plugin to work
                  */
-                'requires_php' => $plugin_data[ 'NMGR requires PHP' ],
-                /**
+            'requires_php' => $plugin_data['NMGR requires PHP'],
+            /**
                  * Minimum wordpress version required for plugin to work
                  */
-                'requires_wp' => $plugin_data[ 'NMGR requires WP' ],
-                /**
+            'requires_wp' => $plugin_data['NMGR requires WP'],
+            /**
                  * Minimum woocommerce version required for plugin to work
                  */
-                'requires_wc' => $plugin_data[ 'NMGR requires WC' ],
-                /**
+            'requires_wc' => $plugin_data['NMGR requires WC'],
+            /**
                  * Documentation url
                  */
-                'documentation_uri' => $plugin_data[ 'NMGR documentation uri' ],
-                /**
+            'documentation_uri' => $plugin_data['NMGR documentation uri'],
+            /**
                  * Wishlist post type name
                  */
-                'post_type' => 'nm_gift_registry',
-                /**
+            'post_type' => 'nm_gift_registry',
+            /**
                  * Pluralized wishlist post type name
                  */
-                'post_type_plural' => 'nm_gift_registries',
-                /**
+            'post_type_plural' => 'nm_gift_registries',
+            /**
                  * Name for saving plugin options in database
                  */
-                'option_name' => 'nmgr_settings',
-                /**
+            'option_name' => 'nmgr_settings',
+            /**
                  * Plugin prefix
                  */
-                'prefix' => 'nmgr_',
-                /**
+            'prefix' => 'nmgr_',
+            /**
                  * Key to identify wishlist items in cart and order
                  */
-                'cart_key' => 'nm_gift_registry',
-                /**
+            'cart_key' => 'nm_gift_registry',
+            /**
                  * Post thumbnail size for wishlist featured image
                  * The post thumbnail is a square so this key returns one value for the width and height
                  */
-                'post_thumbnail_size' => apply_filters('nmgr_medium_size', 190),
+            'post_thumbnail_size' => apply_filters('nmgr_medium_size', 190),
         );
     }
 
@@ -153,9 +153,11 @@ class NMGR_Lite_Install
     {
         $settings = get_option(self::get_plugin_data()->option_name);
 
-        if (!empty($settings) &&
-            isset($settings[ 'allow_multiple_wishlists' ]) &&
-            $settings[ 'allow_multiple_wishlists' ]) {
+        if (
+            !empty($settings) &&
+            isset($settings['allow_multiple_wishlists']) &&
+            $settings['allow_multiple_wishlists']
+        ) {
             add_option('nmgr_disable_multiple_wishlists', true);
         }
 
@@ -175,8 +177,8 @@ class NMGR_Lite_Install
     public static function maybe_install_and_run()
     {
         if (self::maybe_deactivate_plugin()) {
-            add_action('admin_init', array( __CLASS__, 'deactivate_plugin' ));
-            add_action('admin_notices', array( __CLASS__, 'show_deactivation_notice' ));
+            add_action('admin_init', array(__CLASS__, 'deactivate_plugin'));
+            add_action('admin_notices', array(__CLASS__, 'show_deactivation_notice'));
             return;
         }
 
@@ -193,7 +195,7 @@ class NMGR_Lite_Install
 
     public static function install()
     {
-        add_action('init', array( __CLASS__, 'install_actions' ));
+        add_action('init', array(__CLASS__, 'install_actions'));
     }
 
     public static function run()
@@ -211,18 +213,18 @@ class NMGR_Lite_Install
         new NMGR_Widget_Cart();
         new NMGR_Widget_Search();
 
-        add_action('init', array( __CLASS__, 'register_meta_tables' ), 0);
-        add_action('switch_blog', array( __CLASS__, 'register_meta_tables' ), 0);
-        add_filter('plugin_action_links_' . self::get_plugin_data()->basename, array( __CLASS__, 'plugin_action_links' ));
-        add_filter('plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2);
-        add_action('init', array( __CLASS__, 'maybe_disable_multiple_wishlists' ));
+        add_action('init', array(__CLASS__, 'register_meta_tables'), 0);
+        add_action('switch_blog', array(__CLASS__, 'register_meta_tables'), 0);
+        add_filter('plugin_action_links_' . self::get_plugin_data()->basename, array(__CLASS__, 'plugin_action_links'));
+        add_filter('plugin_row_meta', array(__CLASS__, 'plugin_row_meta'), 10, 2);
+        add_action('init', array(__CLASS__, 'maybe_disable_multiple_wishlists'));
     }
 
     public static function maybe_disable_multiple_wishlists()
     {
         if (get_option('nmgr_disable_multiple_wishlists')) {
             $settings = get_option(self::get_plugin_data()->option_name);
-            $settings[ 'allow_multiple_wishlists' ] = '';
+            $settings['allow_multiple_wishlists'] = '';
             update_option(self::get_plugin_data()->option_name, $settings);
             delete_option('nmgr_disable_multiple_wishlists');
         }
@@ -236,7 +238,7 @@ class NMGR_Lite_Install
     public static function cron_schedules($schedules)
     {
         if (version_compare(get_bloginfo('version'), '5.4.0', '<')) {
-            $schedules[ 'weekly' ] = array(
+            $schedules['weekly'] = array(
                 'interval' => WEEK_IN_SECONDS,
                 'display' => __('Once Weekly', 'nm-gift-registry-lite')
             );
@@ -385,7 +387,7 @@ class NMGR_Lite_Install
         return apply_filters("nmgr_{$capability_type}_roles", array(
             'administrator',
             'shop_manager'
-            ));
+        ));
     }
 
     public static function get_capabilities()
@@ -395,12 +397,12 @@ class NMGR_Lite_Install
         $post_type_plural = self::get_plugin_data()->post_type_plural;
 
         // Permission for managing plugin settings
-        $capabilities[ 'manage_settings' ] = array(
+        $capabilities['manage_settings'] = array(
             "manage_{$post_type}_settings"
         );
 
         // Permission for managing gift registry post type CRUD operations
-        $capabilities[ "manage_CRUD" ] = array(
+        $capabilities["manage_CRUD"] = array(
             "edit_{$post_type}",
             "read_{$post_type}",
             "delete_{$post_type}",
@@ -489,7 +491,7 @@ class NMGR_Lite_Install
     {
         return array_merge($links, array(
             '<a href="' . NMGR_Admin_Settings::url() . '">' . __('Settings', 'nm-gift-registry-lite') . '</a>',
-            ));
+        ));
     }
 
     public static function plugin_row_meta($links, $file)
@@ -530,8 +532,8 @@ class NMGR_Lite_Install
     public static function deactivate_plugin()
     {
         deactivate_plugins(self::get_plugin_data()->basename);
-        if (isset($_GET[ 'activate' ])) { // phpcs:ignore WordPress.Security.NonceVerification
-            unset($_GET[ 'activate' ]); // phpcs:ignore WordPress.Security.NonceVerification
+        if (isset($_GET['activate'])) { // phpcs:ignore WordPress.Security.NonceVerification
+            unset($_GET['activate']); // phpcs:ignore WordPress.Security.NonceVerification
         }
     }
 

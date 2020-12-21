@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for displaying content in a dialog window
  *
@@ -25,22 +26,22 @@ $close_button = '<button type="button" class="close" data-dismiss="modal" aria-l
   <?php endif; ?>
 
   <?php
-        if ($show_header_close_button) {
-            echo $close_button;
-        }
-        ?>
+    if ($show_header_close_button) {
+      echo $close_button;
+    }
+    ?>
 
 </div>
 <?php endif; ?>
 
 <div class="modal-body">
   <?php
-    if ($show_body_close_button) {
-        echo $close_button;
-    }
+  if ($show_body_close_button) {
+    echo $close_button;
+  }
 
-    echo $content;
-    ?>
+  echo $content;
+  ?>
 </div>
 
 <?php if ($footer) : ?>
@@ -52,4 +53,4 @@ $close_button = '<button type="button" class="close" data-dismiss="modal" aria-l
 
 
 
- endif;
+endif;

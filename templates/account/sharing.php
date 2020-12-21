@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Displays links for sharing wishlist on social networks
  *
@@ -16,8 +17,8 @@ defined('ABSPATH') || exit;
 $url = $wishlist->get_permalink();
 $wishlist_title = $wishlist->get_title();
 $desc = $wishlist->get_description() ? $wishlist->get_description() : apply_filters('nmgr_default_share_description', sprintf(
-            /* translators: %s: wishlist type title */
-            __('Here is the link to my %s:', 'nm-gift-registry-lite'),
+    /* translators: %s: wishlist type title */
+    __('Here is the link to my %s:', 'nm-gift-registry-lite'),
     esc_html(nmgr_get_type_title())
 ));
 $image = '';
@@ -42,7 +43,7 @@ $image = '';
                 ),
                 'http://www.facebook.com/sharer/sharer.php'
             );
-            ?>
+        ?>
     <div class="share-item nmgr-share-on-facebook">
       <a target="_blank" href="<?php echo esc_url($share_link); ?>"
         title="<?php esc_attr_e('Click to share on facebook', 'nm-gift-registry-lite'); ?>" class="nmgr-tip">
@@ -66,7 +67,7 @@ $image = '';
                 ),
                 'https://twitter.com/share'
             );
-            ?>
+        ?>
     <div class="share-item nmgr-share-on-twitter">
       <a target="_blank" href="<?php echo esc_url($share_link); ?>"
         title="<?php esc_attr_e('Click to share on twitter', 'nm-gift-registry-lite'); ?>" class="nmgr-tip">
@@ -94,7 +95,7 @@ $image = '';
             if ($image) :
                 $share_link = add_query_arg('media', rawurlencode($image), $share_link);
             endif;
-            ?>
+        ?>
     <div class="share-item nmgr-share-on-pinterest">
       <a target="_blank" href="<?php echo esc_url($share_link); ?>"
         title="<?php esc_attr_e('Click to share on pinterest', 'nm-gift-registry-lite'); ?>" class="nmgr-tip">
@@ -119,7 +120,7 @@ $image = '';
                 ),
                 'mailto:'
             );
-            ?>
+        ?>
     <div class="share-item nmgr-share-on-email">
       <a target="_blank" href="<?php echo esc_url($share_link); ?>"
         title="<?php esc_attr_e('Click to share via email', 'nm-gift-registry-lite'); ?>" class="nmgr-tip">

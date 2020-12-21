@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for enabling the wishlist module on a per user basis
  *
@@ -22,9 +23,9 @@ $checked = get_user_meta(get_current_user_id(), 'nmgr_enable_wishlist', true) ? 
       <input type="checkbox" value="1" name="nmgr_enable_wishlist" id="nmgr-enable-wishlist"
         <?php echo esc_attr($checked); ?>>
       <?php
-            /* translators: %s: wishlist type title */
-            printf(esc_html__('Enable %s', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
-            ?>
+      /* translators: %s: wishlist type title */
+      printf(esc_html__('Enable %s', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
+      ?>
     </label>
     <?php wp_nonce_field('nmgr_enable_wishlist', 'nmgr-enable-wishlist-nonce'); ?>
   </form>

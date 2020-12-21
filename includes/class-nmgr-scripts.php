@@ -29,11 +29,11 @@ class NMGR_Scripts
         self::$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
         // 999 priority ensures we hook our scripts after woocommerce's and any other conflicting plugin scripts
-        add_action('admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ), 999);
-        add_action('wp_enqueue_scripts', array( __CLASS__, 'frontend_scripts' ), 999);
+        add_action('admin_enqueue_scripts', array(__CLASS__, 'admin_scripts'), 999);
+        add_action('wp_enqueue_scripts', array(__CLASS__, 'frontend_scripts'), 999);
 
-        add_action('wp_print_scripts', array( __CLASS__, 'add_inline_scripts' ), 5);
-        add_action('wp_print_footer_scripts', array( __CLASS__, 'add_inline_scripts' ), 5);
+        add_action('wp_print_scripts', array(__CLASS__, 'add_inline_scripts'), 5);
+        add_action('wp_print_footer_scripts', array(__CLASS__, 'add_inline_scripts'), 5);
 
         add_action('wp_footer', 'nmgr_include_sprite_file');
         add_action('admin_footer', 'nmgr_include_sprite_file');
@@ -77,20 +77,20 @@ class NMGR_Scripts
 
         // Scripts
         if (!wp_script_is('stupidtable', 'registered')) {
-            wp_register_script('stupidtable', nmgr()->url . 'assets/js/vendor/stupidtable' . self::$suffix . '.js', array( 'jquery' ), '', true);
+            wp_register_script('stupidtable', nmgr()->url . 'assets/js/vendor/stupidtable' . self::$suffix . '.js', array('jquery'), '', true);
         }
 
         if (!wp_script_is('jquery-blockui', 'registered')) {
-            wp_register_script('jquery-blockui', nmgr()->url . 'assets/js/vendor/jquery.blockUI' . self::$suffix . '.js', array( 'jquery' ), '2.70', true);
+            wp_register_script('jquery-blockui', nmgr()->url . 'assets/js/vendor/jquery.blockUI' . self::$suffix . '.js', array('jquery'), '2.70', true);
         }
 
         if (!wp_script_is('jquery-tiptip', 'registered')) {
-            wp_register_script('jquery-tiptip', nmgr()->url . 'assets/js/vendor/jquery.tipTip' . self::$suffix . '.js', array( 'jquery' ), nmgr()->version, true);
+            wp_register_script('jquery-tiptip', nmgr()->url . 'assets/js/vendor/jquery.tipTip' . self::$suffix . '.js', array('jquery'), nmgr()->version, true);
         }
 
         // We're forced to use selectWoo instead of select2 because woocommerce uses it for shipping fields
         if (!wp_script_is('selectWoo', 'registered')) {
-            wp_register_script('selectWoo', nmgr()->url . 'assets/js/vendor/selectWoo.full' . self::$suffix . '.js', array( 'jquery' ), '1.0.6', true);
+            wp_register_script('selectWoo', nmgr()->url . 'assets/js/vendor/selectWoo.full' . self::$suffix . '.js', array('jquery'), '1.0.6', true);
         }
 
         wp_register_script('nmgr-bootstrap', nmgr()->url . 'assets/js/vendor/bootstrap-native' . self::$suffix . '.js', array(), nmgr()->version, true);
@@ -98,20 +98,20 @@ class NMGR_Scripts
 
     private static function register_admin_scripts()
     {
-        wp_register_style('nmgr-admin', nmgr()->url . 'assets/css/admin' . self::$suffix . '.css', array( 'nmgr-jquery-tiptip' ), nmgr()->version);
-        wp_register_script('nmgr-admin', nmgr()->url . 'assets/js/admin' . self::$suffix . '.js', array( 'jquery', 'selectWoo', 'stupidtable', 'jquery-blockui', 'nmgr-bootstrap', 'jquery-ui-datepicker', 'jquery-tiptip' ), nmgr()->version, true);
+        wp_register_style('nmgr-admin', nmgr()->url . 'assets/css/admin' . self::$suffix . '.css', array('nmgr-jquery-tiptip'), nmgr()->version);
+        wp_register_script('nmgr-admin', nmgr()->url . 'assets/js/admin' . self::$suffix . '.js', array('jquery', 'selectWoo', 'stupidtable', 'jquery-blockui', 'nmgr-bootstrap', 'jquery-ui-datepicker', 'jquery-tiptip'), nmgr()->version, true);
     }
 
     private static function register_frontend_scripts()
     {
-        wp_register_style('nmgr-frontend', nmgr()->url . 'assets/css/frontend' . self::$suffix . '.css', array( 'nmgr-jquery-tiptip', 'select2' ), nmgr()->version);
-        wp_register_script('nmgr-frontend', nmgr()->url . 'assets/js/frontend' . self::$suffix . '.js', array( 'jquery', 'jquery-tiptip', 'wc-add-to-cart-variation', 'stupidtable', 'jquery-blockui', 'selectWoo', 'wc-country-select', 'wc-address-i18n', 'nmgr-bootstrap', 'jquery-ui-datepicker' ), nmgr()->version, true);
+        wp_register_style('nmgr-frontend', nmgr()->url . 'assets/css/frontend' . self::$suffix . '.css', array('nmgr-jquery-tiptip', 'select2'), nmgr()->version);
+        wp_register_script('nmgr-frontend', nmgr()->url . 'assets/js/frontend' . self::$suffix . '.js', array('jquery', 'jquery-tiptip', 'wc-add-to-cart-variation', 'stupidtable', 'jquery-blockui', 'selectWoo', 'wc-country-select', 'wc-address-i18n', 'nmgr-bootstrap', 'jquery-ui-datepicker'), nmgr()->version, true);
     }
 
     private static function get_script_data($handle = '')
     {
         $data = array();
-        $nmgr_global = isset($GLOBALS[ 'nmgr' ]) ? $GLOBALS[ 'nmgr' ] : '';
+        $nmgr_global = isset($GLOBALS['nmgr']) ? $GLOBALS['nmgr'] : '';
         $ajax_url = admin_url('admin-ajax.php');
 
         // Parameters that can be used by various scripts
@@ -123,7 +123,7 @@ class NMGR_Scripts
             'style_datepicker' => apply_filters('nmgr_style_datepicker', true),
         );
 
-        $data[ 'nmgr-frontend' ] = array(
+        $data['nmgr-frontend'] = array(
             'global' => $global_params,
             'nonce' => wp_create_nonce('nmgr-frontend'),
             'shipping_address_required' => nmgr_get_option('shipping_address_required'),
@@ -154,7 +154,7 @@ class NMGR_Scripts
         );
 
 
-        $data[ 'nmgr-admin' ] = array(
+        $data['nmgr-admin'] = array(
             'global' => $global_params,
             'i18n_use_account_shipping_address_text' => __("Use the user's account shipping address? This will remove any currently entered shipping information.", 'nm-gift-registry-lite'),
             'i18n_select_user' => esc_attr__('You have not selected a user yet. Please select a user', 'nm-gift-registry-lite'),
@@ -165,11 +165,11 @@ class NMGR_Scripts
         );
 
         if (is_a(wc()->countries, 'WC_Countries')) {
-            $data[ 'nmgr-admin' ][ 'countries' ] = wp_json_encode(array_merge(WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states()));
+            $data['nmgr-admin']['countries'] = wp_json_encode(array_merge(WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states()));
         }
 
         if ($handle) {
-            return isset($data[ $handle ]) ? $data[ $handle ] : false;
+            return isset($data[$handle]) ? $data[$handle] : false;
         }
 
         return $data;
@@ -189,14 +189,14 @@ class NMGR_Scripts
             if (!in_array($handle, self::$inline_scripts, true) && wp_script_is($handle, 'enqueued')) {
                 $data = self::get_script_data($handle);
 
-                if (isset($data[ 'global' ])) {
+                if (isset($data['global'])) {
                     if (false === $global_inline_script_added) {
-                        wp_add_inline_script($handle, 'var nmgr_global_params = ' . json_encode($data[ 'global' ]), 'before');
+                        wp_add_inline_script($handle, 'var nmgr_global_params = ' . json_encode($data['global']), 'before');
                         $global_inline_script_added = true;
                     }
 
                     if ($global_inline_script_added) {
-                        unset($data[ 'global' ]);
+                        unset($data['global']);
                     }
                 }
 

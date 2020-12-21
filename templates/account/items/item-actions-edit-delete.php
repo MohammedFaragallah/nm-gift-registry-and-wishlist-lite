@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist item edit and delete actions
  *
@@ -21,11 +22,11 @@ defined('ABSPATH') || exit;
     <a class="nmgr-action edit-wishlist-item nmgr-tip" href="#"
       title="<?php esc_attr_e('Edit item', 'nm-gift-registry-lite'); ?>">
       <?php
-                echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    'icon' => 'pencil',
-                    'fill' => 'currentColor'
-                ));
-                ?>
+        echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+          'icon' => 'pencil',
+          'fill' => 'currentColor'
+        ));
+        ?>
     </a>
     <?php endif; ?>
 
@@ -34,11 +35,11 @@ defined('ABSPATH') || exit;
       title="<?php esc_attr_e('Delete item', 'nm-gift-registry-lite'); ?>"
       data-notice="<?php echo esc_attr(nmgr_get_delete_item_notice($item)); ?>">
       <?php
-                     echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                         'icon' => 'trash-can',
-                         'fill' => 'currentColor'
-                     ));
-                     ?>
+        echo nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+          'icon' => 'trash-can',
+          'fill' => 'currentColor'
+        ));
+        ?>
     </a>
     <?php endif; ?>
 

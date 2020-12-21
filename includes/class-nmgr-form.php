@@ -41,9 +41,9 @@ class NMGR_Form
 
     public static function run()
     {
-        add_filter('nmgr_fields', array( __CLASS__, 'modify_form_fields' ), 10);
-        add_action('woocommerce_form_field', array( __CLASS__, 'remove_optional_required_html' ), 10, 3);
-        add_filter('woocommerce_form_field_nmgr-hidden', array( __CLASS__, 'create_hidden_field' ), 10, 4);
+        add_filter('nmgr_fields', array(__CLASS__, 'modify_form_fields'), 10);
+        add_action('woocommerce_form_field', array(__CLASS__, 'remove_optional_required_html'), 10, 3);
+        add_filter('woocommerce_form_field_nmgr-hidden', array(__CLASS__, 'create_hidden_field'), 10, 4);
     }
 
     public function __construct($wishlist_id = 0)
@@ -67,11 +67,11 @@ class NMGR_Form
      */
     public static function remove_optional_required_html($field, $key, $args)
     {
-        if (false !== strpos($key, nmgr()->prefix) || isset($args[ 'prefix' ])) {
+        if (false !== strpos($key, nmgr()->prefix) || isset($args['prefix'])) {
             $field = str_replace('<span class="optional">(optional)</span>', '', $field);
         }
 
-        if (false !== strpos($key, nmgr()->prefix) || isset($args[ 'prefix' ])) {
+        if (false !== strpos($key, nmgr()->prefix) || isset($args['prefix'])) {
             $field = str_replace('<abbr class="required', '<abbr class="nmgr-tip required', $field);
         }
 
@@ -97,34 +97,34 @@ class NMGR_Form
              * Let's not do this for woocommerce's shipping fields to
              * prevent html5 focussable error being generated when field is hidden
              */
-            if (false === strpos($field, 'shipping_') && isset($args[ 'required' ]) && $args[ 'required' ]) {
-                $fields[ $field ][ 'custom_attributes' ][ 'required' ] = true;
+            if (false === strpos($field, 'shipping_') && isset($args['required']) && $args['required']) {
+                $fields[$field]['custom_attributes']['required'] = true;
             }
 
             switch ($field) {
                 case 'nmgr_first_name':
-                    if (isset($fields[ 'nmgr_last_name' ])) {
-                        $fields[ $field ][ 'class' ] = array( 'form-row-first' );
+                    if (isset($fields['nmgr_last_name'])) {
+                        $fields[$field]['class'] = array('form-row-first');
                     }
                     break;
                 case 'nmgr_last_name':
-                    if (isset($fields[ 'nmgr_first_name' ])) {
-                        $fields[ $field ][ 'class' ] = array( 'form-row-last' );
+                    if (isset($fields['nmgr_first_name'])) {
+                        $fields[$field]['class'] = array('form-row-last');
                     }
                     break;
                 case 'nmgr_partner_first_name':
-                    if (isset($fields[ 'nmgr_partner_last_name' ])) {
-                        $fields[ $field ][ 'class' ] = array( 'form-row-first' );
+                    if (isset($fields['nmgr_partner_last_name'])) {
+                        $fields[$field]['class'] = array('form-row-first');
                     }
                     break;
                 case 'nmgr_partner_last_name':
-                    if (isset($fields[ 'nmgr_partner_first_name' ])) {
-                        $fields[ $field ][ 'class' ] = array( 'form-row-last' );
+                    if (isset($fields['nmgr_partner_first_name'])) {
+                        $fields[$field]['class'] = array('form-row-last');
                     }
                     break;
                 case 'nmgr_email':
-                    if (isset($fields[ $field ])) {
-                        $fields[ $field ][ 'class' ] = array( 'form-row-wide' );
+                    if (isset($fields[$field])) {
+                        $fields[$field]['class'] = array('form-row-wide');
                     }
                     break;
             }
@@ -143,7 +143,7 @@ class NMGR_Form
      */
     public function has_fields()
     {
-        return ( bool ) $this->fields_count;
+        return (bool) $this->fields_count;
     }
 
     /**
@@ -164,7 +164,7 @@ class NMGR_Form
      */
     public function get_wishlist_value($key)
     {
-        if (is_callable(array( $this->wishlist, "get_$key" ))) {
+        if (is_callable(array($this->wishlist, "get_$key"))) {
             $value = $this->wishlist->{"get_$key"}();
         } else {
             $value = $this->wishlist->get_prop($key);
@@ -189,24 +189,24 @@ class NMGR_Form
         $postmeta = is_a($this->wishlist, 'NMGR_Wishlist') ? get_post_meta($this->wishlist->get_id()) : array();
 
         foreach ($fields as $key => $args) {
-            if (isset($args[ 'default' ])) {
+            if (isset($args['default'])) {
                 continue;
             }
 
             switch ($key) {
                 case 'first_name':
-                    if (!isset($postmeta[ '_first_name' ])) {
-                        $fields[ $key ][ 'default' ] = $user->first_name;
+                    if (!isset($postmeta['_first_name'])) {
+                        $fields[$key]['default'] = $user->first_name;
                     }
                     break;
                 case 'last_name':
-                    if (!isset($postmeta[ '_last_name' ])) {
-                        $fields[ $key ][ 'default' ] = $user->last_name;
+                    if (!isset($postmeta['_last_name'])) {
+                        $fields[$key]['default'] = $user->last_name;
                     }
                     break;
                 case 'email':
-                    if (!isset($postmeta[ '_email' ])) {
-                        $fields[ $key ][ 'default' ] = $user->user_email;
+                    if (!isset($postmeta['_email'])) {
+                        $fields[$key]['default'] = $user->user_email;
                     }
                     break;
             }
@@ -222,7 +222,7 @@ class NMGR_Form
     public function set_values($fields)
     {
         foreach ($fields as $key => $args) {
-            if (isset($args[ 'value' ])) {
+            if (isset($args['value'])) {
                 continue;
             }
 
@@ -231,11 +231,11 @@ class NMGR_Form
             // Process certain fields differently (typically checkbox fields)
             switch ($key) {
                 case 'ship_to_account_address':
-                    $value = ( int ) $this->wishlist->is_shipping_to_account_address();
+                    $value = (int) $this->wishlist->is_shipping_to_account_address();
                     break;
             }
 
-            $fields[ $key ][ 'value' ] = $value;
+            $fields[$key]['value'] = $value;
         }
 
         return $fields;
@@ -253,11 +253,11 @@ class NMGR_Form
     {
         $prefixed = array();
         foreach ($fields as $name => $args) {
-            if ((isset($args[ 'prefix' ]) && !$args[ 'prefix' ]) || false !== strpos($name, nmgr()->prefix)) {
-                $prefixed[ $name ] = $args;
+            if ((isset($args['prefix']) && !$args['prefix']) || false !== strpos($name, nmgr()->prefix)) {
+                $prefixed[$name] = $args;
                 continue;
             }
-            $prefixed[ nmgr()->prefix . $name ] = $args;
+            $prefixed[nmgr()->prefix . $name] = $args;
         }
         return $prefixed;
     }
@@ -276,13 +276,15 @@ class NMGR_Form
         $unprefixed = array();
 
         foreach ($the_fields as $name => $v) {
-            if (!isset($original_fields[ $name ]) ||
-                (isset($original_fields[ $name ]) && isset($original_fields[ $name ][ 'prefix' ]) && !$original_fields[ $name ][ 'prefix' ])) {
-                $unprefixed[ $name ] = $v;
+            if (
+                !isset($original_fields[$name]) ||
+                (isset($original_fields[$name]) && isset($original_fields[$name]['prefix']) && !$original_fields[$name]['prefix'])
+            ) {
+                $unprefixed[$name] = $v;
                 continue;
             }
 
-            $unprefixed[ str_replace(nmgr()->prefix, '', $name) ] = $v;
+            $unprefixed[str_replace(nmgr()->prefix, '', $name)] = $v;
         }
 
         $this->data = $unprefixed;
@@ -371,7 +373,7 @@ class NMGR_Form
     {
         $fields = $requested_fields = array();
 
-        $fields[ 'title' ] = array(
+        $fields['title'] = array(
             'label' => __('Title', 'nm-gift-registry-lite'),
             'placeholder' => sprintf(
                 /* translators: %s: wishlist type title */
@@ -382,18 +384,18 @@ class NMGR_Form
             'fieldset' => 'profile'
         );
 
-        $fields[ 'event_date' ] = array(
+        $fields['event_date'] = array(
             'label' => __('Event Date', 'nm-gift-registry-lite'),
             'autocomplete' => 'off',
             'placeholder' => __('Event date', 'nm-gift-registry-lite'),
             'custom_attributes' => array(
                 'autocomplete' => 'off',
             ),
-            'validate' => array( 'date' ),
+            'validate' => array('date'),
             'fieldset' => 'profile'
         );
 
-        $fields[ 'description' ] = array(
+        $fields['description'] = array(
             'type' => 'textarea',
             'label' => __('Description', 'nm-gift-registry-lite'),
             'placeholder' => sprintf(
@@ -404,42 +406,42 @@ class NMGR_Form
             'fieldset' => 'profile'
         );
 
-        $fields[ 'first_name' ] = array(
+        $fields['first_name'] = array(
             'label' => __('First Name', 'nm-gift-registry-lite'),
             'placeholder' => __('First name', 'nm-gift-registry-lite'),
             'autocomplete' => 'given-name',
             'fieldset' => 'profile'
         );
 
-        $fields[ 'last_name' ] = array(
+        $fields['last_name'] = array(
             'label' => __('Last Name', 'nm-gift-registry-lite'),
             'placeholder' => __('Last name', 'nm-gift-registry-lite'),
             'autocomplete' => 'family-name',
             'fieldset' => 'profile'
         );
 
-        $fields[ 'partner_first_name' ] = array(
+        $fields['partner_first_name'] = array(
             'label' => __('Partner First Name', 'nm-gift-registry-lite'),
             'placeholder' => __('Partner first name', 'nm-gift-registry-lite'),
             'fieldset' => 'profile',
         );
 
-        $fields[ 'partner_last_name' ] = array(
+        $fields['partner_last_name'] = array(
             'label' => __('Partner Last Name', 'nm-gift-registry-lite'),
             'placeholder' => __('Partner last name', 'nm-gift-registry-lite'),
             'fieldset' => 'profile',
         );
 
-        $fields[ 'email' ] = array(
+        $fields['email'] = array(
             'type' => 'email',
             'label' => __('Email', 'nm-gift-registry-lite'),
             'placeholder' => __('Email', 'nm-gift-registry-lite'),
             'autocomplete' => 'email',
-            'validate' => array( 'email' ),
+            'validate' => array('email'),
             'fieldset' => 'profile'
         );
 
-        $fields[ 'ship_to_account_address' ] = array(
+        $fields['ship_to_account_address'] = array(
             'type' => 'checkbox',
             'label' => sprintf(
                 /* translators: %s: wishlist type title */
@@ -449,22 +451,22 @@ class NMGR_Form
             'custom_attributes' => array(
                 'data-save' => !$this->wishlist->is_shipping_to_account_address(),
             ),
-            'default' => ( int ) $this->wishlist->is_shipping_to_account_address(),
+            'default' => (int) $this->wishlist->is_shipping_to_account_address(),
         );
 
-        $fields[ 'wishlist_id' ] = array(
+        $fields['wishlist_id'] = array(
             'type' => 'nmgr-hidden',
             'value' => $this->wishlist->get_id(),
         );
 
-        $fields[ 'nmgr_user_id' ] = array(
+        $fields['nmgr_user_id'] = array(
             'type' => 'nmgr-hidden',
             'prefix' => false,
             'value' => $this->wishlist->get_user_id() ? $this->wishlist->get_user_id() : nmgr_get_current_user_id(),
         );
 
         // Get shipping fields
-        $fields = array_merge($fields, ( array ) $this->get_shipping_fields());
+        $fields = array_merge($fields, (array) $this->get_shipping_fields());
 
         // Set default field values
         $fields = $this->set_defaults($fields);
@@ -474,9 +476,9 @@ class NMGR_Form
 
         // Set required attribute for profile fields based on default settings and plugin settings
         foreach ($fields as $key => $args) {
-            if (isset($args[ 'fieldset' ]) && 'profile' === $args[ 'fieldset' ]) {
-                $required = isset($args[ 'required' ]) && $args[ 'required' ] ? 'required' : false;
-                $fields[ $key ][ 'required' ] = ( bool ) ('required' === nmgr_get_option("display_form_{$key}", $required));
+            if (isset($args['fieldset']) && 'profile' === $args['fieldset']) {
+                $required = isset($args['required']) && $args['required'] ? 'required' : false;
+                $fields[$key]['required'] = (bool) ('required' === nmgr_get_option("display_form_{$key}", $required));
             }
         }
 
@@ -484,26 +486,26 @@ class NMGR_Form
         if ($fieldset) {
             if (is_string($fieldset)) {
                 foreach ($fields as $key => $args) {
-                    if (isset($args[ 'fieldset' ]) && ($args[ 'fieldset' ] === $fieldset) && !in_array($key, ( array ) $ignore)) {
-                        $requested_fields[ $key ] = $args;
+                    if (isset($args['fieldset']) && ($args['fieldset'] === $fieldset) && !in_array($key, (array) $ignore)) {
+                        $requested_fields[$key] = $args;
                     }
                 }
             } elseif (is_array($fieldset)) {
                 foreach ($fields as $key => $args) {
                     if (in_array($key, $fieldset)) {
-                        $requested_fields[ $key ] = $args;
+                        $requested_fields[$key] = $args;
                     }
                 }
             }
         } else {
-            $requested_fields = array_diff_key($fields, array_flip(( array ) $ignore));
+            $requested_fields = array_diff_key($fields, array_flip((array) $ignore));
         }
 
         // Exclude hidden fields
         if ($exclude_hidden) {
             foreach (array_keys($requested_fields) as $key) {
                 if ('no' === nmgr_get_option("display_form_{$key}", 'yes')) {
-                    unset($requested_fields[ $key ]);
+                    unset($requested_fields[$key]);
                 }
             }
         }
@@ -519,8 +521,8 @@ class NMGR_Form
          * Enforce 'required' attribute for title field
          * Title field is used to save the wishlist title in database as wordpress post title
          */
-        if (isset($prepared_fields[ nmgr()->prefix . 'title' ])) {
-            $prepared_fields[ nmgr()->prefix . 'title' ][ 'required' ] = true;
+        if (isset($prepared_fields[nmgr()->prefix . 'title'])) {
+            $prepared_fields[nmgr()->prefix . 'title']['required'] = true;
         }
 
         $this->fields_count = count($prepared_fields);
@@ -567,31 +569,31 @@ class NMGR_Form
                  * functions instead (@see wc-meta-box-functions.php), which are the functions used by woocommerce
                  * to compose shipping and billing fields in the order screen.
                  */
-                $args[ 'type' ] = isset($args[ 'type' ]) ? $args[ 'type' ] : 'text';
-                $args[ 'id' ] = isset($args[ 'id' ]) ? $args[ 'id' ] : $name;
-                $args[ 'label' ] = isset($args[ 'label' ]) ? $args[ 'label' ] : '';
-                $args[ 'wrapper_class' ] = 'form-row ' . (isset($args[ 'class' ]) ? implode(' ', ( array ) $args[ 'class' ]) : '');
-                $args[ 'class' ] = '';
+                $args['type'] = isset($args['type']) ? $args['type'] : 'text';
+                $args['id'] = isset($args['id']) ? $args['id'] : $name;
+                $args['label'] = isset($args['label']) ? $args['label'] : '';
+                $args['wrapper_class'] = 'form-row ' . (isset($args['class']) ? implode(' ', (array) $args['class']) : '');
+                $args['class'] = '';
 
                 switch ($name) {
                     case 'shipping_country':
-                        $args[ 'type' ] = 'select';
-                        $args[ 'class' ] = 'js_field-country select short';
-                        $args[ 'options' ] = array( '' => __('Select a country&hellip;', 'nm-gift-registry-lite') ) + WC()->countries->get_shipping_countries();
+                        $args['type'] = 'select';
+                        $args['class'] = 'js_field-country select short';
+                        $args['options'] = array('' => __('Select a country&hellip;', 'nm-gift-registry-lite')) + WC()->countries->get_shipping_countries();
                         break;
 
                     case 'shipping_state':
-                        $args[ 'class' ] = 'js_field-state select short';
-                        $args[ 'label' ] = __('State / County', 'nm-gift-registry-lite');
+                        $args['class'] = 'js_field-state select short';
+                        $args['label'] = __('State / County', 'nm-gift-registry-lite');
                         break;
 
                     default:
                         break;
                 }
 
-                switch ($args[ 'type' ]) {
+                switch ($args['type']) {
                     case 'select':
-                        $args[ 'style' ] = 'width:100%;max-width:100%!important';
+                        $args['style'] = 'width:100%;max-width:100%!important';
                         woocommerce_wp_select($args);
                         break;
                     case 'textarea':
@@ -615,7 +617,7 @@ class NMGR_Form
                 /**
                  * We are on the frontend here so use woocommerce_form_field to compose the fields.
                  */
-                woocommerce_form_field($name, $args, $args[ 'value' ]);
+                woocommerce_form_field($name, $args, $args['value']);
             }
         }
 
@@ -656,13 +658,13 @@ class NMGR_Form
             $value = $this->get_wishlist_value($key);
 
             // Add field to the 'shipping' fieldset
-            $field[ 'fieldset' ] = 'shipping';
+            $field['fieldset'] = 'shipping';
 
             // Do not prefix field to allow woocommerce js work on it if necessary
-            $field[ 'prefix' ] = false;
+            $field['prefix'] = false;
 
             // Set the field value as the wishlist's value
-            $field[ 'default' ] = $value;
+            $field['default'] = $value;
 
             return $field;
         }, $fields, array_keys($fields));
@@ -700,7 +702,7 @@ class NMGR_Form
         $fields = $this->get_fields_html(array(
             'wishlist_id',
             'nmgr_user_id',
-            ), '', '', false);
+        ), '', '', false);
 
         return apply_filters('nmgr_hidden_fields', $fields);
     }
@@ -715,7 +717,7 @@ class NMGR_Form
     public static function verify_nonce($request = '')
     {
         $request = $request ? $request : $_REQUEST; // phpcs:ignore WordPress.Security.NonceVerification
-        return isset($request[ 'nmgr_form-nonce' ]) ? wp_verify_nonce(sanitize_key($request[ 'nmgr_form-nonce' ]), 'nmgr_form') : false;
+        return isset($request['nmgr_form-nonce']) ? wp_verify_nonce(sanitize_key($request['nmgr_form-nonce']), 'nmgr_form') : false;
     }
 
     /**
@@ -735,29 +737,29 @@ class NMGR_Form
         $unsanitized_data = $data;
 
         foreach (array_keys($fields) as $key) {
-            if (isset($data[ $key ])) {
+            if (isset($data[$key])) {
 
                 // get field types to sanitize
-                $type = sanitize_title(isset($fields[ $key ][ 'type' ]) ? $fields[ $key ][ 'type' ] : 'text');
+                $type = sanitize_title(isset($fields[$key]['type']) ? $fields[$key]['type'] : 'text');
 
                 switch ($type) {
                     case 'checkbox':
-                        $data[ $key ] = 1;
+                        $data[$key] = 1;
                         break;
                     case 'textarea':
-                        $data[ $key ] = wc_sanitize_textarea(wp_unslash($data[ $key ]));
+                        $data[$key] = wc_sanitize_textarea(wp_unslash($data[$key]));
                         break;
                     case 'password':
-                        $data[ $key ] = wp_unslash($data[ $key ]);
+                        $data[$key] = wp_unslash($data[$key]);
                         break;
                     default:
-                        $data[ $key ] = wc_clean(wp_unslash($data[ $key ]));
+                        $data[$key] = wc_clean(wp_unslash($data[$key]));
                         break;
                 }
 
-                $data[ $key ] = apply_filters(
+                $data[$key] = apply_filters(
                     'nmgr_sanitize_' . $type . '_field',
-                    apply_filters('nmgr_sanitize_field_' . $key, $data[ $key ], $data, $unsanitized_data),
+                    apply_filters('nmgr_sanitize_field_' . $key, $data[$key], $data, $unsanitized_data),
                     $key
                 );
             }
@@ -787,29 +789,29 @@ class NMGR_Form
          * Merge posted shipping fields with all fields if the shipping country is posted
          * so that we can validate shipping fields properly
          */
-        if (isset($data[ 'shipping_country' ])) {
-            $shipping_fields = wc()->countries->get_address_fields($data[ 'shipping_country' ], 'shipping_');
+        if (isset($data['shipping_country'])) {
+            $shipping_fields = wc()->countries->get_address_fields($data['shipping_country'], 'shipping_');
             $fields = array_merge($fields, $shipping_fields);
         }
 
         foreach ($fields as $key => $field) {
-            if (!isset($data[ $key ])) {
+            if (!isset($data[$key])) {
                 continue;
             }
 
             /* translators: %s: shipping field label */
-            $field_label = isset($field[ 'label' ]) ? in_array($key, array_keys($shipping_fields)) ? sprintf(__('Shipping %s', 'nm-gift-registry-lite'), $field[ 'label' ]) : $field[ 'label' ] : '';
-            $field_value = $data[ $key ];
+            $field_label = isset($field['label']) ? in_array($key, array_keys($shipping_fields)) ? sprintf(__('Shipping %s', 'nm-gift-registry-lite'), $field['label']) : $field['label'] : '';
+            $field_value = $data[$key];
 
             // Validate required fields
-            if (isset($field[ 'required' ]) && !empty($field[ 'required' ]) && empty($field_value)) {
+            if (isset($field['required']) && !empty($field['required']) && empty($field_value)) {
                 /* translators: %s: shipping field label */
                 $this->error->add('required-field', sprintf(__('%s is a required field.', 'nm-gift-registry-lite'), '<strong>' . esc_html($field_label) . '</strong>'), $field_label);
             }
 
             if (!empty($field_value)) {
-                if (isset($field[ 'validate' ]) && !empty($field[ 'validate' ])) {
-                    foreach (( array ) $field[ 'validate' ] as $rule) {
+                if (isset($field['validate']) && !empty($field['validate'])) {
+                    foreach ((array) $field['validate'] as $rule) {
                         switch ($rule) {
                             case 'email':
                                 if (!is_email($field_value)) {
@@ -821,7 +823,7 @@ class NMGR_Form
                                 }
                                 break;
                             case 'postcode':
-                                $country = $data[ 'shipping_country' ] ? $data[ 'shipping_country' ] : $this->wishlist->get_shipping_country();
+                                $country = $data['shipping_country'] ? $data['shipping_country'] : $this->wishlist->get_shipping_country();
                                 $value = wc_format_postcode($field_value, $country);
 
                                 if ('' !== $value && !WC_Validation::is_postcode($value, $country)) {
@@ -829,15 +831,15 @@ class NMGR_Form
                                 }
                                 break;
                             case 'state':
-                                $country = $data[ 'shipping_country' ] ? $data[ 'shipping_country' ] : $this->wishlist->get_shipping_country();
+                                $country = $data['shipping_country'] ? $data['shipping_country'] : $this->wishlist->get_shipping_country();
                                 $valid_states = WC()->countries->get_states($country);
 
                                 if (!empty($valid_states) && is_array($valid_states) && count($valid_states) > 0) {
                                     $valid_state_values = array_map('wc_strtoupper', array_flip(array_map('wc_strtoupper', $valid_states)));
                                     $field_value = wc_strtoupper($field_value);
 
-                                    if (isset($valid_state_values[ $field_value ])) {
-                                        $field_value = $valid_state_values[ $field_value ];
+                                    if (isset($valid_state_values[$field_value])) {
+                                        $field_value = $valid_state_values[$field_value];
                                     }
 
                                     if (!in_array($field_value, $valid_state_values, true)) {

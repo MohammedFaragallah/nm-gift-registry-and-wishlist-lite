@@ -10,8 +10,8 @@ class NMGR_Ajax
     public static function run()
     {
         self::ajax_events();
-        add_action('admin_init', array( __CLASS__, 'set_global_variable' ), -1);
-        add_filter('nmgr_get_wishlist_data', array( __CLASS__, 'get_wishlist_data' ), 10, 2);
+        add_action('admin_init', array(__CLASS__, 'set_global_variable'), -1);
+        add_filter('nmgr_get_wishlist_data', array(__CLASS__, 'get_wishlist_data'), 10, 2);
     }
 
     /**
@@ -22,13 +22,13 @@ class NMGR_Ajax
      */
     public static function set_global_variable()
     {
-        if (wp_doing_ajax() && isset($_REQUEST[ 'nmgr_global' ])) { // phpcs:ignore WordPress.Security.NonceVerification
-            $nmgr = $_REQUEST[ 'nmgr_global' ]; // phpcs:ignore
+        if (wp_doing_ajax() && isset($_REQUEST['nmgr_global'])) { // phpcs:ignore WordPress.Security.NonceVerification
+            $nmgr = $_REQUEST['nmgr_global']; // phpcs:ignore
 
             if (is_string($nmgr)) {
-                $GLOBALS[ 'nmgr' ] = json_decode(stripslashes($nmgr)); // phpcs:ignore
+                $GLOBALS['nmgr'] = json_decode(stripslashes($nmgr)); // phpcs:ignore
             } else {
-                $GLOBALS[ 'nmgr' ] = ( object ) wc_clean($nmgr);
+                $GLOBALS['nmgr'] = (object) wc_clean($nmgr);
             }
         }
     }
@@ -48,7 +48,7 @@ class NMGR_Ajax
 
         $data = array_merge($data, array(
             'has_shipping_address' => $wishlist->has_shipping_address(),
-            ));
+        ));
 
         return $data;
     }
@@ -77,9 +77,9 @@ class NMGR_Ajax
 
         foreach ($ajax_events as $event) {
             if (method_exists(__CLASS__, $event)) {
-                add_action('wp_ajax_nmgr_' . $event, array( __CLASS__, $event ));
+                add_action('wp_ajax_nmgr_' . $event, array(__CLASS__, $event));
 
-                add_action('wp_ajax_nopriv_nmgr_' . $event, array( __CLASS__, $event ));
+                add_action('wp_ajax_nopriv_nmgr_' . $event, array(__CLASS__, $event));
             }
         }
 
@@ -92,8 +92,8 @@ class NMGR_Ajax
 
         foreach ($ajax_nopriv_events as $event) {
             if (method_exists(__CLASS__, $event)) {
-                add_action('wp_ajax_nmgr_' . $event, array( __CLASS__, $event ));
-                add_action('wp_ajax_nopriv_nmgr_' . $event, array( __CLASS__, $event ));
+                add_action('wp_ajax_nmgr_' . $event, array(__CLASS__, $event));
+                add_action('wp_ajax_nopriv_nmgr_' . $event, array(__CLASS__, $event));
             }
         }
 
@@ -101,8 +101,8 @@ class NMGR_Ajax
          * Remove woocommerce's add to cart action when running our own so that the add to cart action
          * runs only once for us
          */
-        if (wp_doing_ajax() && isset($_REQUEST[ 'action' ]) && ('nmgr_add_to_cart' === $_REQUEST[ 'action' ])) { // phpcs:ignore WordPress.Security.NonceVerification
-            remove_action('wp_loaded', array( 'WC_Form_Handler', 'add_to_cart_action' ), 20);
+        if (wp_doing_ajax() && isset($_REQUEST['action']) && ('nmgr_add_to_cart' === $_REQUEST['action'])) { // phpcs:ignore WordPress.Security.NonceVerification
+            remove_action('wp_loaded', array('WC_Form_Handler', 'add_to_cart_action'), 20);
         }
     }
 
@@ -129,25 +129,25 @@ class NMGR_Ajax
 
     public static function add_to_cart()
     {
-        if (!isset($_POST[ 'nmgr_items' ]) || empty($_POST[ 'nmgr_items' ])) {
+        if (!isset($_POST['nmgr_items']) || empty($_POST['nmgr_items'])) {
             wp_die(-1);
         }
 
         $items_data = array();
-        $item = reset($_POST[ 'nmgr_items' ]);
+        $item = reset($_POST['nmgr_items']);
 
-        $product_id = ( int ) $item[ 'add-to-cart' ];
-        $quantity = empty($item[ 'quantity' ]) ? 1 : wc_stock_amount(wp_unslash($item[ 'quantity' ]));
-        $variation_id = isset($item[ 'variation_id' ]) ? absint($item[ 'variation_id' ]) : 0;
+        $product_id = (int) $item['add-to-cart'];
+        $quantity = empty($item['quantity']) ? 1 : wc_stock_amount(wp_unslash($item['quantity']));
+        $variation_id = isset($item['variation_id']) ? absint($item['variation_id']) : 0;
         $variation = nmgr_get_posted_variations($variation_id, $item);
-        $wishlist_id = ( int ) $item[ 'nmgr-add-to-cart-wishlist' ];
-        $wishlist_item_id = ( int ) $item[ 'nmgr-add-to-cart-wishlist-item' ];
+        $wishlist_id = (int) $item['nmgr-add-to-cart-wishlist'];
+        $wishlist_item_id = (int) $item['nmgr-add-to-cart-wishlist-item'];
         $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 
         if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variation)) {
             // wc filter (check this filter on updates)
             do_action('woocommerce_ajax_added_to_cart', $product_id);
-            wc_add_to_cart_message(array( $product_id => $quantity ), true);
+            wc_add_to_cart_message(array($product_id => $quantity), true);
         }
 
         $items_data[] = array(
@@ -186,16 +186,16 @@ class NMGR_Ajax
             return;
         }
 
-        $data = ( array ) $data;
+        $data = (array) $data;
 
-        $error = isset($data[ 'error' ]) ? $data[ 'error' ] : (wc_notice_count('error') ? true : false);
-        $success = isset($data[ 'success' ]) ? $data[ 'success' ] : (wc_notice_count('success') ? true : false);
+        $error = isset($data['error']) ? $data['error'] : (wc_notice_count('error') ? true : false);
+        $success = isset($data['success']) ? $data['success'] : (wc_notice_count('success') ? true : false);
 
-        unset($data[ 'error' ]);
-        unset($data[ 'success' ]);
+        unset($data['error']);
+        unset($data['success']);
 
         // This clears the notices after printing so we get it last
-        $data[ 'notice' ] = isset($data[ 'notice' ]) ? $data[ 'notice' ] : wc_print_notices(true);
+        $data['notice'] = isset($data['notice']) ? $data['notice'] : wc_print_notices(true);
 
         wp_send_json(array(
             'error' => $error,
@@ -228,15 +228,15 @@ class NMGR_Ajax
 
             if (is_null($wishlist_id) || (0 !== $wishlist_id && !nmgr_user_can_manage_wishlist($wishlist_id))) {
                 throw new Exception(sprintf(
-                        /* translators: %s: wishlist type title */
-                        __('We could not save your %s details, please try again.', 'nm-gift-registry-lite'),
+                    /* translators: %s: wishlist type title */
+                    __('We could not save your %s details, please try again.', 'nm-gift-registry-lite'),
                     nmgr_get_type_title()
                 ));
             }
 
             // Let's flag if this is a new wishlist.
             if (0 === $wishlist_id) {
-                $response_data[ 'created' ] = true;
+                $response_data['created'] = true;
             }
 
             $form = new NMGR_Form($wishlist_id);
@@ -251,8 +251,8 @@ class NMGR_Ajax
 
                 if (!$id) {
                     throw new Exception(sprintf(
-                            /* translators: %s: wishlist type title */
-                            __('Sorry the %s details could not be saved.', 'nm-gift-registry-lite'),
+                        /* translators: %s: wishlist type title */
+                        __('Sorry the %s details could not be saved.', 'nm-gift-registry-lite'),
                         nmgr_get_type_title()
                     ));
                 }
@@ -267,8 +267,8 @@ class NMGR_Ajax
                 );
 
                 $wishlist = nmgr_get_wishlist($id);
-                $response_data[ 'wishlist' ] = $wishlist->get_data();
-                $response_data[ 'html' ] = nmgr_get_profile_template($id);
+                $response_data['wishlist'] = $wishlist->get_data();
+                $response_data['html'] = nmgr_get_profile_template($id);
             }
         } catch (Exception $e) {
             wc_add_notice($e->getMessage(), 'error');
@@ -280,12 +280,12 @@ class NMGR_Ajax
     public static function add_item()
     {
         try {
-            if (!isset($_POST[ 'wishlist_id' ])) {
+            if (!isset($_POST['wishlist_id'])) {
                 /* translators: %s: wishlist type title */
                 throw new Exception(sprintf(__('Invalid %s', 'nm-gift-registry-lite'), nmgr_get_type_title()));
             }
 
-            $wishlist_id = absint(wp_unslash($_POST[ 'wishlist_id' ]));
+            $wishlist_id = absint(wp_unslash($_POST['wishlist_id']));
             $wishlist = nmgr_get_wishlist($wishlist_id, true);
 
             if (!$wishlist) {
@@ -294,23 +294,23 @@ class NMGR_Ajax
             }
 
             // If we passed through items it means we need to save first before adding a new one.
-            if (!empty($_POST[ 'items' ])) {
+            if (!empty($_POST['items'])) {
                 $save_items = array();
-                parse_str(wp_unslash($_POST[ 'items' ]), $save_items);
+                parse_str(wp_unslash($_POST['items']), $save_items);
                 $wishlist->update_items(wc_clean($save_items));
             }
 
-            $items_to_add = isset($_POST[ 'data' ]) ? array_filter(wc_clean(wp_unslash(( array ) $_POST[ 'data' ]))) : array();
+            $items_to_add = isset($_POST['data']) ? array_filter(wc_clean(wp_unslash((array) $_POST['data']))) : array();
 
             // Add items to wishlist.
             foreach ($items_to_add as $item) {
-                if (!isset($item[ 'id' ], $item[ 'qty' ]) || empty($item[ 'id' ])) {
+                if (!isset($item['id'], $item['qty']) || empty($item['id'])) {
                     continue;
                 }
-                $product_id = absint($item[ 'id' ]);
-                $qty = wc_stock_amount($item[ 'qty' ]);
+                $product_id = absint($item['id']);
+                $qty = wc_stock_amount($item['qty']);
                 $product = wc_get_product($product_id);
-                $favourite = isset($item[ 'fav' ]) ? absint($item[ 'fav' ]) : 0;
+                $favourite = isset($item['fav']) ? absint($item['fav']) : 0;
 
                 if (!$product) {
                     throw new Exception(__('Invalid product ID', 'nm-gift-registry-lite') . ' ' . $product_id);
@@ -320,9 +320,9 @@ class NMGR_Ajax
             }
 
             $items_html = nmgr_get_items_template($wishlist);
-            wp_send_json_success(array( 'html' => $items_html ));
+            wp_send_json_success(array('html' => $items_html));
         } catch (Exception $e) {
-            wp_send_json_error(array( 'error' => $e->getMessage() ));
+            wp_send_json_error(array('error' => $e->getMessage()));
         }
     }
 
@@ -334,7 +334,7 @@ class NMGR_Ajax
             $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
             $error_msg = __('The item(s) could not be deleted', 'nm-gift-registry-lite');
 
-            if (!$wishlist_id || !nmgr_user_can_manage_wishlist($wishlist_id) || !isset($_POST[ 'wishlist_item_ids' ])) {
+            if (!$wishlist_id || !nmgr_user_can_manage_wishlist($wishlist_id) || !isset($_POST['wishlist_item_ids'])) {
                 throw new Exception($error_msg);
             }
 
@@ -345,14 +345,14 @@ class NMGR_Ajax
             }
 
             // If we passed through items it means we need to save first before deleting.
-            if (!empty($_POST[ 'items' ])) {
+            if (!empty($_POST['items'])) {
                 $save_items = array();
-                parse_str(wp_unslash($_POST[ 'items' ]), $save_items);
+                parse_str(wp_unslash($_POST['items']), $save_items);
                 $wishlist->update_items(wc_clean($save_items));
             }
 
             $items_data = array();
-            $wishlist_item_ids = array_map('sanitize_text_field', wp_unslash(( array ) $_POST[ 'wishlist_item_ids' ]));
+            $wishlist_item_ids = array_map('sanitize_text_field', wp_unslash((array) $_POST['wishlist_item_ids']));
 
             if (empty($wishlist_item_ids)) {
                 throw new Exception($error_msg);
@@ -376,7 +376,7 @@ class NMGR_Ajax
 
                 $wishlist->delete_item($item_id);
 
-                $item_data[ 'product_in_wishlist' ] = $product ? ( int ) nmgr_user_has_product_in_wishlist($product) : '';
+                $item_data['product_in_wishlist'] = $product ? (int) nmgr_user_has_product_in_wishlist($product) : '';
 
                 $items_data[] = $item_data;
             }
@@ -400,13 +400,13 @@ class NMGR_Ajax
         // check_ajax_referer('nmgr_manage_wishlist');
         $wishlist_id = filter_input(INPUT_POST, 'wishlist_id', FILTER_VALIDATE_INT);
 
-        if ($wishlist_id && nmgr_user_can_manage_wishlist($wishlist_id) && isset($_POST[ 'items' ])) {
+        if ($wishlist_id && nmgr_user_can_manage_wishlist($wishlist_id) && isset($_POST['items'])) {
             $wishlist = nmgr_get_wishlist($wishlist_id);
 
             if ($wishlist) {
                 // Parse the jQuery serialized items.
                 $items = array();
-                parse_str(wp_unslash($_POST[ 'items' ]), $items); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+                parse_str(wp_unslash($_POST['items']), $items); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                 // Update wishlist items
                 $wishlist->update_items(wc_clean($items));
 
@@ -434,27 +434,27 @@ class NMGR_Ajax
         $term = '';
         $include_variations = true;
 
-        if (empty($term) && isset($_GET[ 'term' ])) {
-            $term = ( string ) wc_clean(wp_unslash($_GET[ 'term' ])); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        if (empty($term) && isset($_GET['term'])) {
+            $term = (string) wc_clean(wp_unslash($_GET['term'])); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         }
 
         if (empty($term)) {
             wp_die();
         }
 
-        if (!empty($_GET[ 'limit' ])) {
-            $limit = absint($_GET[ 'limit' ]);
+        if (!empty($_GET['limit'])) {
+            $limit = absint($_GET['limit']);
         } else {
             $limit = absint(apply_filters('nmgr_json_search_limit', 30));
         }
 
-        $include_ids = !empty($_GET[ 'include' ]) ? array_map('absint', ( array ) wp_unslash($_GET[ 'include' ])) : array();
-        $exclude_ids = !empty($_GET[ 'exclude' ]) ? array_map('absint', ( array ) wp_unslash($_GET[ 'exclude' ])) : array();
+        $include_ids = !empty($_GET['include']) ? array_map('absint', (array) wp_unslash($_GET['include'])) : array();
+        $exclude_ids = !empty($_GET['exclude']) ? array_map('absint', (array) wp_unslash($_GET['exclude'])) : array();
 
         $exclude_types = array();
-        if (!empty($_GET[ 'exclude_type' ])) {
+        if (!empty($_GET['exclude_type'])) {
             // Support both comma-delimited and array format inputs.
-            $exclude_types = wp_unslash($_GET[ 'exclude_type' ]);
+            $exclude_types = wp_unslash($_GET['exclude_type']);
             if (!is_array($exclude_types)) {
                 $exclude_types = explode(',', $exclude_types);
             }
@@ -464,13 +464,13 @@ class NMGR_Ajax
                 $exclude_type = strtolower(trim($exclude_type));
             }
             $exclude_types = array_intersect(
-                array_merge(array( 'variation' ), array_keys(wc_get_product_types())),
+                array_merge(array('variation'), array_keys(wc_get_product_types())),
                 $exclude_types
             );
         }
 
         $data_store = WC_Data_Store::load('product');
-        $ids = $data_store->search_products($term, '', ( bool ) $include_variations, false, $limit, $include_ids, $exclude_ids);
+        $ids = $data_store->search_products($term, '', (bool) $include_variations, false, $limit, $include_ids, $exclude_ids);
 
         $product_objects = array_filter(array_map('wc_get_product', $ids), 'wc_products_array_filter_readable');
         $products = array();
@@ -483,16 +483,16 @@ class NMGR_Ajax
             $formatted_name = $product_object->get_formatted_name();
             $managing_stock = $product_object->managing_stock();
 
-            if ($managing_stock && !empty($_GET[ 'display_stock' ])) {
+            if ($managing_stock && !empty($_GET['display_stock'])) {
                 $stock_amount = $product_object->get_stock_quantity();
                 $formatted_name .= ' &ndash; ' . sprintf(
-                        /* translators: %d: stock quantity */
-                        __('Stock: %d', 'nm-gift-registry-lite'),
+                    /* translators: %d: stock quantity */
+                    __('Stock: %d', 'nm-gift-registry-lite'),
                     wc_format_stock_quantity_for_display($stock_amount, $product_object)
                 );
             }
 
-            $products[ $product_object->get_id() ] = rawurldecode($formatted_name);
+            $products[$product_object->get_id()] = rawurldecode($formatted_name);
         }
 
         wp_send_json($products);
@@ -547,8 +547,8 @@ class NMGR_Ajax
 
         if (!$wishlist_id || !nmgr_user_can_manage_wishlist($wishlist_id)) {
             wc_add_notice(sprintf(
-                    /* translators: %s: wishlist type title */
-                    __('We could not save your %s shipping details, please try again.', 'nm-gift-registry-lite'),
+                /* translators: %s: wishlist type title */
+                __('We could not save your %s shipping details, please try again.', 'nm-gift-registry-lite'),
                 nmgr_get_type_title()
             ), 'error');
             self::send_ajax_response();
@@ -558,17 +558,17 @@ class NMGR_Ajax
         $wishlist = $form->get_wishlist();
 
         // Always save the ship_to_account_address field
-        $use_account_shipping = isset($form_data[ 'nmgr_ship_to_account_address' ]) ? $form_data[ 'nmgr_ship_to_account_address' ] : null;
+        $use_account_shipping = isset($form_data['nmgr_ship_to_account_address']) ? $form_data['nmgr_ship_to_account_address'] : null;
         $wishlist->set_ship_to_account_address(sanitize_title($use_account_shipping));
         $wishlist->save();
 
         if ($use_account_shipping) {
             // Reset wishlist shipping values if users wants to ship to account address
-            $default_shipping = $wishlist->get_default_data()[ 'shipping' ];
+            $default_shipping = $wishlist->get_default_data()['shipping'];
 
             $shipping = array();
             foreach ($default_shipping as $key => $value) {
-                $shipping[ "shipping_$key" ] = $value;
+                $shipping["shipping_$key"] = $value;
             }
 
             $wishlist->set_props($shipping);
@@ -587,9 +587,9 @@ class NMGR_Ajax
             }
         }
 
-        $wishlist_data = array_merge($wishlist->get_data(), array( 'has_shipping_address' => $wishlist->has_shipping_address() ));
-        $response_data[ 'wishlist' ] = $wishlist_data;
-        $response_data[ 'html' ] = nmgr_get_shipping_template($wishlist_id);
+        $wishlist_data = array_merge($wishlist->get_data(), array('has_shipping_address' => $wishlist->has_shipping_address()));
+        $response_data['wishlist'] = $wishlist_data;
+        $response_data['html'] = nmgr_get_shipping_template($wishlist_id);
 
         self::send_ajax_response($response_data);
     }
@@ -607,7 +607,7 @@ class NMGR_Ajax
             wp_die(-1);
         }
 
-        $term = isset($_GET[ 'term' ]) ? ( string ) wc_clean(wp_unslash($_GET[ 'term' ])) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $term = isset($_GET['term']) ? (string) wc_clean(wp_unslash($_GET['term'])) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $limit = 0;
 
         if (empty($term)) {
@@ -617,11 +617,11 @@ class NMGR_Ajax
         $ids = array();
         // Search by ID.
         if (is_numeric($term)) {
-            $customer = new WC_Customer(( int ) $term);
+            $customer = new WC_Customer((int) $term);
 
             // Customer exists.
             if (0 !== $customer->get_id()) {
-                $ids = array( $customer->get_id() );
+                $ids = array($customer->get_id());
             }
         }
 
@@ -644,13 +644,13 @@ class NMGR_Ajax
 
         $found_customers = array();
 
-        if (!empty($_GET[ 'exclude' ])) {
-            $ids = array_diff($ids, array_map('absint', ( array ) wp_unslash($_GET[ 'exclude' ])));
+        if (!empty($_GET['exclude'])) {
+            $ids = array_diff($ids, array_map('absint', (array) wp_unslash($_GET['exclude'])));
         }
 
         foreach ($ids as $id) {
             $customer = new WC_Customer($id);
-            $found_customers[ $id ] = sprintf(
+            $found_customers[$id] = sprintf(
                 /* translators: $1: customer name, $2: customer email */
                 esc_html__('%1$s (%2$s)', 'nm-gift-registry-lite'),
                 $customer->get_first_name() . ' ' . $customer->get_last_name(),
@@ -665,12 +665,12 @@ class NMGR_Ajax
     {
         // check_ajax_referer('nmgr-frontend');
 
-        $data = isset($_POST[ 'data' ]) ? $_POST[ 'data' ] : $args;
+        $data = isset($_POST['data']) ? $_POST['data'] : $args;
 
         if ('dialog' === filter_input(INPUT_POST, 'context')) {
-            $data[ 'show_cart_contents_only' ] = true;
+            $data['show_cart_contents_only'] = true;
             $args = array(
-                'title' => isset($data[ 'title' ]) ? $data[ 'title' ] : '',
+                'title' => isset($data['title']) ? $data['title'] : '',
                 'content' => nmgr_get_cart_template($data),
             );
             $template = nmgr_get_dialog_template($args);
@@ -678,7 +678,7 @@ class NMGR_Ajax
             $template = nmgr_get_cart_template($data);
         }
 
-        self::send_ajax_response(array( 'template' => $template ));
+        self::send_ajax_response(array('template' => $template));
     }
 
     public static function dialog_create_new_wishlist()
@@ -688,16 +688,18 @@ class NMGR_Ajax
         $context = filter_input(INPUT_POST, 'context');
 
         $customer = new WC_Customer(get_current_user_id());
-        $submit_btn_args = array( 'attributes' => array() );
+        $submit_btn_args = array('attributes' => array());
 
         if ('add_to_wishlist' === $context) {
-            $submit_btn_args[ 'attributes' ][ 'data-action' ] = 'add_to_wishlist';
-            $submit_btn_args[ 'attributes' ][ 'disabled' ] = true;
+            $submit_btn_args['attributes']['data-action'] = 'add_to_wishlist';
+            $submit_btn_args['attributes']['disabled'] = true;
         }
 
-        if (nmgr_get_option('shipping_address_required') &&
-            (is_nmgr_guest() || ($customer->get_id() && !$customer->get_shipping_address()))) {
-            $submit_btn_args[ 'attributes' ][ 'data-message' ] = sprintf(__('The shipping address for this %s is required before you can add items to it.', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
+        if (
+            nmgr_get_option('shipping_address_required') &&
+            (is_nmgr_guest() || ($customer->get_id() && !$customer->get_shipping_address()))
+        ) {
+            $submit_btn_args['attributes']['data-message'] = sprintf(__('The shipping address for this %s is required before you can add items to it.', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
         }
 
         $args = array(
@@ -710,7 +712,7 @@ class NMGR_Ajax
             'footer' => nmgr_get_dialog_submit_button($submit_btn_args)
         );
 
-        self::send_ajax_response(array( 'template' => nmgr_get_dialog_template($args) ));
+        self::send_ajax_response(array('template' => nmgr_get_dialog_template($args)));
     }
 
     public static function dialog_set_shipping_address()
@@ -719,12 +721,12 @@ class NMGR_Ajax
 
         $wishlist_id = filter_input(INPUT_POST, 'nmgr_wid', FILTER_VALIDATE_INT);
         $context = filter_input(INPUT_POST, 'context');
-        $submit_btn_args = array( 'attributes' => array() );
+        $submit_btn_args = array('attributes' => array());
 
         if ('add_to_wishlist' === $context) {
-            $submit_btn_args[ 'attributes' ][ 'disabled' ] = true;
-            $submit_btn_args[ 'attributes' ][ 'data-action' ] = 'add_to_wishlist';
-            $submit_btn_args[ 'attributes' ][ 'data-message' ] = sprintf(__('The shipping address for this %s is required before you can add items to it.', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
+            $submit_btn_args['attributes']['disabled'] = true;
+            $submit_btn_args['attributes']['data-action'] = 'add_to_wishlist';
+            $submit_btn_args['attributes']['data-message'] = sprintf(__('The shipping address for this %s is required before you can add items to it.', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
         }
 
         $args = array(
@@ -733,7 +735,7 @@ class NMGR_Ajax
             'footer' => nmgr_get_dialog_submit_button($submit_btn_args)
         );
 
-        self::send_ajax_response(array( 'template' => nmgr_get_dialog_template($args) ));
+        self::send_ajax_response(array('template' => nmgr_get_dialog_template($args)));
     }
 
     // Automatically create a wishlist for a user without any wishlist when adding to a wishlist
@@ -756,8 +758,8 @@ class NMGR_Ajax
         );
 
         $title = str_replace(
-            array( '{wishlist_type_title}', '{site_title}', '{wishlist_id}' ),
-            array( nmgr_get_type_title('c'), get_bloginfo('name'), $wishlist_id ),
+            array('{wishlist_type_title}', '{site_title}', '{wishlist_id}'),
+            array(nmgr_get_type_title('c'), get_bloginfo('name'), $wishlist_id),
             $default_title
         );
 
@@ -778,17 +780,17 @@ class NMGR_Ajax
         $id = $wishlist->save();
 
         if (!$id) {
-            self::send_ajax_response(array( 'error' => true ));
+            self::send_ajax_response(array('error' => true));
         }
 
-        self::send_ajax_response(array( 'wishlist' => $wishlist->get_data() ));
+        self::send_ajax_response(array('wishlist' => $wishlist->get_data()));
     }
 
     public static function dialog_add_to_wishlist()
     {
         // check_ajax_referer('nmgr-frontend');
         $template = self::get_add_to_wishlist_dialog();
-        self::send_ajax_response(array( 'template' => $template ));
+        self::send_ajax_response(array('template' => $template));
     }
 
     public static function get_add_to_wishlist_dialog()
@@ -818,7 +820,7 @@ class NMGR_Ajax
             );
 
             if ($product->is_type('grouped')) {
-                $args[ 'grouped_products' ] = array_filter(
+                $args['grouped_products'] = array_filter(
                     array_map('wc_get_product', $product->get_children()),
                     'wc_products_array_filter_visible_grouped'
                 );

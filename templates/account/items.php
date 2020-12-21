@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for displaying items in a wishlist
  *
@@ -18,10 +19,10 @@ global $post;
 
 <div id="nmgr-items" class="<?php echo esc_attr($class); ?>"
   data-wishlist-id="<?php echo $wishlist ? absint($wishlist->get_id()) : 0; ?>"
-  data-nonce="<?php echo esc_attr($nonce); ?>" data-editable="<?php echo esc_attr($items_args[ 'editable' ]); ?>">
+  data-nonce="<?php echo esc_attr($nonce); ?>" data-editable="<?php echo esc_attr($items_args['editable']); ?>">
 
   <?php
-    if (!$wishlist):
+    if (!$wishlist) :
 
         nmgr_get_no_wishlist_placeholder('items', true);
 
@@ -32,7 +33,7 @@ global $post;
         }
 
         do_action('nmgr_before_items', $items, $wishlist, $items_args);
-        ?>
+    ?>
 
   <table class="nmgr-items-table nmgr-table">
     <thead>
@@ -71,12 +72,12 @@ global $post;
 
                     if ($item->is_fulfilled()) {
                         $tr_title = apply_filters('nmgr_item_row_fulfilled_text', sprintf(
-                                /* translators: %s : wishlist type title */
-                                __('This item has been bought for the %s owner.', 'nm-gift-registry-lite'),
+                            /* translators: %s : wishlist type title */
+                            __('This item has been bought for the %s owner.', 'nm-gift-registry-lite'),
                             nmgr_get_type_title()
                         ));
                     }
-                    ?>
+                ?>
       <tr class="item <?php echo esc_attr(implode(' ', array_filter($row_class))); ?>"
         data-product_title="<?php echo sanitize_text_field($the_product->get_title()); ?>"
         data-wishlist_item_id="<?php echo absint($item->get_id()); ?>"

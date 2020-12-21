@@ -120,7 +120,7 @@ abstract class NMGR_Data
      */
     public function get_data()
     {
-        return array_merge(array( 'id' => $this->get_id() ), $this->data);
+        return array_merge(array('id' => $this->get_id()), $this->data);
     }
 
     /**
@@ -225,7 +225,7 @@ abstract class NMGR_Data
      */
     public function set_object_read($read = true)
     {
-        $this->object_read = ( bool ) $read;
+        $this->object_read = (bool) $read;
     }
 
     /**
@@ -235,7 +235,7 @@ abstract class NMGR_Data
      */
     public function get_object_read()
     {
-        return ( bool ) $this->object_read;
+        return (bool) $this->object_read;
     }
 
     /**
@@ -248,7 +248,7 @@ abstract class NMGR_Data
         foreach ($props as $prop => $value) {
             $setter = "set_$prop";
 
-            if (is_callable(array( $this, $setter ))) {
+            if (is_callable(array($this, $setter))) {
                 $this->{$setter}($value);
             } else {
                 $this->set_prop($prop, $value);
@@ -268,12 +268,12 @@ abstract class NMGR_Data
     {
         if (array_key_exists($prop, $this->data)) {
             if (true === $this->object_read) {
-                $stored_value = is_callable(array( $this, "get_$prop" )) ? $this->{"get_$prop"}($value) : $this->get_prop($prop);
+                $stored_value = is_callable(array($this, "get_$prop")) ? $this->{"get_$prop"}($value) : $this->get_prop($prop);
                 if ($value !== $stored_value) {
-                    $this->changes[ $prop ] = $value;
+                    $this->changes[$prop] = $value;
                 }
             } else {
-                $this->data[ $prop ] = $value;
+                $this->data[$prop] = $value;
             }
         }
     }
@@ -287,13 +287,13 @@ abstract class NMGR_Data
      */
     public function set_child_prop($prop, $parent, $value)
     {
-        if (isset($this->data[ $parent ]) && array_key_exists($prop, ( array ) $this->data[ $parent ])) {
+        if (isset($this->data[$parent]) && array_key_exists($prop, (array) $this->data[$parent])) {
             if (true === $this->object_read) {
-                if ($value !== $this->data[ $parent ][ $prop ] || (isset($this->changes[ $parent ]) && array_key_exists($prop, $this->changes[ $parent ]))) {
-                    $this->changes[ $parent ][ $prop ] = $value;
+                if ($value !== $this->data[$parent][$prop] || (isset($this->changes[$parent]) && array_key_exists($prop, $this->changes[$parent]))) {
+                    $this->changes[$parent][$prop] = $value;
                 }
             } else {
-                $this->data[ $parent ][ $prop ] = $value;
+                $this->data[$parent][$prop] = $value;
             }
         }
     }
@@ -330,7 +330,7 @@ abstract class NMGR_Data
         $value = null;
 
         if (array_key_exists($prop, $this->data)) {
-            $value = array_key_exists($prop, $this->changes) ? $this->changes[ $prop ] : $this->data[ $prop ];
+            $value = array_key_exists($prop, $this->changes) ? $this->changes[$prop] : $this->data[$prop];
         }
 
         return $this->filter_prop_value($value, $prop);
@@ -347,8 +347,8 @@ abstract class NMGR_Data
     {
         $value = null;
 
-        if (isset($this->data[ $parent ]) && array_key_exists($prop, ( array ) $this->data[ $parent ])) {
-            $value = isset($this->changes[ $parent ][ $prop ]) ? $this->changes[ $parent ][ $prop ] : $this->data[ $parent ][ $prop ];
+        if (isset($this->data[$parent]) && array_key_exists($prop, (array) $this->data[$parent])) {
+            $value = isset($this->changes[$parent][$prop]) ? $this->changes[$parent][$prop] : $this->data[$parent][$prop];
         }
         return $this->filter_prop_value($value, $prop, $parent);
     }
@@ -398,9 +398,11 @@ abstract class NMGR_Data
 
         // Props should be updated if they are a part of the $changed array or don't exist yet.
         foreach ($this->flatten_props($meta_data) as $meta_key => $prop) {
-            if (array_key_exists($meta_key, $this->flatten_props($this->get_changes())) ||
-                !metadata_exists($meta_type, $this->get_id(), $meta_key)) {
-                $props_to_update[ $meta_key ] = $prop;
+            if (
+                array_key_exists($meta_key, $this->flatten_props($this->get_changes())) ||
+                !metadata_exists($meta_type, $this->get_id(), $meta_key)
+            ) {
+                $props_to_update[$meta_key] = $prop;
             }
         }
 
@@ -422,9 +424,9 @@ abstract class NMGR_Data
         foreach ($props as $meta_key => $prop) {
             if (is_array($prop) && in_array($meta_key, $this->get_parent_props())) {
                 foreach ($prop as $key => $value) {
-                    $props[ $meta_key . '_' . $key ] = $value;
+                    $props[$meta_key . '_' . $key] = $value;
                 }
-                unset($props[ $meta_key ]);
+                unset($props[$meta_key]);
             }
         }
         return $props;
@@ -447,11 +449,11 @@ abstract class NMGR_Data
         // Get all internal meta properties
         $internal_meta_props = $this->flatten_props($this->get_meta_data());
 
-        $flattened_props = $this->flatten_props(( array ) $props);
+        $flattened_props = $this->flatten_props((array) $props);
 
         foreach ($flattened_props as $prop => $value) {
             if (array_key_exists($prop, $internal_meta_props)) {
-                $props_to_meta_keys[ $prop ] = "_$prop";
+                $props_to_meta_keys[$prop] = "_$prop";
             }
         }
         return $props_to_meta_keys;

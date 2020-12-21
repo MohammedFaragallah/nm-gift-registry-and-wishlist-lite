@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist item purchased quantity
  *

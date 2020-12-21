@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form for search for wishlists on the frontend
  *
@@ -19,9 +20,10 @@ defined('ABSPATH') || exit;
     <?php esc_html_e('Search for:', 'nm-gift-registry-lite'); ?>
   </label>
   <input type="search" class="search-field" placeholder="<?php
-                 /* translators: %s: wishlist type title */
-                 printf(esc_attr__('Search %s&hellip;', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title('', true)));
-                 ?>" value="<?php echo esc_attr($input_value); ?>" name="<?php echo esc_attr($input_name); ?>" />
+                                                          /* translators: %s: wishlist type title */
+                                                          printf(esc_attr__('Search %s&hellip;', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title('', true)));
+                                                          ?>" value="<?php echo esc_attr($input_value); ?>"
+    name="<?php echo esc_attr($input_name); ?>" />
   <button type="submit" value="<?php echo esc_attr_x('Search', 'submit button', 'nm-gift-registry-lite'); ?>">
     <?php echo esc_html_x('Search', 'submit button', 'nm-gift-registry-lite'); ?>
   </button>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist item cost per quantity
  *
@@ -18,7 +19,7 @@ defined('ABSPATH') || exit;
   data-sort-value="<?php echo esc_attr($product->get_price()); ?>">
   <div class="view nmgr-tip" title="<?php esc_attr_e('Cost per item', 'nm-gift-registry-lite'); ?>">
     <?php
-        echo wp_kses_post($product->get_price_html());
-        ?>
+    echo wp_kses_post($product->get_price_html());
+    ?>
   </div>
 </td>

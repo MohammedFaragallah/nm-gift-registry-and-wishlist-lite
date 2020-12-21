@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Call to action to create profile for new wishlists
  *
@@ -20,22 +21,22 @@ defined('ABSPATH') || exit;
 <div class="nmgr-call-to-action-no-wishlist nmgr-text-center">
   <h4>
     <?php
-        if (is_nmgr_admin() && isset($tab) && 'items' === $tab) {
-            esc_html_e('No items yet.', 'nm-gift-registry-lite');
-            echo '<br>';
-            printf(
-                /* translators: %s: wishlist type title */
-                esc_html__(' Save this %s before you can start adding items to it.', 'nm-gift-registry-lite'),
-                esc_html(nmgr_get_type_title())
-            );
-        } else {
-            printf(
-                /* translators: %s: wishlist type title */
-                esc_html__('Get started with creating your %s profile', 'nm-gift-registry-lite'),
-                esc_html(nmgr_get_type_title())
-            );
-        }
-        ?>
+    if (is_nmgr_admin() && isset($tab) && 'items' === $tab) {
+      esc_html_e('No items yet.', 'nm-gift-registry-lite');
+      echo '<br>';
+      printf(
+        /* translators: %s: wishlist type title */
+        esc_html__(' Save this %s before you can start adding items to it.', 'nm-gift-registry-lite'),
+        esc_html(nmgr_get_type_title())
+      );
+    } else {
+      printf(
+        /* translators: %s: wishlist type title */
+        esc_html__('Get started with creating your %s profile', 'nm-gift-registry-lite'),
+        esc_html(nmgr_get_type_title())
+      );
+    }
+    ?>
   </h4>
 
   <?php if (is_nmgr_account_tab()) : ?>

@@ -130,7 +130,7 @@ class NMGR_Wishlist extends NMGR_Data
                 return $d->get_data();
             }, $this->get_items());
 
-            $data = array_merge($data, array( 'items' => $items_data ));
+            $data = array_merge($data, array('items' => $items_data));
         }
 
         return apply_filters('nmgr_get_wishlist_data', $data, $this);
@@ -430,7 +430,7 @@ class NMGR_Wishlist extends NMGR_Data
         foreach ($this->get_items() as $item) {
             $total += $item->get_total();
         }
-        return $currency_symbol ? wc_price($total, array( 'currency' => get_woocommerce_currency() )) : $total;
+        return $currency_symbol ? wc_price($total, array('currency' => get_woocommerce_currency())) : $total;
     }
 
     /**
@@ -733,8 +733,8 @@ class NMGR_Wishlist extends NMGR_Data
     {
         $items = $this->get_items();
 
-        if (isset($items[ $id ])) {
-            return $items[ $id ];
+        if (isset($items[$id])) {
+            return $items[$id];
         }
 
         foreach ($items as $item) {
@@ -753,8 +753,8 @@ class NMGR_Wishlist extends NMGR_Data
      */
     public function update_items($posted_data)
     {
-        if (isset($posted_data[ 'wishlist_item_id' ])) {
-            foreach ($posted_data[ 'wishlist_item_id' ] as $item_id) {
+        if (isset($posted_data['wishlist_item_id'])) {
+            foreach ($posted_data['wishlist_item_id'] as $item_id) {
                 $item = $this->get_Item($item_id);
 
                 if (!$item) {
@@ -770,18 +770,18 @@ class NMGR_Wishlist extends NMGR_Data
                 $item_data = array();
 
                 foreach ($data_keys as $key => $default) {
-                    $item_data[ $key ] = isset($posted_data[ $key ][ $item_id ]) ? wc_check_invalid_utf8(wp_unslash($posted_data[ $key ][ $item_id ])) : $default;
+                    $item_data[$key] = isset($posted_data[$key][$item_id]) ? wc_check_invalid_utf8(wp_unslash($posted_data[$key][$item_id])) : $default;
                 }
 
-                if ('0' === $item_data[ 'wishlist_item_qty' ]) {
+                if ('0' === $item_data['wishlist_item_qty']) {
                     $item->delete();
                     continue;
                 }
 
                 $item->set_props(
                     array(
-                        'quantity' => $item_data[ 'wishlist_item_qty' ],
-                        'purchased_quantity' => $item_data[ 'wishlist_item_purchased_qty' ],
+                        'quantity' => $item_data['wishlist_item_qty'],
+                        'purchased_quantity' => $item_data['wishlist_item_purchased_qty'],
                     )
                 );
 
@@ -870,7 +870,7 @@ class NMGR_Wishlist extends NMGR_Data
             $item = $this->get_item($unique_id);
 
             // if the wishlist already has the item, we can only update the quantity
-            $args[ 'quantity' ] = $item->get_quantity() + $qty;
+            $args['quantity'] = $item->get_quantity() + $qty;
         }
 
         $item->set_props($args);
@@ -915,7 +915,7 @@ class NMGR_Wishlist extends NMGR_Data
      */
     public function generate_unique_id($product_id, $variation_id = 0, $variation = array())
     {
-        $id_parts = array( $product_id );
+        $id_parts = array($product_id);
 
         if ($variation_id && 0 !== $variation_id) {
             $id_parts[] = $variation_id;
@@ -955,8 +955,8 @@ class NMGR_Wishlist extends NMGR_Data
         foreach ($items as $item_id => $item) {
             $meta = $item->get_meta(nmgr()->cart_key);
             if ($meta) {
-                if ($meta[ 'wishlist_id' ] === $this->get_id()) {
-                    $items_in_order[ $item_id ] = array(
+                if ($meta['wishlist_id'] === $this->get_id()) {
+                    $items_in_order[$item_id] = array(
                         'name' => $item->get_name(),
                         'quantity' => $item->get_quantity(),
                         'variation_id' => $item->get_variation_id(),
@@ -1003,7 +1003,7 @@ class NMGR_Wishlist extends NMGR_Data
     public function has_shipping_address()
     {
         if ($this->is_shipping_to_account_address()) {
-            return ( bool ) $this->get_customer()->get_shipping_address();
+            return (bool) $this->get_customer()->get_shipping_address();
         }
         return $this->get_shipping_address_1() || $this->get_shipping_address_2();
     }
@@ -1015,7 +1015,7 @@ class NMGR_Wishlist extends NMGR_Data
      */
     public function is_shipping_to_account_address()
     {
-        return ( bool ) $this->get_prop('ship_to_account_address');
+        return (bool) $this->get_prop('ship_to_account_address');
     }
 
     /**
@@ -1042,7 +1042,7 @@ class NMGR_Wishlist extends NMGR_Data
         if ($product->is_type('grouped') && $product->has_child()) {
             $product_item_ids = $product->get_children();
         } else {
-            $product_item_ids = ( array ) $product->get_id();
+            $product_item_ids = (array) $product->get_id();
         }
 
         $wishlist_item_ids = array_map(function ($item) use ($product) {
@@ -1060,7 +1060,8 @@ class NMGR_Wishlist extends NMGR_Data
      */
     public function is_fulfilled()
     {
-        if ($this->has_items() &&
+        if (
+            $this->has_items() &&
             nmgr_get_option('display_item_quantity', 1) &&
             nmgr_get_option('display_item_purchased_quantity', 1)
         ) {

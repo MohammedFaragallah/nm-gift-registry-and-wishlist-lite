@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wishlist items actions (Save)
  *

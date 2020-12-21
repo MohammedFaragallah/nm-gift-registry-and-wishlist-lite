@@ -94,10 +94,10 @@ class NMGR_Database_Wishlist
              * or an update purely from CRUD.
              */
             if (doing_action('save_post')) {
-                $GLOBALS[ 'wpdb' ]->update($GLOBALS[ 'wpdb' ]->posts, $post_data, array( 'ID' => $wishlist->get_id() ));
+                $GLOBALS['wpdb']->update($GLOBALS['wpdb']->posts, $post_data, array('ID' => $wishlist->get_id()));
                 clean_post_cache($wishlist->get_id());
             } else {
-                wp_update_post(array_merge(array( 'ID' => $wishlist->get_id() ), $post_data));
+                wp_update_post(array_merge(array('ID' => $wishlist->get_id()), $post_data));
             }
         }
 
@@ -141,7 +141,7 @@ class NMGR_Database_Wishlist
         $props_to_meta_keys = $wishlist->get_internal_meta_keys($wishlist->get_meta_data());
 
         foreach ($props_to_meta_keys as $prop => $meta_key) {
-            $data[ $prop ] = get_post_meta($wishlist->get_id(), $meta_key, true);
+            $data[$prop] = get_post_meta($wishlist->get_id(), $meta_key, true);
         }
 
         $wishlist->set_props($data);
@@ -160,7 +160,7 @@ class NMGR_Database_Wishlist
         $props_to_meta_keys = $wishlist->get_internal_meta_keys($props_to_update);
 
         foreach ($props_to_meta_keys as $prop => $meta_key) {
-            if (is_callable(array( $wishlist, "get_$prop" ))) {
+            if (is_callable(array($wishlist, "get_$prop"))) {
                 $value = $wishlist->{"get_$prop"}();
             } else {
                 $value = $wishlist->get_prop($prop);

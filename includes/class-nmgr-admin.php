@@ -9,62 +9,64 @@ class NMGR_Admin
             return;
         }
 
-        add_action("manage_nm_gift_registry_posts_custom_column", array( __CLASS__, 'get_column_contents' ), 999, 2);
-        add_filter("manage_edit-nm_gift_registry_columns", array( __CLASS__, 'get_column_headers' ));
-        add_filter("manage_edit-nm_gift_registry_sortable_columns", array( __CLASS__, 'get_column_info' ));
-        add_action('show_user_profile', array( __CLASS__, 'show_enable_wishlist_form' ));
-        add_action('edit_user_profile', array( __CLASS__, 'show_enable_wishlist_form' ));
-        add_action('personal_options_update', array( __CLASS__, 'save_enable_wishlist_form' ));
-        add_action('edit_user_profile_update', array( __CLASS__, 'save_enable_wishlist_form' ));
-        add_filter('display_post_states', array( __CLASS__, 'post_states' ), 10, 2);
-        add_filter("manage_edit-shop_order_columns", array( __CLASS__, 'shop_order_column_headers' ));
-        add_action("manage_shop_order_posts_custom_column", array( __CLASS__, 'shop_order_column_contents' ));
-        add_action("admin_print_styles", array( __CLASS__, 'shop_order_styles' ));
-        add_filter("admin_footer_text", array( __CLASS__, 'admin_footer_text' ), 10);
+        add_action("manage_nm_gift_registry_posts_custom_column", array(__CLASS__, 'get_column_contents'), 999, 2);
+        add_filter("manage_edit-nm_gift_registry_columns", array(__CLASS__, 'get_column_headers'));
+        add_filter("manage_edit-nm_gift_registry_sortable_columns", array(__CLASS__, 'get_column_info'));
+        add_action('show_user_profile', array(__CLASS__, 'show_enable_wishlist_form'));
+        add_action('edit_user_profile', array(__CLASS__, 'show_enable_wishlist_form'));
+        add_action('personal_options_update', array(__CLASS__, 'save_enable_wishlist_form'));
+        add_action('edit_user_profile_update', array(__CLASS__, 'save_enable_wishlist_form'));
+        add_filter('display_post_states', array(__CLASS__, 'post_states'), 10, 2);
+        add_filter("manage_edit-shop_order_columns", array(__CLASS__, 'shop_order_column_headers'));
+        add_action("manage_shop_order_posts_custom_column", array(__CLASS__, 'shop_order_column_contents'));
+        add_action("admin_print_styles", array(__CLASS__, 'shop_order_styles'));
+        add_filter("admin_footer_text", array(__CLASS__, 'admin_footer_text'), 10);
     }
 
     public static function get_column_headers($columns)
     {
         $nmgr = array();
 
-        if ('no' !== nmgr_get_option('display_form_first_name') ||
+        if (
+            'no' !== nmgr_get_option('display_form_first_name') ||
             'no' !== nmgr_get_option('display_form_last_name') ||
             'no' !== nmgr_get_option('display_form_partner_first_name') ||
-            'no' !== nmgr_get_option('display_form_partner_last_name')) {
-            $nmgr[ 'nmgr_display_name' ] = __('Display name', 'nm-gift-registry-lite');
+            'no' !== nmgr_get_option('display_form_partner_last_name')
+        ) {
+            $nmgr['nmgr_display_name'] = __('Display name', 'nm-gift-registry-lite');
         }
 
         if ('no' !== nmgr_get_option('display_form_email')) {
-            $nmgr[ 'nmgr_email' ] = __('Email', 'nm-gift-registry-lite');
+            $nmgr['nmgr_email'] = __('Email', 'nm-gift-registry-lite');
         }
 
         if ('no' !== nmgr_get_option('display_form_event_date')) {
-            $nmgr[ 'nmgr_event_date' ] = __('Event date', 'nm-gift-registry-lite');
+            $nmgr['nmgr_event_date'] = __('Event date', 'nm-gift-registry-lite');
         }
 
         if (nmgr_get_option('enable_shipping')) {
-            $nmgr [ 'nmgr_shipping_address' ] = __('Ships to', 'nm-gift-registry-lite');
+            $nmgr['nmgr_shipping_address'] = __('Ships to', 'nm-gift-registry-lite');
         }
 
         if (nmgr_get_option('display_item_quantity')) {
-            $nmgr[ 'nmgr_quantity' ] = nmgr_get_svg(array(
+            $nmgr['nmgr_quantity'] = nmgr_get_svg(array(
                 'icon' => 'cart-empty',
                 'class' => 'nmgr-tip',
                 'title' => __('Desired Quantity', 'nm-gift-registry-lite'),
                 'size' => 1.25,
-                ));
+            ));
         }
 
         if (nmgr_get_option('display_item_purchased_quantity')) {
-            $nmgr[ 'nmgr_purchased_quantity' ] = nmgr_get_svg(array(
+            $nmgr['nmgr_purchased_quantity'] = nmgr_get_svg(array(
                 'icon' => 'cart-full',
                 'class' => 'nmgr-tip',
                 'title' => __('Purchased Quantity', 'nm-gift-registry-lite'),
                 'size' => 1.25
-                ));
+            ));
         }
 
-        $nmgr[ 'author' ] = __('Author', 'nm-gift-registry-lite');
+        $nmgr['author'] = __('Author', 'nm-gift-registry-lite');
 
         $sorted_columns = array_slice($columns, 0, count($columns) - 1, true) +
             $nmgr +
@@ -75,8 +77,8 @@ class NMGR_Admin
 
     public static function get_column_info($sortable_columns)
     {
-        $sortable_columns[ 'nmgr_quantity' ] = 'quantity';
-        $sortable_columns[ 'nmgr_purchased_quantity' ] = 'purchased-quantity';
+        $sortable_columns['nmgr_quantity'] = 'quantity';
+        $sortable_columns['nmgr_purchased_quantity'] = 'purchased-quantity';
         return $sortable_columns;
     }
 
@@ -126,7 +128,7 @@ class NMGR_Admin
       <td>
         <label for="nmgr_enable_wishlist">
           <input type="checkbox" name='nmgr_enable_wishlist' id='nmgr_enable_wishlist' value='1'
-            <?php checked(( int ) get_user_meta($user->ID, 'nmgr_enable_wishlist', true), 1, true); ?> />
+            <?php checked((int) get_user_meta($user->ID, 'nmgr_enable_wishlist', true), 1, true); ?> />
           <?php _e('Enable the wishlist module', 'nm-gift-registry-lite'); ?>
         </label>
       </td>
@@ -142,7 +144,7 @@ class NMGR_Admin
             return;
         }
 
-        if (isset($_POST[ 'nmgr_enable_wishlist' ])) {
+        if (isset($_POST['nmgr_enable_wishlist'])) {
             update_user_meta($user_id, 'nmgr_enable_wishlist', 1);
         } else {
             delete_user_meta($user_id, 'nmgr_enable_wishlist');
@@ -157,11 +159,11 @@ class NMGR_Admin
     public static function post_states($states, $post)
     {
         if (absint(nmgr_get_option('single_wishlist_template')) === $post->ID) {
-            $states[ 'nmgr_single_wishlist_template' ] = __('Single wishlist page', 'nm-gift-registry-lite');
+            $states['nmgr_single_wishlist_template'] = __('Single wishlist page', 'nm-gift-registry-lite');
         }
 
         if (absint(nmgr_get_option('search_results_template')) === $post->ID) {
-            $states[ 'nmgr_search_results_template' ] = __('Wishlist search results page', 'nm-gift-registry-lite');
+            $states['nmgr_search_results_template'] = __('Wishlist search results page', 'nm-gift-registry-lite');
         }
 
         return $states;
@@ -169,14 +171,14 @@ class NMGR_Admin
 
     public static function shop_order_column_headers($columns)
     {
-        $nmgr = array( 'nm_gift_registry' => __('Wishlists', 'nm-gift-registry-lite') );
+        $nmgr = array('nm_gift_registry' => __('Wishlists', 'nm-gift-registry-lite'));
         $new_columns = array();
 
         foreach ($columns as $key => $name) {
-            $new_columns[ $key ] = $name;
+            $new_columns[$key] = $name;
 
             if ('order_number' === $key) {
-                $new_columns[ 'nm_gift_registry' ] = __('Wishlists', 'nm-gift-registry-lite');
+                $new_columns['nm_gift_registry'] = __('Wishlists', 'nm-gift-registry-lite');
             }
         }
 
@@ -198,13 +200,13 @@ class NMGR_Admin
         }
 
         foreach ($order_wishlist_data as $wishlist_data) {
-            $wishlist = isset($wishlist_data[ 'wishlist_id' ]) ? nmgr_get_wishlist($wishlist_data[ 'wishlist_id' ]) : false;
+            $wishlist = isset($wishlist_data['wishlist_id']) ? nmgr_get_wishlist($wishlist_data['wishlist_id']) : false;
 
             if ($wishlist) {
                 $item_count_text = sprintf(
                     /* translators: %s: count of items in wishlist */
-                    _n('%s item', '%s items', count($wishlist_data[ 'wishlist_item_ids' ]), 'nm-gift-registry-lite'),
-                    count($wishlist_data[ 'wishlist_item_ids' ])
+                    _n('%s item', '%s items', count($wishlist_data['wishlist_item_ids']), 'nm-gift-registry-lite'),
+                    count($wishlist_data['wishlist_item_ids'])
                 );
 
                 echo '<div class="nm-wishlist">';

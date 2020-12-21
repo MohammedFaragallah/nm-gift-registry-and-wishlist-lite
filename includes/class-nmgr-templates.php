@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Functions related to NM Gift Registry templates
  */
@@ -9,95 +10,95 @@ class NMGR_Templates
     public static function run()
     {
         // Setup templates with woocommerce and wordpress
-        add_filter('is_woocommerce', array( __CLASS__, 'is_woocommerce' ));
-        add_filter('init', array( __CLASS__, 'include_templates' ));
-        add_filter('body_class', array( __CLASS__, 'body_class' ));
-        add_action('the_post', array( __CLASS__, 'set_global_variable' ), -1);
-        add_action('add_meta_boxes', array( __CLASS__, 'set_global_variable' ), -1);
-        add_action('template_redirect', array( __CLASS__, 'set_global_variable' ), -1);
+        add_filter('is_woocommerce', array(__CLASS__, 'is_woocommerce'));
+        add_filter('init', array(__CLASS__, 'include_templates'));
+        add_filter('body_class', array(__CLASS__, 'body_class'));
+        add_action('the_post', array(__CLASS__, 'set_global_variable'), -1);
+        add_action('add_meta_boxes', array(__CLASS__, 'set_global_variable'), -1);
+        add_action('template_redirect', array(__CLASS__, 'set_global_variable'), -1);
 
         // Single wishlist page content
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_actions' ), 5);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_title' ), 20);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_display_name' ), 30);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_event_date' ), 40);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_description' ), 50);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_actions'), 5);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_title'), 20);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_display_name'), 30);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_event_date'), 40);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_description'), 50);
         add_action('nmgr_wishlist', 'woocommerce_output_all_notices', 60);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_items_table' ), 70);
-        add_action('nmgr_wishlist', array( __CLASS__, 'single_show_share_links' ), 80);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_items_table'), 70);
+        add_action('nmgr_wishlist', array(__CLASS__, 'single_show_share_links'), 80);
 
         // Wishlist items table header
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_thumbnail' ), 10);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_title' ), 20);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_cost' ), 30);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_quantity' ), 40);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_purchased_quantity' ), 50);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_total_cost' ), 70);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_add_to_cart_button' ), 80, 3);
-        add_action('nmgr_items_table_header', array( __CLASS__, 'items_table_header_show_edit_delete_buttons' ), 90, 3);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_thumbnail'), 10);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_title'), 20);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_cost'), 30);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_quantity'), 40);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_purchased_quantity'), 50);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_total_cost'), 70);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_add_to_cart_button'), 80, 3);
+        add_action('nmgr_items_table_header', array(__CLASS__, 'items_table_header_show_edit_delete_buttons'), 90, 3);
 
         // Wishlist items table body
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_thumbnail' ), 10);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_title' ), 20);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_cost' ), 30);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_quantity' ), 40);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_purchased_quantity' ), 50);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_total_cost' ), 70);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_add_to_cart_button' ), 80, 3);
-        add_action('nmgr_items_table_body', array( __CLASS__, 'items_table_body_show_edit_delete_buttons' ), 90, 3);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_thumbnail'), 10);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_title'), 20);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_cost'), 30);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_quantity'), 40);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_purchased_quantity'), 50);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_total_cost'), 70);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_add_to_cart_button'), 80, 3);
+        add_action('nmgr_items_table_body', array(__CLASS__, 'items_table_body_show_edit_delete_buttons'), 90, 3);
 
         // Before wishlist items table
-        add_action('nmgr_before_items', array( __CLASS__, 'before_items_maybe_show_required_shipping_address_notice' ), 10, 3);
+        add_action('nmgr_before_items', array(__CLASS__, 'before_items_maybe_show_required_shipping_address_notice'), 10, 3);
 
         // After wishlist items table
-        add_action('nmgr_after_items', array( __CLASS__, 'after_items_show_items_total_cost' ), 10, 2);
-        add_action('nmgr_after_items', array( __CLASS__, 'after_items_show_add_to_cart_notice' ), 10, 2);
-        add_action('nmgr_after_items', array( __CLASS__, 'after_items_show_items_actions' ), 20, 3);
-        add_action('nmgr_after_items_actions', array( __CLASS__, 'after_items_actions_show_add_items_button' ), 10, 3);
-        add_action('nmgr_after_items_actions', array( __CLASS__, 'after_items_actions_show_save_items_button' ), 20, 3);
+        add_action('nmgr_after_items', array(__CLASS__, 'after_items_show_items_total_cost'), 10, 2);
+        add_action('nmgr_after_items', array(__CLASS__, 'after_items_show_add_to_cart_notice'), 10, 2);
+        add_action('nmgr_after_items', array(__CLASS__, 'after_items_show_items_actions'), 20, 3);
+        add_action('nmgr_after_items_actions', array(__CLASS__, 'after_items_actions_show_add_items_button'), 10, 3);
+        add_action('nmgr_after_items_actions', array(__CLASS__, 'after_items_actions_show_save_items_button'), 20, 3);
 
         // Wishlist items table conditionals
-        add_filter('nmgr_items_table_show_thumbnail', array( __CLASS__, 'maybe_show_item_thumbnail' ), 10);
-        add_filter('nmgr_items_table_show_title', array( __CLASS__, 'maybe_show_item_title' ), 10);
-        add_filter('nmgr_items_table_show_cost', array( __CLASS__, 'maybe_show_item_cost' ), 10);
-        add_filter('nmgr_items_table_show_quantity', array( __CLASS__, 'maybe_show_item_quantity' ), 10);
-        add_filter('nmgr_items_table_show_purchased_quantity', array( __CLASS__, 'maybe_show_item_purchased_quantity' ), 10);
-        add_filter('nmgr_items_table_show_total_cost', array( __CLASS__, 'maybe_show_item_total_cost' ), 10);
-        add_filter('nmgr_items_table_show_add_to_cart_button', array( __CLASS__, 'maybe_show_item_add_to_cart_button' ), 10, 2);
-        add_filter('nmgr_items_table_show_edit_delete_buttons', array( __CLASS__, 'maybe_show_item_edit_delete_buttons' ), 10, 2);
+        add_filter('nmgr_items_table_show_thumbnail', array(__CLASS__, 'maybe_show_item_thumbnail'), 10);
+        add_filter('nmgr_items_table_show_title', array(__CLASS__, 'maybe_show_item_title'), 10);
+        add_filter('nmgr_items_table_show_cost', array(__CLASS__, 'maybe_show_item_cost'), 10);
+        add_filter('nmgr_items_table_show_quantity', array(__CLASS__, 'maybe_show_item_quantity'), 10);
+        add_filter('nmgr_items_table_show_purchased_quantity', array(__CLASS__, 'maybe_show_item_purchased_quantity'), 10);
+        add_filter('nmgr_items_table_show_total_cost', array(__CLASS__, 'maybe_show_item_total_cost'), 10);
+        add_filter('nmgr_items_table_show_add_to_cart_button', array(__CLASS__, 'maybe_show_item_add_to_cart_button'), 10, 2);
+        add_filter('nmgr_items_table_show_edit_delete_buttons', array(__CLASS__, 'maybe_show_item_edit_delete_buttons'), 10, 2);
 
         // Wishlist sharing
-        add_action('wp_head', array( __CLASS__, 'add_open_graph_markup' ));
+        add_action('wp_head', array(__CLASS__, 'add_open_graph_markup'));
 
         // Setup account page
         $page = nmgr_get_account_details('slug');
 
         if ($page) {
-            add_filter('woocommerce_get_query_vars', array( __CLASS__, 'add_account_query_var' ));
-            add_filter('woocommerce_account_menu_items', array( __CLASS__, 'add_account_menu_item' ), 10, 1);
-            add_filter("woocommerce_endpoint_{$page}_title", array( __CLASS__, 'endpoint_title' ), 10, 2);
-            add_action("woocommerce_account_{$page}_endpoint", array( __CLASS__, 'account_endpoint' ), 10);
+            add_filter('woocommerce_get_query_vars', array(__CLASS__, 'add_account_query_var'));
+            add_filter('woocommerce_account_menu_items', array(__CLASS__, 'add_account_menu_item'), 10, 1);
+            add_filter("woocommerce_endpoint_{$page}_title", array(__CLASS__, 'endpoint_title'), 10, 2);
+            add_action("woocommerce_account_{$page}_endpoint", array(__CLASS__, 'account_endpoint'), 10);
         }
 
         // Account page content
-        add_filter('nmgr_account_tabs', array( __CLASS__, 'show_account_tabs' ), 10);
-        add_filter('nmgr_account_tabs', array( __CLASS__, 'sort_account_tabs' ), 20);
-        add_action('woocommerce_account_dashboard', array( __CLASS__, 'show_wishlist_dashboard_text' ), 10);
-        add_action('woocommerce_account_dashboard', array( __CLASS__, 'enable_wishlist' ), 20);
-        add_action('template_redirect', array( __CLASS__, 'enable_wishlist_redirection' ));
-        add_filter('nmgr_account_tab_title', array( __CLASS__, 'account_tab_title' ), 10, 3);
+        add_filter('nmgr_account_tabs', array(__CLASS__, 'show_account_tabs'), 10);
+        add_filter('nmgr_account_tabs', array(__CLASS__, 'sort_account_tabs'), 20);
+        add_action('woocommerce_account_dashboard', array(__CLASS__, 'show_wishlist_dashboard_text'), 10);
+        add_action('woocommerce_account_dashboard', array(__CLASS__, 'enable_wishlist'), 20);
+        add_action('template_redirect', array(__CLASS__, 'enable_wishlist_redirection'));
+        add_filter('nmgr_account_tab_title', array(__CLASS__, 'account_tab_title'), 10, 3);
 
         // Modify Wishlist data properties
-        add_filter('nmgr_get_prop', array( __CLASS__, 'get_wishlist_property' ), 10, 4);
+        add_filter('nmgr_get_prop', array(__CLASS__, 'get_wishlist_property'), 10, 4);
 
         // Sidebar
-        add_action('nmgr_sidebar', array( __CLASS__, 'show_theme_sidebar' ), 10);
+        add_action('nmgr_sidebar', array(__CLASS__, 'show_theme_sidebar'), 10);
 
         // Search
-        add_action('nmgr_search_results_header', array( __CLASS__, 'search_results_header' ), 10);
-        add_action('nmgr_no_search_results', array( __CLASS__, 'no_search_results_notification' ), 10);
+        add_action('nmgr_search_results_header', array(__CLASS__, 'search_results_header'), 10);
+        add_action('nmgr_no_search_results', array(__CLASS__, 'no_search_results_notification'), 10);
 
-        add_filter('nmgr_delete_item_notice', array( __CLASS__, 'notify_of_item_purchased_status' ), 10, 2);
+        add_filter('nmgr_delete_item_notice', array(__CLASS__, 'notify_of_item_purchased_status'), 10, 2);
     }
 
     /**
@@ -113,12 +114,14 @@ class NMGR_Templates
 
     public static function include_templates()
     {
-        add_filter('template_include', array( __CLASS__, 'include_template_page' ));
+        add_filter('template_include', array(__CLASS__, 'include_template_page'));
 
-        if (!current_theme_supports('woocommerce') ||
+        if (
+            !current_theme_supports('woocommerce') ||
             nmgr_get_option('single_wishlist_template') ||
-            nmgr_get_option('search_results_template')) {
-            add_action('template_redirect', array( __CLASS__, 'include_template_shortcode' ));
+            nmgr_get_option('search_results_template')
+        ) {
+            add_action('template_redirect', array(__CLASS__, 'include_template_shortcode'));
         }
     }
 
@@ -223,7 +226,7 @@ class NMGR_Templates
     {
         // Use the shortcode only if it is not already being used
         if (is_nmgr_wishlist() && !nmgr_post_content_has_shortcodes('nmgr_wishlist')) {
-            add_filter('the_content', array( __CLASS__, 'show_single_wishlist_shortcode' ), 10);
+            add_filter('the_content', array(__CLASS__, 'show_single_wishlist_shortcode'), 10);
             add_filter('comments_open', '__return_false', 20, 2);
         }
 
@@ -235,7 +238,7 @@ class NMGR_Templates
          * used in the search shortcode.
          */
         if (is_search() && is_nmgr_search()) {
-            add_filter('the_content', array( __CLASS__, 'show_search_results' ));
+            add_filter('the_content', array(__CLASS__, 'show_search_results'));
             add_filter('comments_open', '__return_false', 20, 2);
         }
     }
@@ -246,7 +249,7 @@ class NMGR_Templates
             return $content;
         }
 
-        remove_filter('the_content', array( __CLASS__, 'show_single_wishlist_shortcode' ));
+        remove_filter('the_content', array(__CLASS__, 'show_single_wishlist_shortcode'));
         return do_shortcode('[nmgr_wishlist id="' . get_the_ID() . '"]');
     }
 
@@ -261,7 +264,7 @@ class NMGR_Templates
             return $content;
         }
 
-        remove_filter('the_content', array( __CLASS__, 'show_search_results' ));
+        remove_filter('the_content', array(__CLASS__, 'show_search_results'));
         return nmgr_get_search_results_template();
     }
 
@@ -317,15 +320,15 @@ class NMGR_Templates
      */
     public static function set_global_variable()
     {
-        $GLOBALS[ 'nmgr' ] = new stdClass();
-        $GLOBALS[ 'nmgr' ]->is_account = is_nmgr_account();
-        $GLOBALS[ 'nmgr' ]->is_wishlist = is_nmgr_wishlist();
-        $GLOBALS[ 'nmgr' ]->is_admin = is_nmgr_admin();
-        $GLOBALS[ 'nmgr' ]->is_search = is_nmgr_search();
-        $GLOBALS[ 'nmgr' ]->is_account_tab = is_nmgr_account_tab();
-        $GLOBALS[ 'nmgr' ]->is_modal = is_nmgr_modal();
-        $GLOBALS[ 'nmgr' ]->wishlist_id = nmgr_get_current_wishlist_id();
-        $GLOBALS[ 'nmgr' ]->wishlist = nmgr_get_current_wishlist_id() ? nmgr_get_wishlist()->get_data() : '';
+        $GLOBALS['nmgr'] = new stdClass();
+        $GLOBALS['nmgr']->is_account = is_nmgr_account();
+        $GLOBALS['nmgr']->is_wishlist = is_nmgr_wishlist();
+        $GLOBALS['nmgr']->is_admin = is_nmgr_admin();
+        $GLOBALS['nmgr']->is_search = is_nmgr_search();
+        $GLOBALS['nmgr']->is_account_tab = is_nmgr_account_tab();
+        $GLOBALS['nmgr']->is_modal = is_nmgr_modal();
+        $GLOBALS['nmgr']->wishlist_id = nmgr_get_current_wishlist_id();
+        $GLOBALS['nmgr']->wishlist = nmgr_get_current_wishlist_id() ? nmgr_get_wishlist()->get_data() : '';
     }
 
     /**
@@ -349,8 +352,7 @@ class NMGR_Templates
             );
 
             if ((!nmgr_get_option('shipping_address_required') ||
-                (nmgr_get_option('shipping_address_required') && $wishlist->has_shipping_address()))
-            ) {
+                (nmgr_get_option('shipping_address_required') && $wishlist->has_shipping_address()))) {
                 printf(
                     '<a class="button nmgr-tip" title="%1$s" href="%2$s">%3$s</a>',
                     sprintf(
@@ -434,7 +436,7 @@ class NMGR_Templates
             nmgr_get_items_template(array(
                 'id' => $wishlist,
                 'editable' => false,
-                ), true);
+            ), true);
         } else {
             $link = '';
             if (nmgr_user_has_wishlist($wishlist)) {
@@ -447,8 +449,8 @@ class NMGR_Templates
 
             wc_print_notice(
                 $link .
-                /* translators: %s: wishlist type title */
-                sprintf(__('This %s is empty.', 'nm-gift-registry-lite'), nmgr_get_type_title()),
+                    /* translators: %s: wishlist type title */
+                    sprintf(__('This %s is empty.', 'nm-gift-registry-lite'), nmgr_get_type_title()),
                 'notice'
             );
         }
@@ -465,7 +467,7 @@ class NMGR_Templates
         nmgr_get_share_template(array(
             'id' => $wishlist,
             'title' => __('Share on:', 'nm-gift-registry-lite')
-            ), true);
+        ), true);
     }
 
     /**
@@ -513,11 +515,11 @@ class NMGR_Templates
             printf(
                 '<th class="item_quantity  sortable" data-sort="int"><span>%s</span></th>',
                 nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                'icon' => 'cart-empty',
-                'size' => 1,
-                'fill' => 'currentColor',
-                'class' => 'nmgr-tip',
-                'title' => __('Desired Quantity', 'nm-gift-registry-lite')
+                    'icon' => 'cart-empty',
+                    'size' => 1,
+                    'fill' => 'currentColor',
+                    'class' => 'nmgr-tip',
+                    'title' => __('Desired Quantity', 'nm-gift-registry-lite')
                 ))
             );
         }
@@ -532,11 +534,11 @@ class NMGR_Templates
             printf(
                 '<th class="item_purchased_quantity sortable" data-sort="int"><span>%s</span></th>',
                 nmgr_get_svg(array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                'icon' => 'cart-full',
-                'size' => 1,
-                'fill' => 'currentColor',
-                'class' => 'nmgr-tip',
-                'title' => __('Purchased Quantity', 'nm-gift-registry-lite')
+                    'icon' => 'cart-full',
+                    'size' => 1,
+                    'fill' => 'currentColor',
+                    'class' => 'nmgr-tip',
+                    'title' => __('Purchased Quantity', 'nm-gift-registry-lite')
                 ))
             );
         }
@@ -574,9 +576,9 @@ class NMGR_Templates
             printf(
                 '<th class="item_actions "><div>%s</div></th>', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 nmgr_get_svg(array(
-                'icon' => 'gear',
-                'size' => 1,
-                'fill' => 'currentColor'
+                    'icon' => 'gear',
+                    'size' => 1,
+                    'fill' => 'currentColor'
                 ))
             );
         }
@@ -592,11 +594,12 @@ class NMGR_Templates
         if (is_nmgr_admin() || apply_filters('nmgr_items_table_show_thumbnail', true)) {
             $product = $item->get_product();
             $thumbnail = $product ? $product->get_image('nmgr_thumbnail', array(
-                    'title' => $product->get_name(),
-                    'class' => 'nmgr-tip',
-                    'alt' => $product->get_name() )) : '';
+                'title' => $product->get_name(),
+                'class' => 'nmgr-tip',
+                'alt' => $product->get_name()
+            )) : '';
 
-            nmgr_template('account/items/item-thumbnail.php', array( 'thumbnail' => $thumbnail ));
+            nmgr_template('account/items/item-thumbnail.php', array('thumbnail' => $thumbnail));
         }
     }
 
@@ -678,7 +681,7 @@ class NMGR_Templates
     public static function items_table_body_show_total_cost($item)
     {
         if (is_nmgr_admin() || apply_filters('nmgr_items_table_show_total_cost', true)) {
-            nmgr_template('account/items/item-total_cost.php', array( 'item' => $item ));
+            nmgr_template('account/items/item-total_cost.php', array('item' => $item));
         }
     }
 
@@ -728,9 +731,11 @@ class NMGR_Templates
         if (is_nmgr_admin() || apply_filters('nmgr_items_table_show_edit_delete_buttons', false, $items_args)) {
             $show_edit_button = false;
 
-            if (nmgr_get_option('display_item_quantity', 1) ||
+            if (
+                nmgr_get_option('display_item_quantity', 1) ||
                 nmgr_get_option('display_item_favourite', 1) ||
-                nmgr_get_option('display_item_purchased_quantity')) {
+                nmgr_get_option('display_item_purchased_quantity')
+            ) {
                 $show_edit_button = true;
             }
 
@@ -779,8 +784,8 @@ class NMGR_Templates
 
         $value = $bool && nmgr_get_option('display_item_total_cost', 1);
 
-        if (!$value && has_action('nmgr_after_items', array( __CLASS__, 'after_items_show_items_total_cost' ))) {
-            remove_action('nmgr_after_items', array( __CLASS__, 'after_items_show_items_total_cost' ), 10, 2);
+        if (!$value && has_action('nmgr_after_items', array(__CLASS__, 'after_items_show_items_total_cost'))) {
+            remove_action('nmgr_after_items', array(__CLASS__, 'after_items_show_items_total_cost'), 10, 2);
         }
 
         return $value;
@@ -788,11 +793,11 @@ class NMGR_Templates
 
     public static function maybe_show_item_add_to_cart_button($bool, $items_args)
     {
-        $value = is_nmgr_wishlist() || $items_args[ 'add_to_cart' ] || $bool;
+        $value = is_nmgr_wishlist() || $items_args['add_to_cart'] || $bool;
 
         if (!$value) {
-            if (has_action('nmgr_after_items', array( __CLASS__, 'after_items_show_add_to_cart_notice' ))) {
-                remove_action('nmgr_after_items', array( __CLASS__, 'after_items_show_add_to_cart_notice' ), 10, 2);
+            if (has_action('nmgr_after_items', array(__CLASS__, 'after_items_show_add_to_cart_notice'))) {
+                remove_action('nmgr_after_items', array(__CLASS__, 'after_items_show_add_to_cart_notice'), 10, 2);
             }
         }
 
@@ -801,11 +806,11 @@ class NMGR_Templates
 
     public static function maybe_show_item_edit_delete_buttons($bool, $items_args)
     {
-        $value = $bool || is_nmgr_account() || (!is_nmgr_wishlist() && $items_args[ 'editable' ]);
+        $value = $bool || is_nmgr_account() || (!is_nmgr_wishlist() && $items_args['editable']);
 
         if (!$value) {
-            if (has_action('nmgr_after_items_actions', array( __CLASS__, 'after_items_actions_show_save_items_button' ))) {
-                remove_action('nmgr_after_items_actions', array( __CLASS__, 'after_items_actions_show_save_items_button' ), 20, 3);
+            if (has_action('nmgr_after_items_actions', array(__CLASS__, 'after_items_actions_show_save_items_button'))) {
+                remove_action('nmgr_after_items_actions', array(__CLASS__, 'after_items_actions_show_save_items_button'), 20, 3);
             }
         }
 
@@ -814,7 +819,7 @@ class NMGR_Templates
 
     public static function before_items_maybe_show_required_shipping_address_notice($items, $wishlist, $items_args)
     {
-        if ($items_args[ 'editable' ]) {
+        if ($items_args['editable']) {
             nmgr_maybe_show_required_shipping_address_notice($wishlist);
         }
     }
@@ -828,7 +833,7 @@ class NMGR_Templates
     public static function after_items_show_items_total_cost($items, $wishlist)
     {
         if (!is_nmgr_wishlist()) {
-            nmgr_template('account/items/items-total-cost.php', array( 'wishlist' => $wishlist ));
+            nmgr_template('account/items/items-total-cost.php', array('wishlist' => $wishlist));
         }
     }
 
@@ -857,7 +862,7 @@ class NMGR_Templates
                 'items' => $items,
                 'wishlist' => $wishlist,
                 'items_args' => $items_args
-        )
+            )
         );
     }
 
@@ -868,9 +873,11 @@ class NMGR_Templates
      */
     public static function after_items_actions_show_add_items_button($items, $wishlist, $items_args)
     {
-        if (is_nmgr_wishlist() ||
+        if (
+            is_nmgr_wishlist() ||
             (nmgr_get_option('shipping_address_required') && !$wishlist->has_shipping_address()) ||
-            !$items_args[ 'editable' ]) {
+            !$items_args['editable']
+        ) {
             return;
         }
 
@@ -889,9 +896,9 @@ class NMGR_Templates
     {
         if (
             (!nmgr_get_option('display_item_quantity', 1) &&
-            !nmgr_get_option('display_item_purchased_quantity', 1)) ||
+                !nmgr_get_option('display_item_purchased_quantity', 1)) ||
             empty($items) ||
-            !$items_args[ 'editable' ]
+            !$items_args['editable']
         ) {
             return;
         } ?>
@@ -931,7 +938,8 @@ class NMGR_Templates
     {
         global $post, $wp_query;
         if ((is_nmgr_account() && !is_nmgr_enabled()) ||
-            (is_nmgr_wishlist() && !is_nmgr_enabled($post->post_author))) {
+            (is_nmgr_wishlist() && !is_nmgr_enabled($post->post_author))
+        ) {
             $wp_query->set_404();
             status_header(404);
             include get_query_template('404');
@@ -948,7 +956,7 @@ class NMGR_Templates
      */
     public static function add_account_query_var($query_vars)
     {
-        $query_vars[ nmgr_get_account_details('slug') ] = nmgr_get_account_details('slug');
+        $query_vars[nmgr_get_account_details('slug')] = nmgr_get_account_details('slug');
         return $query_vars;
     }
 
@@ -986,8 +994,8 @@ class NMGR_Templates
         }
 
         $logout = array_pop($items);
-        $items[ nmgr_get_account_details('slug') ] = nmgr_get_account_details('name');
-        $items[ 'customer-logout' ] = $logout;
+        $items[nmgr_get_account_details('slug')] = nmgr_get_account_details('name');
+        $items['customer-logout'] = $logout;
 
         return apply_filters('nmgr_account_menu_item', $items);
     }
@@ -1019,32 +1027,32 @@ class NMGR_Templates
      */
     public static function get_account_tabs()
     {
-        $tabs[ 'overview' ] = array(
+        $tabs['overview'] = array(
             'title' => __('Overview', 'nm-gift-registry-lite'),
             'priority' => 10,
-            'callback' => array( __CLASS__, 'overview_tab' ),
+            'callback' => array(__CLASS__, 'overview_tab'),
         );
 
-        $tabs[ 'profile' ] = array(
+        $tabs['profile'] = array(
             'title' => __('Profile', 'nm-gift-registry-lite'),
             'priority' => 20,
-            'callback' => array( __CLASS__, 'profile_tab' ),
+            'callback' => array(__CLASS__, 'profile_tab'),
         );
-        $tabs[ 'items' ] = array(
+        $tabs['items'] = array(
             'title' => __('Items', 'nm-gift-registry-lite'),
             'priority' => 30,
-            'callback' => array( __CLASS__, 'items_tab' ),
+            'callback' => array(__CLASS__, 'items_tab'),
         );
 
-        $tabs[ 'shipping' ] = array(
+        $tabs['shipping'] = array(
             'title' => __('Shipping', 'nm-gift-registry-lite'),
             'priority' => 40,
-            'callback' => array( __CLASS__, 'shipping_tab' ),
+            'callback' => array(__CLASS__, 'shipping_tab'),
         );
 
         foreach (array_keys($tabs) as $key) {
-            $tabs[ $key ][ 'tab_id' ] = "nmgr-tab-{$key}";
-            $tabs[ $key ][ 'tab_content_id' ] = "tab-{$key}";
+            $tabs[$key]['tab_id'] = "nmgr-tab-{$key}";
+            $tabs[$key]['tab_content_id'] = "tab-{$key}";
         }
 
         return $tabs;
@@ -1056,23 +1064,23 @@ class NMGR_Templates
     public static function show_account_tabs($tabs)
     {
         if (!nmgr_get_option('enable_shipping')) {
-            unset($tabs[ 'shipping' ]);
+            unset($tabs['shipping']);
         }
         return $tabs;
     }
 
     public static function sort_account_tabs($tabs = array())
     {
-        uasort($tabs, array( __CLASS__, 'sort_by_priority' ));
+        uasort($tabs, array(__CLASS__, 'sort_by_priority'));
         return $tabs;
     }
 
     private static function sort_by_priority($a, $b)
     {
-        if (!isset($a[ 'priority' ], $b[ 'priority' ]) || $a[ 'priority' ] === $b[ 'priority' ]) {
+        if (!isset($a['priority'], $b['priority']) || $a['priority'] === $b['priority']) {
             return 0;
         }
-        return ($a[ 'priority' ] < $b[ 'priority' ]) ? -1 : 1;
+        return ($a['priority'] < $b['priority']) ? -1 : 1;
     }
 
     /**
@@ -1121,28 +1129,28 @@ class NMGR_Templates
         switch ($tab) {
             case 'profile':
                 if (!$wishlist) {
-                    $icon_args[ 'class' ] = str_replace('nmgr-hide', '', $icon_args[ 'class' ]);
+                    $icon_args['class'] = str_replace('nmgr-hide', '', $icon_args['class']);
                 }
-                $icon_args[ 'title' ] = sprintf(
+                $icon_args['title'] = sprintf(
                     /* translators: %s: wishlist type title */
                     esc_html__('Fill in your %s profile details.', 'nm-gift-registry-lite'),
                     esc_html(nmgr_get_type_title())
                 );
-                $icon_args[ 'data-notice' ] = 'require-profile';
+                $icon_args['data-notice'] = 'require-profile';
                 $icon = nmgr_get_svg($icon_args);
                 $title .= $icon;
                 break;
 
             case 'shipping':
                 if ($wishlist && nmgr_get_option('shipping_address_required') && !$wishlist->has_shipping_address()) {
-                    $icon_args[ 'class' ] = str_replace('nmgr-hide', '', $icon_args[ 'class' ]);
+                    $icon_args['class'] = str_replace('nmgr-hide', '', $icon_args['class']);
                 }
-                $icon_args[ 'title' ] = sprintf(
+                $icon_args['title'] = sprintf(
                     /* translators: %s: wishlist type title */
                     esc_html__('Your shipping address is required before you can add items to your %s.', 'nm-gift-registry-lite'),
                     esc_html(nmgr_get_type_title())
                 );
-                $icon_args[ 'data-notice' ] = 'require-shipping-address';
+                $icon_args['data-notice'] = 'require-shipping-address';
                 $icon = nmgr_get_svg($icon_args);
                 $title .= $icon;
                 break;
@@ -1162,7 +1170,7 @@ class NMGR_Templates
     public static function get_wishlist_property($value, $prop, $parent, $object)
     {
         if ('wishlist' === $object->get_object_type()) {
-            $dont_modify = array( 'status' );
+            $dont_modify = array('status');
 
             if (!in_array($prop, $dont_modify) && 'no' === nmgr_get_option("display_form_{$prop}")) {
                 return null;
@@ -1170,7 +1178,7 @@ class NMGR_Templates
 
             // Shipping
             if (!nmgr_get_option('enable_shipping', 1)) {
-                $shipping = array( 'ship_to_account_address' );
+                $shipping = array('ship_to_account_address');
                 if ('shipping' === $parent || in_array($prop, $shipping)) {
                     return null;
                 }
@@ -1197,8 +1205,10 @@ class NMGR_Templates
         $file_exists = false;
 
         foreach ($templates as $template_name) {
-            if (file_exists(get_stylesheet_directory() . '/' . $template_name) ||
-                file_exists(get_template_directory() . '/' . $template_name)) {
+            if (
+                file_exists(get_stylesheet_directory() . '/' . $template_name) ||
+                file_exists(get_template_directory() . '/' . $template_name)
+            ) {
                 $file_exists = true;
                 break;
             }
@@ -1219,24 +1229,24 @@ class NMGR_Templates
     {
         global $wp_query;
 
-        if (!isset($args[ 'show_title' ], $args[ 'show_post_count' ]) || (!$args[ 'show_title' ] && !$args[ 'show_post_count' ])) {
+        if (!isset($args['show_title'], $args['show_post_count']) || (!$args['show_title'] && !$args['show_post_count'])) {
             return;
         } ?>
 <header class="nmgr-search-header nmgr-text-center">
   <?php
-            if ($args[ 'show_title' ]) {
+            if ($args['show_title']) {
                 echo '<h2 class="nmgr-search-title">';
                 /* translators: %s: search query */
                 printf(esc_html__('Search results for: &ldquo;%s&rdquo;', 'nm-gift-registry-lite'), get_search_query(true));
                 echo '</h2>';
             }
 
-        if ($args[ 'show_post_count' ]) {
-            echo '<p>';
-            /* translators: %d: total results */
-            printf(_n('%d result found', '%d results found', $wp_query->found_posts, 'nm-gift-registry-lite'), absint($wp_query->found_posts));
-            echo '</p>';
-        } ?>
+            if ($args['show_post_count']) {
+                echo '<p>';
+                /* translators: %d: total results */
+                printf(_n('%d result found', '%d results found', $wp_query->found_posts, 'nm-gift-registry-lite'), absint($wp_query->found_posts));
+                echo '</p>';
+            } ?>
 </header>
 <?php
     }
@@ -1249,12 +1259,12 @@ class NMGR_Templates
     public static function no_search_results_notification()
     {
         echo '<p class="woocommerce-info">' .
-        sprintf(
-            /* translators: %s: wishlist type title */
-            esc_html__('No %s were found matching your selection.', 'nm-gift-registry-lite'),
-            esc_html(nmgr_get_type_title('', true))
-        ) .
-        '</p>';
+            sprintf(
+                /* translators: %s: wishlist type title */
+                esc_html__('No %s were found matching your selection.', 'nm-gift-registry-lite'),
+                esc_html(nmgr_get_type_title('', true))
+            ) .
+            '</p>';
     }
 
     public static function notify_of_item_purchased_status($notice, $item)

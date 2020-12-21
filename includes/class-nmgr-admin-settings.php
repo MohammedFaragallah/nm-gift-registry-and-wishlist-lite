@@ -31,15 +31,15 @@ class NMGR_Admin_Settings
 
     public static function run()
     {
-        add_filter('woocommerce_screen_ids', array( __CLASS__, 'add_screen_id' ));
-        add_action('admin_menu', array( __CLASS__, 'add_settings_page' ));
-        add_action('admin_init', array( __CLASS__, 'add_settings_fields' ));
-        add_filter('pre_update_option_' . nmgr()->option_name, array( __CLASS__, 'pre_update_option_actions' ), 10, 2);
-        add_action('update_option_' . nmgr()->option_name, array( __CLASS__, 'update_option_actions' ), 10, 2);
-        add_action('nmgr_settings_sections_tab_full_version', array( __CLASS__, 'do_settings_sections_full_version' ));
+        add_filter('woocommerce_screen_ids', array(__CLASS__, 'add_screen_id'));
+        add_action('admin_menu', array(__CLASS__, 'add_settings_page'));
+        add_action('admin_init', array(__CLASS__, 'add_settings_fields'));
+        add_filter('pre_update_option_' . nmgr()->option_name, array(__CLASS__, 'pre_update_option_actions'), 10, 2);
+        add_action('update_option_' . nmgr()->option_name, array(__CLASS__, 'update_option_actions'), 10, 2);
+        add_action('nmgr_settings_sections_tab_full_version', array(__CLASS__, 'do_settings_sections_full_version'));
 
         // phpcs:disable WordPress.Security.NonceVerification
-        if (isset($_GET[ 'page' ]) && self::$settings_slug === $_GET[ 'page' ]) {
+        if (isset($_GET['page']) && self::$settings_slug === $_GET['page']) {
             self::$current_tab = self::get_current_tab($_GET);
             self::$current_section = self::get_current_section($_GET);
         }
@@ -64,7 +64,7 @@ class NMGR_Admin_Settings
      */
     public static function get_current_tab($request)
     {
-        return empty($request[ 'tab' ]) ? 'general' : sanitize_title(wp_unslash($request[ 'tab' ]));
+        return empty($request['tab']) ? 'general' : sanitize_title(wp_unslash($request['tab']));
     }
 
     /**
@@ -75,13 +75,13 @@ class NMGR_Admin_Settings
      */
     public static function get_current_section($request)
     {
-        $section = isset($request[ 'section' ]) ? sanitize_title(wp_unslash($request[ 'section' ])) : '';
+        $section = isset($request['section']) ? sanitize_title(wp_unslash($request['section'])) : '';
         $tab = self::get_current_tab($request);
 
         if ($tab && !$section) {
-            $tab_args = isset(self::get_tabs()[ $tab ]) ? self::get_tabs()[ $tab ] : '';
-            if (!empty($tab_args) && isset($tab_args[ 'sections' ])) {
-                $sec = array_flip($tab_args[ 'sections' ]);
+            $tab_args = isset(self::get_tabs()[$tab]) ? self::get_tabs()[$tab] : '';
+            if (!empty($tab_args) && isset($tab_args['sections'])) {
+                $sec = array_flip($tab_args['sections']);
                 $section = reset($sec);
             }
         }
@@ -92,56 +92,56 @@ class NMGR_Admin_Settings
     {
         $default_values = self::get_default_values();
 
-        if ($old_value[ 'enable_shipping' ] !== $new_value[ 'enable_shipping' ]) {
-            if (!$new_value[ 'enable_shipping' ]) {
-                $new_value[ 'shipping_address_required' ] = '';
+        if ($old_value['enable_shipping'] !== $new_value['enable_shipping']) {
+            if (!$new_value['enable_shipping']) {
+                $new_value['shipping_address_required'] = '';
             }
         }
 
-        if ($old_value[ 'type' ] !== $new_value[ 'type' ]) {
-            if ('wishlist' == $new_value[ 'type' ]) {
-                $new_value[ 'type_title' ] = 'wishlist';
-                $new_value[ 'display_form_event_date' ] = 'no';
-                $new_value[ 'display_form_partner_first_name' ] = 'no';
-                $new_value[ 'display_form_partner_last_name' ] = 'no';
-                $new_value[ 'display_item_purchased_quantity' ] = '';
-                $new_value[ 'enable_shipping' ] = '';
-                $new_value[ 'display_tab_shipping' ] = '';
-                $new_value[ 'allow_guest_wishlists' ] = 1;
-            } elseif ('gift_registry' == $new_value[ 'type' ]) {
-                $new_value[ 'type_title' ] = 'gift_registry';
-                $new_value[ 'enable_shipping' ] = 1;
+        if ($old_value['type'] !== $new_value['type']) {
+            if ('wishlist' == $new_value['type']) {
+                $new_value['type_title'] = 'wishlist';
+                $new_value['display_form_event_date'] = 'no';
+                $new_value['display_form_partner_first_name'] = 'no';
+                $new_value['display_form_partner_last_name'] = 'no';
+                $new_value['display_item_purchased_quantity'] = '';
+                $new_value['enable_shipping'] = '';
+                $new_value['display_tab_shipping'] = '';
+                $new_value['allow_guest_wishlists'] = 1;
+            } elseif ('gift_registry' == $new_value['type']) {
+                $new_value['type_title'] = 'gift_registry';
+                $new_value['enable_shipping'] = 1;
 
                 foreach (array_keys($new_value) as $key) {
                     if (strpos($key, 'display_form_') !== false) {
-                        $new_value[ $key ] = 'optional';
+                        $new_value[$key] = 'optional';
                     }
 
                     if (strpos($key, 'display_item_') !== false) {
-                        $new_value[ $key ] = 1;
+                        $new_value[$key] = 1;
                     }
 
                     if (strpos($key, 'display_tab_') !== false) {
-                        $new_value[ $key ] = 1;
+                        $new_value[$key] = 1;
                     }
                 }
             }
         }
 
-        if ($old_value[ 'display_item_quantity' ] !== $new_value[ 'display_item_quantity' ]) {
-            if (!$new_value[ 'display_item_quantity' ]) {
-                $new_value[ 'display_item_total_cost' ] = '';
+        if ($old_value['display_item_quantity'] !== $new_value['display_item_quantity']) {
+            if (!$new_value['display_item_quantity']) {
+                $new_value['display_item_total_cost'] = '';
             } else {
-                $new_value[ 'display_item_total_cost' ] = 1;
+                $new_value['display_item_total_cost'] = 1;
             }
         }
 
-        if (!$new_value[ 'display_item_quantity' ] || !$new_value[ 'display_item_purchased_quantity' ]) {
-            $new_value[ 'hide_fulfilled_items' ] = '';
+        if (!$new_value['display_item_quantity'] || !$new_value['display_item_purchased_quantity']) {
+            $new_value['hide_fulfilled_items'] = '';
         }
 
-        if (!$new_value[ 'add_to_wishlist_button_text' ]) {
-            $new_value[ 'add_to_wishlist_button_text' ] = $default_values[ 'add_to_wishlist_button_text' ];
+        if (!$new_value['add_to_wishlist_button_text']) {
+            $new_value['add_to_wishlist_button_text'] = $default_values['add_to_wishlist_button_text'];
         }
 
         return $new_value;
@@ -151,20 +151,20 @@ class NMGR_Admin_Settings
     {
         global $wpdb;
 
-        if ($old_value[ 'my_account_name' ] != $new_value[ 'my_account_name' ]) {
+        if ($old_value['my_account_name'] != $new_value['my_account_name']) {
             update_option('nmgr_flush_rewrite_rules', 'yes');
         }
 
-        if ($old_value[ 'permalink_base' ] != $new_value[ 'permalink_base' ]) {
+        if ($old_value['permalink_base'] != $new_value['permalink_base']) {
             update_option('nmgr_flush_rewrite_rules', 'yes');
         }
 
-        if ($old_value[ 'wishlist_account_page_id' ] != $new_value[ 'wishlist_account_page_id' ]) {
+        if ($old_value['wishlist_account_page_id'] != $new_value['wishlist_account_page_id']) {
             update_option('nmgr_flush_rewrite_rules', 'yes');
         }
 
-        if ($old_value[ 'user_enable_wishlist' ] != $new_value[ 'user_enable_wishlist' ]) {
-            if (!$new_value[ 'user_enable_wishlist' ]) {
+        if ($old_value['user_enable_wishlist'] != $new_value['user_enable_wishlist']) {
+            if (!$new_value['user_enable_wishlist']) {
                 // delete all the enable_wishlist options for all users in the user meta table
                 delete_metadata('user', 0, 'nmgr_enable_wishlist', '', true);
             } else {
@@ -180,8 +180,8 @@ class NMGR_Admin_Settings
             }
         }
 
-        if ($old_value[ 'display_item_purchased_quantity' ] != $new_value[ 'display_item_purchased_quantity' ]) {
-            if (!$new_value[ 'display_item_purchased_quantity' ]) {
+        if ($old_value['display_item_purchased_quantity'] != $new_value['display_item_purchased_quantity']) {
+            if (!$new_value['display_item_purchased_quantity']) {
                 $wpdb->query($wpdb->prepare(
                     "UPDATE {$wpdb->prefix}nmgr_wishlist_itemmeta SET meta_value = %d WHERE meta_key = %s",
                     0,
@@ -195,10 +195,12 @@ class NMGR_Admin_Settings
             }
         }
 
-        if (isset($old_value[ 'allow_multiple_wishlists' ]) &&
-            $old_value[ 'allow_multiple_wishlists' ] != $new_value[ 'allow_multiple_wishlists' ]) {
+        if (
+            isset($old_value['allow_multiple_wishlists']) &&
+            $old_value['allow_multiple_wishlists'] != $new_value['allow_multiple_wishlists']
+        ) {
             // if the setting has changed from users having  a single wishlist to having multiple wishlists
-            if (!$new_value[ 'allow_multiple_wishlists' ]) {
+            if (!$new_value['allow_multiple_wishlists']) {
                 // Get all the users that have wishlists (registered users and guests)
                 $meta_rows = $wpdb->get_results("SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '_nmgr_user_id' ORDER BY meta_id DESC ");
 
@@ -212,7 +214,7 @@ class NMGR_Admin_Settings
                     foreach ($meta_rows as $row) {
                         if ($value == $row->meta_value) {
                             // Add post ids as indexed array
-                            $user_ids_to_post_ids[ $value ][] = $row->post_id;
+                            $user_ids_to_post_ids[$value][] = $row->post_id;
                         }
                     }
                 }
@@ -221,7 +223,7 @@ class NMGR_Admin_Settings
                  *  @todo check if it is necessary to remove this filter as this code has been refactored
                  * not to use get_posts which was used originally
                  */
-                remove_filter('wp_insert_post_data', array( 'NMGR_Admin_Post', 'insert_post_data' ), 10);
+                remove_filter('wp_insert_post_data', array('NMGR_Admin_Post', 'insert_post_data'), 10);
 
                 // Delete all wishlists of all users except the most recent
                 foreach ($user_ids_to_post_ids as $user_id => $post_ids) {
@@ -246,7 +248,7 @@ class NMGR_Admin_Settings
                  *  @todo check if it is necessary to add this filter as this code has been refactored
                  * not to use get_posts which was used originally
                  */
-                add_filter('wp_insert_post_data', array( 'NMGR_Admin_Post', 'insert_post_data' ), 10, 2);
+                add_filter('wp_insert_post_data', array('NMGR_Admin_Post', 'insert_post_data'), 10, 2);
             }
         }
     }
@@ -267,7 +269,7 @@ class NMGR_Admin_Settings
             __('Settings', 'nm-gift-registry-lite'),
             'manage_' . nmgr()->post_type . '_settings',
             self::$settings_slug,
-            array( __CLASS__, 'settings_page_content' )
+            array(__CLASS__, 'settings_page_content')
         );
     }
 
@@ -283,23 +285,23 @@ class NMGR_Admin_Settings
         foreach (array_keys(self::get_tabs()) as $tab) {
             $get_tab_sections = $tab . '_tab_sections';
             if (method_exists(__CLASS__, $get_tab_sections)) {
-                $this_section = call_user_func(array( __CLASS__, $get_tab_sections ));
+                $this_section = call_user_func(array(__CLASS__, $get_tab_sections));
                 if ($this_section) {
                     foreach ($this_section as $args) {
                         foreach ($args as $args_key => $args_value) {
                             if ('fields' == $args_key) {
                                 foreach ($args_value as $value) {
                                     // Key to use to save the value
-                                    $option_key = isset($value[ 'option_name' ]) ? $value[ 'option_name' ] : (isset($value[ 'id' ]) ? $value[ 'id' ] : '');
+                                    $option_key = isset($value['option_name']) ? $value['option_name'] : (isset($value['id']) ? $value['id'] : '');
                                     if ($option_key) {
-                                        if (isset($value[ 'option_group' ]) && $value[ 'option_group' ]) {
-                                            $fields[ $option_key ][] = isset($value[ 'default' ]) ? $value[ 'default' ] : '';
+                                        if (isset($value['option_group']) && $value['option_group']) {
+                                            $fields[$option_key][] = isset($value['default']) ? $value['default'] : '';
                                         } else {
-                                            $fields[ $option_key ] = isset($value[ 'default' ]) ? $value[ 'default' ] : '';
+                                            $fields[$option_key] = isset($value['default']) ? $value['default'] : '';
                                         }
 
-                                        if (is_array($fields[ $option_key ])) {
-                                            $fields[ $option_key ] = array_filter($fields[ $option_key ]);
+                                        if (is_array($fields[$option_key])) {
+                                            $fields[$option_key] = array_filter($fields[$option_key]);
                                         }
                                     }
                                 }
@@ -352,75 +354,77 @@ class NMGR_Admin_Settings
                 'show_sections' => false,
                 'submit_button' => false
             )
-            ));
+        ));
     }
 
     public static function settings_page_content()
     {
-        ?>
+?>
 <div class="wrap <?php echo esc_attr(nmgr()->post_type) . " " . esc_attr(self::$current_tab); ?>">
   <form method="post" action="options.php" enctype="multipart/form-data">
     <nav class="nav-tab-wrapper">
       <?php
                     foreach (self::get_tabs() as $slug => $args) {
-                        $tab_title = isset($args[ 'tab_title' ]) ? $args[ 'tab_title' ] : $slug;
+                        $tab_title = isset($args['tab_title']) ? $args['tab_title'] : $slug;
                         $tab_url = add_query_arg(array(
                             'page' => self::$settings_slug,
                             'tab' => esc_attr($slug)
-                            ), nmgr_get_admin_url());
+                        ), nmgr_get_admin_url());
 
                         echo '<a href="' . esc_html($tab_url) . '" class="nav-tab ' . (self::$current_tab === $slug ? 'nav-tab-active' : '') . '">' . esc_html($tab_title) . '</a>';
                     } ?>
     </nav>
 
     <?php
-                $current_tab_sections = isset(self::get_tabs()[ self::$current_tab ][ 'sections' ]) ? self::get_tabs()[ self::$current_tab ][ 'sections' ] : null;
+                $current_tab_sections = isset(self::get_tabs()[self::$current_tab]['sections']) ? self::get_tabs()[self::$current_tab]['sections'] : null;
 
-        if ($current_tab_sections) :
-                    ?>
+                if ($current_tab_sections) :
+                ?>
     <ul class="subsubsub">
 
       <?php
                         $section_keys = array_keys($current_tab_sections);
 
-        foreach ($current_tab_sections as $key => $label) {
-            $section_url = add_query_arg(array(
+                        foreach ($current_tab_sections as $key => $label) {
+                            $section_url = add_query_arg(array(
                                 'page' => self::$settings_slug,
                                 'tab' => esc_attr(self::$current_tab),
                                 'section' => sanitize_title($key)
-                                ), nmgr_get_admin_url());
-            echo '<li><a href="' . esc_html($section_url) . '" class="' . (self::$current_section == $key ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($section_keys) == $key ? '' : '|') . ' </li>';
-        } ?>
+                            ), nmgr_get_admin_url());
+                            echo '<li><a href="' . esc_html($section_url) . '" class="' . (self::$current_section == $key ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($section_keys) == $key ? '' : '|') . ' </li>';
+                        } ?>
 
     </ul><br class="clear" />
     <?php
                 endif;
 
-        $args = isset(self::get_tabs()[ self::$current_tab ]) ? self::get_tabs()[ self::$current_tab ] : '';
+                $args = isset(self::get_tabs()[self::$current_tab]) ? self::get_tabs()[self::$current_tab] : '';
 
-        settings_errors();
-        settings_fields(nmgr()->option_name);
+                settings_errors();
+                settings_fields(nmgr()->option_name);
 
-        $sections_title = isset($args[ 'sections_title' ]) ? $args[ 'sections_title' ] : null;
+                $sections_title = isset($args['sections_title']) ? $args['sections_title'] : null;
 
-        // hack to keep settings_errors() above section titles
-        printf(
-            '<h1 style=%s>%s</h1>',
-            empty($sections_title) ? 'display:none;' : '',
-            $sections_title
-        );
+                // hack to keep settings_errors() above section titles
+                printf(
+                    '<h1 style=%s>%s</h1>',
+                    empty($sections_title) ? 'display:none;' : '',
+                    $sections_title
+                );
 
-        if (isset($args[ 'show_sections' ]) && $args[ 'show_sections' ]) {
-            $key = !empty(self::$current_section) ? self::$current_section : self::$current_tab;
-            do_settings_sections($key);
-        }
+                if (isset($args['show_sections']) && $args['show_sections']) {
+                    $key = !empty(self::$current_section) ? self::$current_section : self::$current_tab;
+                    do_settings_sections($key);
+                }
 
-        do_action('nmgr_settings_sections_tab_' . self::$current_tab);
+                do_action('nmgr_settings_sections_tab_' . self::$current_tab);
 
-        if (!isset($args[ 'submit_button' ]) ||
-                    (isset($args[ 'submit_button' ]) && $args[ 'submit_button' ])) {
-            submit_button();
-        } ?>
+                if (
+                    !isset($args['submit_button']) ||
+                    (isset($args['submit_button']) && $args['submit_button'])
+                ) {
+                    submit_button();
+                } ?>
   </form>
 </div>
 <?php
@@ -438,7 +442,7 @@ class NMGR_Admin_Settings
         $get_tab_sections = $tab . '_tab_sections';
 
         if (method_exists(__CLASS__, $get_tab_sections)) {
-            return call_user_func(array( __CLASS__, $get_tab_sections ));
+            return call_user_func(array(__CLASS__, $get_tab_sections));
         }
     }
 
@@ -447,7 +451,7 @@ class NMGR_Admin_Settings
         register_setting(
             nmgr()->option_name,
             nmgr()->option_name,
-            array( __CLASS__, 'validate' )
+            array(__CLASS__, 'validate')
         );
 
         $sections = self::get_tab_sections();
@@ -456,38 +460,38 @@ class NMGR_Admin_Settings
         }
 
         foreach ($sections as $key => $section) {
-            $page = isset($section[ 'section' ]) ? $section[ 'section' ] : self::$current_tab;
+            $page = isset($section['section']) ? $section['section'] : self::$current_tab;
 
             add_settings_section(
                 $key,
-                isset($section[ 'title' ]) ? $section[ 'title' ] : "",
-                array( __CLASS__, 'settings_section_callback' ),
+                isset($section['title']) ? $section['title'] : "",
+                array(__CLASS__, 'settings_section_callback'),
                 $page
             );
 
-            if (!isset($section[ 'fields' ])) {
+            if (!isset($section['fields'])) {
                 continue;
             }
 
-            foreach ($section[ 'fields' ] as $field) {
-                if ('heading' === $field[ 'type' ]) {
-                    $field[ 'id' ] = uniqid();
+            foreach ($section['fields'] as $field) {
+                if ('heading' === $field['type']) {
+                    $field['id'] = uniqid();
                 }
 
-                if (!isset($field[ 'id' ]) || (isset($field[ 'show_in_group' ]) && $field[ 'show_in_group' ])) {
+                if (!isset($field['id']) || (isset($field['show_in_group']) && $field['show_in_group'])) {
                     continue;
                 }
 
                 add_settings_field(
-                    $field[ 'id' ],
+                    $field['id'],
                     self::get_formatted_settings_field_label($field),
-                    array( __CLASS__, 'output_field' ),
+                    array(__CLASS__, 'output_field'),
                     $page,
                     $key,
                     array(
-                        'class' => isset($field[ 'type' ]) && 'heading' === $field[ 'type' ] ? 'hidden' : '',
+                        'class' => isset($field['type']) && 'heading' === $field['type'] ? 'hidden' : '',
                         'field' => $field,
-                        'fields' => $section[ 'fields' ]
+                        'fields' => $section['fields']
                     )
                 );
             }
@@ -504,19 +508,19 @@ class NMGR_Admin_Settings
      */
     private static function get_formatted_settings_field_label($field)
     {
-        if (!isset($field[ 'label' ])) {
+        if (!isset($field['label'])) {
             return '';
         }
 
-        $label = $field[ 'label' ];
+        $label = $field['label'];
 
-        if (isset($field[ 'error_codes' ]) && self::has_settings_error_code($field[ 'error_codes' ])) {
-            $title = self::get_settings_error_message_by_code($field[ 'error_codes' ]);
+        if (isset($field['error_codes']) && self::has_settings_error_code($field['error_codes'])) {
+            $title = self::get_settings_error_message_by_code($field['error_codes']);
             $label = '<span class="nmgr-settings-error" title="' . $title . '">' . $label . '</span>';
         }
 
-        if (isset($field[ 'desc_tip' ])) {
-            $label .= ' ' . wc_help_tip($field[ 'desc_tip' ]);
+        if (isset($field['desc_tip'])) {
+            $label .= ' ' . wc_help_tip($field['desc_tip']);
         }
 
         return $label;
@@ -532,7 +536,7 @@ class NMGR_Admin_Settings
     private static function has_settings_error_code($code)
     {
         foreach (get_settings_errors('nmgr-settings') as $error) {
-            if (in_array($error[ 'code' ], ( array ) $code, true)) {
+            if (in_array($error['code'], (array) $code, true)) {
                 return true;
             }
         }
@@ -543,8 +547,8 @@ class NMGR_Admin_Settings
     {
         $message = '';
         foreach (get_settings_errors('nmgr-settings') as $error) {
-            if (in_array($error[ 'code' ], ( array ) $code, true)) {
-                $message .= $error[ 'message' ] . '&#10;';
+            if (in_array($error['code'], (array) $code, true)) {
+                $message .= $error['message'] . '&#10;';
             }
         }
         return trim($message);
@@ -554,9 +558,9 @@ class NMGR_Admin_Settings
     {
         $tab_sections = self::get_tab_sections();
 
-        if (isset($tab_sections[ $section[ 'id' ] ])) {
-            if (isset($tab_sections[ $section[ 'id' ] ][ 'description' ])) {
-                echo "<p class='section-description'>" . esc_html($tab_sections[ $section[ 'id' ] ][ 'description' ]) . "</p>";
+        if (isset($tab_sections[$section['id']])) {
+            if (isset($tab_sections[$section['id']]['description'])) {
+                echo "<p class='section-description'>" . esc_html($tab_sections[$section['id']]['description']) . "</p>";
             }
         }
     }
@@ -568,14 +572,14 @@ class NMGR_Admin_Settings
      */
     public static function get_field_name($field)
     {
-        if (isset($field[ 'name' ])) {
-            $name = $field[ 'name' ];
+        if (isset($field['name'])) {
+            $name = $field['name'];
         } else {
-            $key = isset($field[ 'option_name' ]) ? $field[ 'option_name' ] : (isset($field[ 'id' ]) ? $field[ 'id' ] : '');
+            $key = isset($field['option_name']) ? $field['option_name'] : (isset($field['id']) ? $field['id'] : '');
             $name = "nmgr_settings[$key]";
         }
 
-        $name = isset($field[ 'option_group' ]) && $field[ 'option_group' ] ? $name . '[]' : $name;
+        $name = isset($field['option_group']) && $field['option_group'] ? $name . '[]' : $name;
         return $name;
     }
 
@@ -586,13 +590,13 @@ class NMGR_Admin_Settings
      */
     public static function get_field_value($field)
     {
-        $field_default = isset($field[ 'default' ]) ? $field[ 'default' ] : '';
-        $field_id = isset($field[ 'id' ]) ? $field[ 'id' ] : '';
+        $field_default = isset($field['default']) ? $field['default'] : '';
+        $field_id = isset($field['id']) ? $field['id'] : '';
 
-        if (isset($field[ 'option_name' ])) {
-            $value = nmgr_get_option($field[ 'option_name' ], $field_default);
-        } elseif (isset($field[ 'name' ])) {
-            $value = get_option($field[ 'name' ], $field_default);
+        if (isset($field['option_name'])) {
+            $value = nmgr_get_option($field['option_name'], $field_default);
+        } elseif (isset($field['name'])) {
+            $value = get_option($field['name'], $field_default);
         } else {
             $value = nmgr_get_option($field_id, $field_default);
         }
@@ -607,8 +611,8 @@ class NMGR_Admin_Settings
      */
     private static function checked($field, $echo = false)
     {
-        $stored_value = ( array ) self::get_field_value($field);
-        $field_value = isset($field[ 'value' ]) ? $field[ 'value' ] : 1;
+        $stored_value = (array) self::get_field_value($field);
+        $field_value = isset($field['value']) ? $field['value'] : 1;
 
         if (in_array($field_value, $stored_value)) {
             $result = " checked='checked'";
@@ -631,7 +635,7 @@ class NMGR_Admin_Settings
      */
     private static function selected($option_value, $field, $echo = false)
     {
-        $stored_value = ( array ) self::get_field_value($field);
+        $stored_value = (array) self::get_field_value($field);
 
         if (in_array($option_value, $stored_value)) {
             $result = " selected='selected'";
@@ -647,27 +651,27 @@ class NMGR_Admin_Settings
 
     public static function output_field($setting)
     {
-        $field = $setting[ 'field' ];
-        $fields = $setting[ 'fields' ];
+        $field = $setting['field'];
+        $fields = $setting['fields'];
 
         // Ensure necessary fields are set
-        $field_id = isset($field[ 'id' ]) ? esc_attr($field[ 'id' ]) : '';
-        $field_type = isset($field[ 'type' ]) ? esc_attr($field[ 'type' ]) : '';
-        $field_desc = isset($field[ 'desc' ]) ? nmgr_kses_post($field[ 'desc' ]) : '';
-        $field_placeholder = isset($field[ 'placeholder' ]) ? esc_attr($field[ 'placeholder' ]) : '';
-        $field_class = isset($field[ 'class' ]) ? esc_attr($field[ 'class' ]) : '';
-        $field_css = isset($field[ 'css' ]) ? esc_attr($field[ 'css' ]) : '';
+        $field_id = isset($field['id']) ? esc_attr($field['id']) : '';
+        $field_type = isset($field['type']) ? esc_attr($field['type']) : '';
+        $field_desc = isset($field['desc']) ? nmgr_kses_post($field['desc']) : '';
+        $field_placeholder = isset($field['placeholder']) ? esc_attr($field['placeholder']) : '';
+        $field_class = isset($field['class']) ? esc_attr($field['class']) : '';
+        $field_css = isset($field['css']) ? esc_attr($field['css']) : '';
         $field_name = esc_attr(self::get_field_name($field));
         $raw_field_value = self::get_field_value($field);
         $field_value = !is_array($raw_field_value) ? esc_attr($raw_field_value) : $raw_field_value;
-        $inline_class = isset($field[ 'inline' ]) && true === $field[ 'inline' ] ? 'nmgr-inline' : '';
-        $field_options = isset($field[ 'options' ]) ? $field[ 'options' ] : array();
+        $inline_class = isset($field['inline']) && true === $field['inline'] ? 'nmgr-inline' : '';
+        $field_options = isset($field['options']) ? $field['options'] : array();
         $custom_attributes = array();
 
-        if (isset($field[ 'custom_attributes' ]) && is_array($field[ 'custom_attributes' ])) {
-            foreach ($field[ 'custom_attributes' ] as $attribute => $attribute_value) {
+        if (isset($field['custom_attributes']) && is_array($field['custom_attributes'])) {
+            foreach ($field['custom_attributes'] as $attribute => $attribute_value) {
                 if (false === $attribute_value) {
-                    unset($field[ 'custom_attributes' ][ $attribute ]);
+                    unset($field['custom_attributes'][$attribute]);
                     break;
                 }
                 $custom_attributes[] = esc_attr($attribute) . '="' . esc_attr($attribute_value) . '"';
@@ -675,15 +679,15 @@ class NMGR_Admin_Settings
         }
         $field_custom_attributes = implode(' ', $custom_attributes);
 
-        if (isset($field[ 'show_in_group' ]) && $field[ 'show_in_group' ]) {
+        if (isset($field['show_in_group']) && $field['show_in_group']) {
             return;
         }
 
         switch ($field_type) {
             case 'heading':
                 echo '</td></tr></tbody></table>';
-                echo isset($field[ 'label' ]) && !empty($field[ 'label' ]) ? "<h2 class='heading'>{$field[ 'label' ]}</h2>" : '';
-                echo!empty($field_desc) ? "<p>{$field_desc}</p>" : '';
+                echo isset($field['label']) && !empty($field['label']) ? "<h2 class='heading'>{$field['label']}</h2>" : '';
+                echo !empty($field_desc) ? "<p>{$field_desc}</p>" : '';
                 echo '<table class="form-table" role="presentation"><tbody><tr class="hidden"><th></th><td>';
                 break;
 
@@ -711,9 +715,9 @@ class NMGR_Admin_Settings
                 break;
 
             case 'checkbox':
-                if (isset($field[ 'checkboxgroup' ])) {
+                if (isset($field['checkboxgroup'])) {
                     $group_fields = array_filter($fields, function ($f) use ($field) {
-                        return isset($f[ 'checkboxgroup' ]) && $f[ 'checkboxgroup' ] == $field[ 'checkboxgroup' ];
+                        return isset($f['checkboxgroup']) && $f['checkboxgroup'] == $field['checkboxgroup'];
                     });
 
                     if ($group_fields) {
@@ -721,9 +725,9 @@ class NMGR_Admin_Settings
                             printf(
                                 "<label><input %s value='%s' name='%s' type='checkbox' /> %s</label><br />", // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                 self::checked($group_field),
-                                isset($group_field[ 'value' ]) ? esc_attr($group_field[ 'value' ]) : 1,
+                                isset($group_field['value']) ? esc_attr($group_field['value']) : 1,
                                 esc_attr(self::get_field_name($group_field)),
-                                isset($group_field[ 'desc' ]) ? nmgr_kses_post($group_field[ 'desc' ]) : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                isset($group_field['desc']) ? nmgr_kses_post($group_field['desc']) : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                             );
                         }
                     }
@@ -739,38 +743,38 @@ class NMGR_Admin_Settings
                 break;
 
             case 'radio':
-                ?>
+        ?>
 <div class="nmgr-input-group <?php echo $inline_class; ?>">
   <?php
-                    foreach ($field[ 'options' ] as $key => $val) :
+                    foreach ($field['options'] as $key => $val) :
                         $checked = checked($key, $field_value, false);
-                        ?>
-  <div><label><input
-        <?php echo $checked . ' ' . $field_custom_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
-        value="<?php echo $key; ?>" name="<?php echo $field_name; ?>" type="radio" /><?php echo $val; ?></label></div>
+                    ?>
+  <div><label><input <?php echo $checked . ' ' . $field_custom_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                            ?> value="<?php echo $key; ?>" name="<?php echo $field_name; ?>"
+        type="radio" /><?php echo $val; ?></label></div>
   <?php endforeach; ?>
 </div>
 <?php
                 break;
 
             case 'radio_with_image':
-                ?>
+            ?>
 <div class="nmgr-btn-group nmgr-input-group <?php echo $inline_class; ?>">
   <?php
-                    foreach ($field[ 'options' ] as $key => $args) :
+                    foreach ($field['options'] as $key => $args) :
                         $checked = checked($key, $field_value, false);
                         $option_id = "{$field_id}-{$key}";
-                        ?>
+                    ?>
   <div class="nmgr-btn">
-    <input <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
-      id="<?php echo esc_attr($option_id); ?>" type="radio" value="<?php echo esc_attr($key); ?>"
-      name="<?php echo $field_name; ?>">
+    <input <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                    ?> id="<?php echo esc_attr($option_id); ?>" type="radio"
+      value="<?php echo esc_attr($key); ?>" name="<?php echo $field_name; ?>">
     <label for="<?php echo esc_attr($option_id); ?>"
-      title="<?php echo isset($args[ 'label_title' ]) ? esc_attr($args[ 'label_title' ]) : ''; ?>" class="nmgr-tip">
+      title="<?php echo isset($args['label_title']) ? esc_attr($args['label_title']) : ''; ?>" class="nmgr-tip">
       <?php
-                                             echo isset($args[ 'image' ]) ? nmgr_kses_post($args[ 'image' ]) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                             echo isset($args[ 'label' ]) ? esc_html($args[ 'label' ]) : '';
-                                             ?>
+                                echo isset($args['image']) ? nmgr_kses_post($args['image']) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                echo isset($args['label']) ? esc_html($args['label']) : '';
+                                ?>
     </label>
   </div>
   <?php endforeach; ?>
@@ -809,8 +813,8 @@ class NMGR_Admin_Settings
                     'selected' => absint($field_value),
                 );
 
-                if (isset($field[ 'args' ])) {
-                    $args = wp_parse_args($field[ 'args' ], $args);
+                if (isset($field['args'])) {
+                    $args = wp_parse_args($field['args'], $args);
                 }
 
                 echo str_replace(' id=', " data-placeholder='" . $field_placeholder . "' style='" . $field_css . "' class='" . $field_class . "' id=", wp_dropdown_pages($args));
@@ -822,7 +826,7 @@ class NMGR_Admin_Settings
         }
 
         // These fields should not have description
-        $exclude_fields = array( 'checkbox', 'heading' );
+        $exclude_fields = array('checkbox', 'heading');
         if ($field_desc && !in_array($field_type, $exclude_fields)) {
             echo '<p>' . $field_desc . '</p>';
         }
@@ -850,7 +854,7 @@ class NMGR_Admin_Settings
             foreach ($content as $prop => $value) {
                 if ('fields' == $prop) {
                     if ($section) {
-                        if (isset($content[ 'section' ]) && $content[ 'section' ] === $section) {
+                        if (isset($content['section']) && $content['section'] === $section) {
                             $fields = array_merge($fields, $value);
                             break 2;
                         }
@@ -863,14 +867,14 @@ class NMGR_Admin_Settings
 
         foreach ($fields as $field) {
             // Key for the field
-            $key = isset($field[ 'option_name' ]) ? $field[ 'option_name' ] : (isset($field[ 'id' ]) ? $field[ 'id' ] : '');
+            $key = isset($field['option_name']) ? $field['option_name'] : (isset($field['id']) ? $field['id'] : '');
 
             // Get posted value
-            $posted_value = isset($input[ $key ]) ? $input[ $key ] : null;
+            $posted_value = isset($input[$key]) ? $input[$key] : null;
 
             // Format/Sanitize value to save in database
-            if (isset($field[ 'type' ])) {
-                switch ($field[ 'type' ]) {
+            if (isset($field['type'])) {
+                switch ($field['type']) {
                     case 'textarea':
                         $value = nmgr_kses_post(trim($posted_value));
                         break;
@@ -881,20 +885,24 @@ class NMGR_Admin_Settings
                 }
             }
 
-            $input[ $key ] = $value;
+            $input[$key] = $value;
         }
 
         $options = array_merge(nmgr_get_option(), $input);
 
-        if (array_key_exists('allow_guest_wishlists', $input) &&
-            $input[ 'allow_guest_wishlists' ] &&
-            isset($options[ 'wishlist_account_page_id' ]) &&
-            !$options[ 'wishlist_account_page_id' ]) {
+        if (
+            array_key_exists('allow_guest_wishlists', $input) &&
+            $input['allow_guest_wishlists'] &&
+            isset($options['wishlist_account_page_id']) &&
+            !$options['wishlist_account_page_id']
+        ) {
             add_settings_error('nmgr-settings', 'no-wishlist-account-page-id', __('You have allowed guests to create wishlists. You need to set a page for managing wishlists.', 'nm-gift-registry-lite'), 'warning');
         }
 
-        if (array_key_exists('my_account_name', $input) && empty($input[ 'my_account_name' ]) &&
-            isset($options[ 'wishlist_account_page_id' ]) && !$options[ 'wishlist_account_page_id' ]) {
+        if (
+            array_key_exists('my_account_name', $input) && empty($input['my_account_name']) &&
+            isset($options['wishlist_account_page_id']) && !$options['wishlist_account_page_id']
+        ) {
             add_settings_error('nmgr-settings', 'no-my-account-name', __('You have not set the title of the page for managing wishlists in the my-account page or a page for managing wishlists. You need to set one or both of these to allow your users manage their wishlists, except if you know what you are doing.', 'nm-gift-registry-lite'), 'warning');
         }
 
@@ -918,7 +926,7 @@ class NMGR_Admin_Settings
 
             $composed_field = array(
                 'id' => "display_form_{$key}",
-                'label' => isset($args[ 'label' ]) ? $args[ 'label' ] : '',
+                'label' => isset($args['label']) ? $args['label'] : '',
                 'type' => 'select',
                 'options' => array(
                     'optional' => __('Optional', 'nm-gift-registry-lite'),
@@ -953,20 +961,20 @@ class NMGR_Admin_Settings
 
             switch ($key) {
                 case 'quantity':
-                    $args[ 'desc_tip' ] = __('Unchecking this column would disable all functionality related to the quantities of wishlist items. For example it would prevent the regulation of the quantities of items added to the wishlist and cart. Please see the documentation for full explanation.', 'nm-gift-registry-lite');
+                    $args['desc_tip'] = __('Unchecking this column would disable all functionality related to the quantities of wishlist items. For example it would prevent the regulation of the quantities of items added to the wishlist and cart. Please see the documentation for full explanation.', 'nm-gift-registry-lite');
                     break;
 
                 case 'purchased_quantity':
-                    $args[ 'desc_tip' ] = __('Unchecking this column would disable all functionality related to the purchasing of wishlist items. It would also reset the purchased quantities of all items in all existing wishlists to zero. Please see the documentation for full explanation.', 'nm-gift-registry-lite');
+                    $args['desc_tip'] = __('Unchecking this column would disable all functionality related to the purchasing of wishlist items. It would also reset the purchased quantities of all items in all existing wishlists to zero. Please see the documentation for full explanation.', 'nm-gift-registry-lite');
                     break;
 
                 case 'total_cost':
-                    $args[ 'desc_tip' ] = __('The visibility of this column depends on the "quantity" column being visible.', 'nm-gift-registry-lite');
-                    $args[ 'custom_attributes' ][ 'disabled' ] = nmgr_get_option('display_item_quantity', 1) ? false : 'disabled';
+                    $args['desc_tip'] = __('The visibility of this column depends on the "quantity" column being visible.', 'nm-gift-registry-lite');
+                    $args['custom_attributes']['disabled'] = nmgr_get_option('display_item_quantity', 1) ? false : 'disabled';
                     break;
 
                 case 'actions':
-                    $args[ 'desc_tip' ] = __('This column allows action such as add to cart, edit, and delete to be performed on the wishlist items from the frontend. Unchecking it would prevent these actions from being able to be performed from the frontend.', 'nm-gift-registry-lite');
+                    $args['desc_tip'] = __('This column allows action such as add to cart, edit, and delete to be performed on the wishlist items from the frontend. Unchecking it would prevent these actions from being able to be performed from the frontend.', 'nm-gift-registry-lite');
                     break;
             }
 
@@ -979,7 +987,7 @@ class NMGR_Admin_Settings
     {
         $sections = array();
 
-        $sections[ 'general' ] = array(
+        $sections['general'] = array(
             'title' => '',
             'description' => '',
             'section' => 'general',
@@ -1146,7 +1154,7 @@ class NMGR_Admin_Settings
             )
         );
 
-        $sections[ 'add_to_wishlist' ] = array(
+        $sections['add_to_wishlist'] = array(
             'title' => '',
             'description' => '',
             'section' => 'add_to_wishlist',
@@ -1254,7 +1262,7 @@ class NMGR_Admin_Settings
             ),
         );
 
-        $sections[ 'add_to_cart' ] = array(
+        $sections['add_to_cart'] = array(
             'title' => '',
             'description' => '',
             'section' => 'add_to_cart',
@@ -1285,14 +1293,14 @@ class NMGR_Admin_Settings
     {
         $modules_tab_sections = array();
 
-        $modules_tab_sections[ 'profile_form' ] = array(
+        $modules_tab_sections['profile_form'] = array(
             'title' => __('Wishlist profile form fields', 'nm-gift-registry-lite'),
             'description' => __('Set the display type for the wishlist profile form fields.', 'nm-gift-registry-lite'),
             'section' => 'profile_form',
             'fields' => self::get_profile_form_fields(),
         );
 
-        $modules_tab_sections[ 'items_table' ] = array(
+        $modules_tab_sections['items_table'] = array(
             'title' => __('Wishlist items table', 'nm-gift-registry-lite'),
             'description' => __('Set the visibility of default columns on the items table. For some of these columns their visibility controls related plugin functionality so changing it may adjust how the plugin works. Please see the documentation for full explanation.', 'nm-gift-registry-lite'),
             'section' => 'items_table',
@@ -1313,7 +1321,7 @@ class NMGR_Admin_Settings
             ),
         );
 
-        $modules_tab_sections[ 'shipping_section' ] = array(
+        $modules_tab_sections['shipping_section'] = array(
             'title' => __('Wishlist shipping', 'nm-gift-registry-lite'),
             'description' => __('Configure the wishlist shipping module', 'nm-gift-registry-lite'),
             'section' => 'shipping',
@@ -1462,10 +1470,11 @@ class NMGR_Admin_Settings
     <?php foreach ($features as $feature) : ?>
     <div class="nmgr-feature">
       <div class="nmgr-image">
-        <?php echo $feature[ 'image' ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></div>
+        <?php echo $feature['image']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            ?></div>
       <div class="nmgr-info">
-        <h2><?php echo esc_html($feature[ 'title' ]); ?></h2>
-        <p><?php echo wp_kses_post($feature[ 'desc' ]); ?></p>
+        <h2><?php echo esc_html($feature['title']); ?></h2>
+        <p><?php echo wp_kses_post($feature['desc']); ?></p>
       </div>
     </div>
     <?php endforeach; ?>

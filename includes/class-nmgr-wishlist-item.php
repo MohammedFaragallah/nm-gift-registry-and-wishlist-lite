@@ -3,16 +3,16 @@
 defined('ABSPATH') || exit;
 
 /**
- * Wishlist item class
- */
+                                 * Wishlist item class
+                                 */
 class NMGR_Wishlist_Item extends NMGR_Data
 {
 
     /**
-     * Wishlist item data stored in nmgr_wishlist_items table
-     *
-     * @var array
-     */
+             * Wishlist item data stored in nmgr_wishlist_items table
+             *
+             * @var array
+             */
     protected $core_data = array(
         // General wishlist id containing many items
         'wishlist_id' => 0,
@@ -25,7 +25,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
     );
 
     /**
-     * Wishlist item meta data stored in nmgr_wishlist_itemmeta table
+         * Wishlist item meta data stored in nmgr_wishlist_itemmeta table
      *
      * Internal meta keys for wishlist item
      *
@@ -179,7 +179,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
      */
     public function get_variation()
     {
-        return array_filter(( array ) $this->get_prop('variation'));
+        return array_filter((array) $this->get_prop('variation'));
     }
 
     /**
@@ -199,7 +199,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
      */
     public function get_purchased_quantity()
     {
-        return ( int ) apply_filters('nmgr_item_purchased_quantity', $this->get_prop('purchased_quantity'), $this);
+        return (int) apply_filters('nmgr_item_purchased_quantity', $this->get_prop('purchased_quantity'), $this);
     }
 
     /**
@@ -231,7 +231,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
      */
     public function get_quantity_reference()
     {
-        return ( array ) $this->get_prop('quantity_reference');
+        return (array) $this->get_prop('quantity_reference');
     }
 
     /**
@@ -269,8 +269,8 @@ class NMGR_Wishlist_Item extends NMGR_Data
     {
         $product = $this->get_product();
         if ($product) {
-            $total = ( float ) wc_get_price_excluding_tax($product, array( 'qty' => $this->get_quantity() ));
-            return $currency_symbol ? wc_price($total, array( 'currency' => get_woocommerce_currency() )) : $total;
+            $total = (float) wc_get_price_excluding_tax($product, array('qty' => $this->get_quantity()));
+            return $currency_symbol ? wc_price($total, array('currency' => get_woocommerce_currency())) : $total;
         }
     }
 
@@ -403,7 +403,7 @@ class NMGR_Wishlist_Item extends NMGR_Data
         if ($product->is_type('variation')) {
             $this->set_product_id($product->get_parent_id());
             $this->set_variation_id($product->get_id());
-            $this->set_variation(is_callable(array( $product, 'get_variation_attributes' )) ? $product->get_variation_attributes() : array());
+            $this->set_variation(is_callable(array($product, 'get_variation_attributes')) ? $product->get_variation_attributes() : array());
         } else {
             $this->set_product_id($product->get_id());
         }
@@ -446,9 +446,9 @@ class NMGR_Wishlist_Item extends NMGR_Data
     {
         $purchased = false;
         if (nmgr_get_option('display_item_purchased_quantity', 1)) {
-            $purchased = ( bool ) $this->get_purchased_quantity();
+            $purchased = (bool) $this->get_purchased_quantity();
         }
-        return ( bool ) apply_filters('nmgr_item_is_purchased', $purchased, $this);
+        return (bool) apply_filters('nmgr_item_is_purchased', $purchased, $this);
     }
 
     /**
@@ -462,8 +462,8 @@ class NMGR_Wishlist_Item extends NMGR_Data
     {
         $fulfilled = false;
         if (nmgr_get_option('display_item_quantity', 1) && nmgr_get_option('display_item_purchased_quantity')) {
-            $fulfilled = ( bool ) 0 >= $this->get_unpurchased_quantity();
+            $fulfilled = (bool) 0 >= $this->get_unpurchased_quantity();
         }
-        return ( bool ) apply_filters('nmgr_item_is_fulfilled', $fulfilled, $this);
+        return (bool) apply_filters('nmgr_item_is_fulfilled', $fulfilled, $this);
     }
 }

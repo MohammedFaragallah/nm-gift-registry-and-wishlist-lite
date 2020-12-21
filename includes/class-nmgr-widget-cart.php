@@ -88,23 +88,23 @@ class NMGR_Widget_Cart extends WP_Widget
             return;
         }
 
-        echo $args[ 'before_widget' ];
+        echo $args['before_widget'];
 
-        if (!empty($instance[ 'title' ])) {
-            echo $args[ 'before_title' ] . apply_filters('widget_title', $instance[ 'title' ]) . $args[ 'after_title' ];
+        if (!empty($instance['title'])) {
+            echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
 
         $template_args = array(
-            'show_item_image' => empty($instance[ 'hide_item_image' ]) ? 1 : 0,
-            'show_item_add_to_cart_button' => empty($instance[ 'hide_item_add_to_cart_button' ]) ? 1 : 0,
-            'show_item_qty_cost' => empty($instance[ 'hide_item_qty_cost' ]) ? 1 : 0,
-            'show_item_availability' => empty($instance[ 'hide_item_availability' ]) ? 1 : 0,
-            'show_item_rating' => empty($instance[ 'show_item_rating' ]) ? 0 : 1,
-            'show_total_quantity' => empty($instance[ 'hide_total_quantity' ]) ? 1 : 0,
-            'show_total_cost' => empty($instance[ 'hide_total_cost' ]) ? 1 : 0,
-            'show_manage_button' => empty($instance[ 'hide_manage_button' ]) ? 1 : 0,
-            'number_of_items' => empty($instance[ 'number_of_items' ]) ? '' : $instance[ 'number_of_items' ],
-            'show_cart_contents_only' => empty($instance[ 'show_cart_contents_only' ]) ? 0 : 1,
+            'show_item_image' => empty($instance['hide_item_image']) ? 1 : 0,
+            'show_item_add_to_cart_button' => empty($instance['hide_item_add_to_cart_button']) ? 1 : 0,
+            'show_item_qty_cost' => empty($instance['hide_item_qty_cost']) ? 1 : 0,
+            'show_item_availability' => empty($instance['hide_item_availability']) ? 1 : 0,
+            'show_item_rating' => empty($instance['show_item_rating']) ? 0 : 1,
+            'show_total_quantity' => empty($instance['hide_total_quantity']) ? 1 : 0,
+            'show_total_cost' => empty($instance['hide_total_cost']) ? 1 : 0,
+            'show_manage_button' => empty($instance['hide_manage_button']) ? 1 : 0,
+            'number_of_items' => empty($instance['number_of_items']) ? '' : $instance['number_of_items'],
+            'show_cart_contents_only' => empty($instance['show_cart_contents_only']) ? 0 : 1,
         );
 
         echo '<div class="widget_nmgr_cart_content">';
@@ -113,7 +113,7 @@ class NMGR_Widget_Cart extends WP_Widget
 
         echo '</div>';
 
-        echo $args[ 'after_widget' ];
+        echo $args['after_widget'];
     }
 
     public function form($instance)
@@ -125,58 +125,57 @@ class NMGR_Widget_Cart extends WP_Widget
         }
 
         foreach ($fields as $key => $setting) {
-            $class = isset($setting[ 'class' ]) ? $setting[ 'class' ] : '';
-            $value = isset($instance[ $key ]) ? $instance[ $key ] : (isset($setting[ 'std' ]) ? $setting[ 'std' ] : '');
+            $class = isset($setting['class']) ? $setting['class'] : '';
+            $value = isset($instance[$key]) ? $instance[$key] : (isset($setting['std']) ? $setting['std'] : '');
 
-            switch ($setting[ 'type' ]) {
+            switch ($setting['type']) {
                 case 'text':
                 case 'number':
-                    ?>
+?>
 <p>
-  <label
-    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo wp_kses_post($setting[ 'label' ]); ?></label>
+  <label for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo wp_kses_post($setting['label']); ?></label>
   <input class="widefat <?php echo esc_attr($class); ?>" id="<?php echo esc_attr($this->get_field_id($key)); ?>"
-    name="<?php echo esc_attr($this->get_field_name($key)); ?>" type="<?php echo $setting[ 'type' ]; ?>"
+    name="<?php echo esc_attr($this->get_field_name($key)); ?>" type="<?php echo $setting['type']; ?>"
     value="<?php echo esc_attr($value); ?>" />
 </p>
 <?php
                     break;
 
                 case 'checkbox':
-                    ?>
+                ?>
 <p>
   <input class="checkbox <?php echo esc_attr($class); ?>" id="<?php echo esc_attr($this->get_field_id($key)); ?>"
     name="<?php echo esc_attr($this->get_field_name($key)); ?>" type="checkbox" value="1"
     <?php checked($value, 1); ?> />
   <label
-    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting[ 'label' ]; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
+    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting['label']; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
 </p>
 <?php
                     break;
 
                 case 'textarea':
-                    ?>
+                ?>
 <p>
   <label
-    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting[ 'label' ]; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
+    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting['label']; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
   <textarea class="widefat <?php echo esc_attr($class); ?>" id="<?php echo esc_attr($this->get_field_id($key)); ?>"
     name="<?php echo esc_attr($this->get_field_name($key)); ?>" cols="20"
     rows="3"><?php echo esc_textarea($value); ?></textarea>
-  <?php if (isset($setting[ 'desc' ])) : ?>
-  <small><?php echo esc_html($setting[ 'desc' ]); ?></small>
+  <?php if (isset($setting['desc'])) : ?>
+  <small><?php echo esc_html($setting['desc']); ?></small>
   <?php endif; ?>
 </p>
 <?php
                     break;
 
                 case 'select':
-                    ?>
+                ?>
 <p>
   <label
-    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting[ 'label' ]; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
+    for="<?php echo esc_attr($this->get_field_id($key)); ?>"><?php echo $setting['label']; /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label>
   <select class="widefat <?php echo esc_attr($class); ?>" id="<?php echo esc_attr($this->get_field_id($key)); ?>"
     name="<?php echo esc_attr($this->get_field_name($key)); ?>">
-    <?php foreach ($setting[ 'options' ] as $option_key => $option_value) : ?>
+    <?php foreach ($setting['options'] as $option_key => $option_value) : ?>
     <option value="<?php echo esc_attr($option_key); ?>" <?php selected($option_key, $value); ?>>
       <?php echo esc_html($option_value); ?></option>
     <?php endforeach; ?>
@@ -197,19 +196,19 @@ class NMGR_Widget_Cart extends WP_Widget
         }
 
         foreach ($this->get_form_fields() as $key => $setting) {
-            if (!isset($setting[ 'type' ])) {
+            if (!isset($setting['type'])) {
                 continue;
             }
 
-            switch ($setting[ 'type' ]) {
+            switch ($setting['type']) {
                 case 'textarea':
-                    $instance[ $key ] = wp_kses(trim(wp_unslash($new_instance[ $key ])), wp_kses_allowed_html('post'));
+                    $instance[$key] = wp_kses(trim(wp_unslash($new_instance[$key])), wp_kses_allowed_html('post'));
                     break;
                 case 'checkbox':
-                    $instance[ $key ] = empty($new_instance[ $key ]) ? 0 : 1;
+                    $instance[$key] = empty($new_instance[$key]) ? 0 : 1;
                     break;
                 default:
-                    $instance[ $key ] = isset($new_instance[ $key ]) ? sanitize_text_field($new_instance[ $key ]) : $setting[ 'std' ];
+                    $instance[$key] = isset($new_instance[$key]) ? sanitize_text_field($new_instance[$key]) : $setting['std'];
                     break;
             }
         }
