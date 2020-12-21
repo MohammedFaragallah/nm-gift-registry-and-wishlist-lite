@@ -144,16 +144,18 @@ class NMGR_Wordpress
                         [
                             'methods'             => WP_REST_Server::CREATABLE,
                             'callback'            => 'update_item',
-                            'item_id' => [
-                                'required'    => true,
-                                'type'        => 'integer',
-                                'description' => 'Item ID to update.',
-                            ],
-                            'quantity' => [
-                                'required'    => true,
-                                'type'        => 'integer',
-                                'description' => 'new updated quantity',
-                                'default' => 1
+                            'args' => [
+                                'item_id' => [
+                                    'required'    => true,
+                                    'type'        => 'integer',
+                                    'description' => 'Item ID to update.',
+                                ],
+                                'quantity' => [
+                                    'required'    => true,
+                                    'type'        => 'integer',
+                                    'description' => 'new updated quantity',
+                                    'default' => 1
+                                ]
                             ],
                             'permission_callback' => '__return_true',
                         ],
