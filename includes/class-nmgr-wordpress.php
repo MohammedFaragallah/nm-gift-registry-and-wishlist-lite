@@ -53,6 +53,7 @@ class NMGR_Wordpress
                 $base = 'gift-registry';
 
                 $product_controller = new WC_REST_Products_Controller();
+                $product_controller->get_collection_params();
 
                 register_rest_route(
                     $namespace,
@@ -61,20 +62,14 @@ class NMGR_Wordpress
                         [
                             'methods'             => WP_REST_Server::READABLE,
                             'callback'            => 'get_wishlist',
-                            'args'                => [
+                            'args'                => array_merge([
                                 'items' => [
                                     'required'    => false,
                                     'type'        => 'boolean',
                                     'description' => 'Whether to get the wishlist items with the data.',
                                     'default'     => false,
                                 ],
-                                'products' => [
-                                    'required' => false,
-                                    "type" => 'object',
-                                    'description' => 'registry products query',
-                                    'properties' => $product_controller->get_collection_params(),
-                                ]
-                            ],
+                            ], $product_controller->get_collection_params()),
                             'permission_callback' => '__return_true',
                         ],
                     ]
@@ -194,14 +189,14 @@ class NMGR_Wordpress
                             array_push($ids, $d->get_product_id());
                         }
 
-                        $products = wc_get_products(array_merge(
-                            array('include' => $ids),
-                            array('per_page' => 100),
-                            (array) $params['products']
-                        ));
+                        if (count($ids)) {
+                            $product_controller = new WC_REST_Products_Controller();
 
-                        foreach ($products as $key => $value) {
-                            array_push($wishlist_obj['products'], $value->get_data());
+                            $request->set_param('include', $ids);
+
+                            $products =  $product_controller->get_items($request);
+
+                            $wishlist_obj['products'] = $products->get_data();
                         }
                     }
 
