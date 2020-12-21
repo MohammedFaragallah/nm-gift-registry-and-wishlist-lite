@@ -52,6 +52,8 @@ class NMGR_Wordpress
 
                 $base = 'gift-registry';
 
+                $product_controller = new WC_REST_Products_Controller();
+
                 register_rest_route(
                     $namespace,
                     '/' . $base,
@@ -66,6 +68,12 @@ class NMGR_Wordpress
                                     'description' => 'Whether to get the wishlist items with the data.',
                                     'default'     => false,
                                 ],
+                                'products' => [
+                                    'required' => false,
+                                    "type" => 'object',
+                                    'description' => 'registry products query',
+                                    'properties' => $product_controller->get_collection_params(),
+                                ]
                             ],
                             'permission_callback' => '__return_true',
                         ],
@@ -145,6 +153,26 @@ class NMGR_Wordpress
                     }
 
                     $wishlist_obj = $wishlist_class->get_data($params['items']);
+
+                    if ($params['items']) {
+                        $wishlist_obj['products'] = array();
+                        $ids = array();
+
+                        foreach ($wishlist_class->get_items() as $key => $item) {
+                            $d = new NMGR_Wishlist_Item($key);
+                            array_push($ids, $d->get_product_id());
+                        }
+
+                        $products = wc_get_products(array_merge(
+                            array('include' => $ids),
+                            array('per_page' => 100),
+                            (array) $params['products']
+                        ));
+
+                        foreach ($products as $key => $value) {
+                            array_push($wishlist_obj['products'], $value->get_data());
+                        }
+                    }
 
                     $wishlist_obj['total'] = $wishlist_class->get_total();
                     $wishlist_obj['permalink'] = $wishlist_class->get_permalink();
