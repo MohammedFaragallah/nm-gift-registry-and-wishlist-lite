@@ -136,6 +136,29 @@ class NMGR_Wordpress
                         ],
                     ]
                 );
+
+                register_rest_route(
+                    $namespace,
+                    '/' . $base . '/update-item',
+                    [
+                        [
+                            'methods'             => WP_REST_Server::CREATABLE,
+                            'callback'            => 'update_item',
+                            'item_id' => [
+                                'required'    => true,
+                                'type'        => 'integer',
+                                'description' => 'Item ID to update.',
+                            ],
+                            'quantity' => [
+                                'required'    => true,
+                                'type'        => 'integer',
+                                'description' => 'new updated quantity',
+                                'default' => 1
+                            ],
+                            'permission_callback' => '__return_true',
+                        ],
+                    ]
+                );
             }
         );
 
@@ -243,6 +266,39 @@ class NMGR_Wordpress
 
             return rest_ensure_response($wishlist_id);
         }
+
+        function update_item(WP_REST_Request $request)
+        {
+            $params      = $request->get_params();
+            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+
+            if ($wishlist_id > 0) {
+                try {
+                    $wishlist_class = new NMGR_Wishlist($wishlist_id);
+
+                    if (!$wishlist_class->is_active()) {
+                        return false;
+                    }
+
+                    $item = $wishlist_class->get_Item($params['item_id']);
+
+                    if ($item) {
+                        $item->set_props(
+                            array(
+                                'quantity' => $params['quantity'],
+                            )
+                        );
+
+                        return $item->save();
+                    }
+                } catch (Exception $e) {
+                    return rest_ensure_response($e);
+                }
+            }
+
+            return rest_ensure_response($wishlist_id);
+        }
+
         self::set_add_to_wishlist_button_position();
     }
 
