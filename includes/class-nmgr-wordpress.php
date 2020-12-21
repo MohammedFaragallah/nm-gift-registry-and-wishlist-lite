@@ -155,6 +155,12 @@ class NMGR_Wordpress
                                     'type'        => 'integer',
                                     'description' => 'new updated quantity',
                                     'default' => 1
+                                ],
+                                'purchased_quantity' => [
+                                    'required'    => true,
+                                    'type'        => 'integer',
+                                    'description' => 'new updated purchased quantity',
+                                    'default' => 1
                                 ]
                             ],
                             'permission_callback' => '__return_true',
@@ -288,6 +294,7 @@ class NMGR_Wordpress
                         $item->set_props(
                             array(
                                 'quantity' => $params['quantity'],
+                                'purchased_quantity' => $params['purchased_quantity'],
                             )
                         );
 
