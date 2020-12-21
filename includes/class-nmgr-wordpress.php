@@ -5,45 +5,45 @@ class NMGR_Wordpress
 {
     public static function run()
     {
-        add_action('init', array( __CLASS__, 'load_plugin_textdomain' ), 1);
-        add_action('init', array( __CLASS__, 'register_post_types' ));
-        add_action('init', array( __CLASS__, 'add_rewrite_rules' ));
-        add_action('init', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 999);
-        add_action('init', array( __CLASS__, 'add_image_sizes' ));
-        add_action('wp', array( __CLASS__, 'add_shortcodes' ));
-        add_filter('query_vars', array( __CLASS__, 'query_vars' ));
+        add_action('init', array(__CLASS__, 'load_plugin_textdomain'), 1);
+        add_action('init', array(__CLASS__, 'register_post_types'));
+        add_action('init', array(__CLASS__, 'add_rewrite_rules'));
+        add_action('init', array(__CLASS__, 'maybe_flush_rewrite_rules'), 999);
+        add_action('init', array(__CLASS__, 'add_image_sizes'));
+        add_action('wp', array(__CLASS__, 'add_shortcodes'));
+        add_filter('query_vars', array(__CLASS__, 'query_vars'));
 
-        add_action('before_delete_post', array( __CLASS__, 'setup_before_delete_post_action' ), -1);
-        add_action('delete_post', array( __CLASS__, 'setup_delete_action' ), -1);
-        add_action('trashed_post', array( __CLASS__, 'setup_trashed_action' ), -1);
-        add_action('untrashed_post', array( __CLASS__, 'setup_untrashed_action' ), -1);
+        add_action('before_delete_post', array(__CLASS__, 'setup_before_delete_post_action'), -1);
+        add_action('delete_post', array(__CLASS__, 'setup_delete_action'), -1);
+        add_action('trashed_post', array(__CLASS__, 'setup_trashed_action'), -1);
+        add_action('untrashed_post', array(__CLASS__, 'setup_untrashed_action'), -1);
 
-        add_action('nmgr_before_delete_wishlist', array( __CLASS__, 'before_delete_wishlist' ));
-        add_action('nmgr_delete_wishlist', array( __CLASS__, 'clean_wishlist_data_on_delete' ));
-        add_action('nmgr_trashed_wishlist', array( __CLASS__, 'clean_wishlist_data_on_delete' ));
-        add_action('nmgr_untrashed_wishlist', array( __CLASS__, 'clean_wishlist_data_on_delete' ));
-        add_action('nmgr_created_wishlist', array( __CLASS__, 'update_wishlist_data_on_save' ));
-        add_action('nmgr_updated_wishlist', array( __CLASS__, 'update_wishlist_data_on_save' ));
+        add_action('nmgr_before_delete_wishlist', array(__CLASS__, 'before_delete_wishlist'));
+        add_action('nmgr_delete_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
+        add_action('nmgr_trashed_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
+        add_action('nmgr_untrashed_wishlist', array(__CLASS__, 'clean_wishlist_data_on_delete'));
+        add_action('nmgr_created_wishlist', array(__CLASS__, 'update_wishlist_data_on_save'));
+        add_action('nmgr_updated_wishlist', array(__CLASS__, 'update_wishlist_data_on_save'));
 
         // Add to template_redirect hook so that it occurs only on frontend (non-ajax) requests
-        add_action('template_redirect', array( __CLASS__, 'add_to_wishlist_action' ), 20);
+        add_action('template_redirect', array(__CLASS__, 'add_to_wishlist_action'), 20);
 
-        add_filter('nmgr_quantity_input_min', array( __CLASS__, 'set_minimum_input_quantity' ), 10);
-        add_filter('nmgr_quantity_input_max', array( __CLASS__, 'set_maximum_input_quantity' ), 10);
-        add_action('wp_loaded', array( __CLASS__, 'show_notice' ));
-        add_action('wp', array( __CLASS__, 'enable_wishlist' ));
-        add_action('deleted_user_meta', array( __CLASS__, 'delete_user_wishlists_if_user_disabled' ), 10, 3);
-        add_filter('posts_search', array( __CLASS__, 'enhance_wishlist_search' ));
-        add_action('wp', array( __CLASS__, 'maybe_set_user_id_cookie' ));
-        add_action('nmgr_delete_guest_wishlists', array( __CLASS__, 'delete_guest_wishlists' ));
-        add_filter('woocommerce_login_redirect', array( __CLASS__, 'login_redirect' ), 10, 2);
-        add_action('nmgr_data_before_save', array( __CLASS__, 'before_save_wishlist' ));
-        add_action('nmgr_delete_wishlist_item', array( __CLASS__, 'delete_item_from_cart' ), 10, 2);
-        add_action('wp_footer', array( __CLASS__, 'add_modal_template' ));
-        add_action('admin_footer', array( __CLASS__, 'add_modal_template' ));
-        add_filter('nmgr_account_tabs', array( __CLASS__, 'filter_account_sections' ));
-        add_action('nmgr_before_shipping', array( __CLASS__, 'show_shipping_address_required_notice' ));
-        add_filter('wp_insert_post_data', array( __CLASS__, 'insert_post_data' ), 1, 2);
+        add_filter('nmgr_quantity_input_min', array(__CLASS__, 'set_minimum_input_quantity'), 10);
+        add_filter('nmgr_quantity_input_max', array(__CLASS__, 'set_maximum_input_quantity'), 10);
+        add_action('wp_loaded', array(__CLASS__, 'show_notice'));
+        add_action('wp', array(__CLASS__, 'enable_wishlist'));
+        add_action('deleted_user_meta', array(__CLASS__, 'delete_user_wishlists_if_user_disabled'), 10, 3);
+        add_filter('posts_search', array(__CLASS__, 'enhance_wishlist_search'));
+        add_action('wp', array(__CLASS__, 'maybe_set_user_id_cookie'));
+        add_action('nmgr_delete_guest_wishlists', array(__CLASS__, 'delete_guest_wishlists'));
+        add_filter('woocommerce_login_redirect', array(__CLASS__, 'login_redirect'), 10, 2);
+        add_action('nmgr_data_before_save', array(__CLASS__, 'before_save_wishlist'));
+        add_action('nmgr_delete_wishlist_item', array(__CLASS__, 'delete_item_from_cart'), 10, 2);
+        add_action('wp_footer', array(__CLASS__, 'add_modal_template'));
+        add_action('admin_footer', array(__CLASS__, 'add_modal_template'));
+        add_filter('nmgr_account_tabs', array(__CLASS__, 'filter_account_sections'));
+        add_action('nmgr_before_shipping', array(__CLASS__, 'show_shipping_address_required_notice'));
+        add_filter('wp_insert_post_data', array(__CLASS__, 'insert_post_data'), 1, 2);
 
         add_action(
             'rest_api_init',
@@ -82,7 +82,7 @@ class NMGR_Wordpress
 
                 register_rest_route(
                     $namespace,
-                    '/' . $base .'/add-item',
+                    '/' . $base . '/add-item',
                     [
                         [
                             'methods'             => WP_REST_Server::CREATABLE,
@@ -115,7 +115,7 @@ class NMGR_Wordpress
 
                 register_rest_route(
                     $namespace,
-                    '/' . $base .'/remove-item',
+                    '/' . $base . '/remove-item',
                     [
                         [
                             'methods'             => WP_REST_Server::CREATABLE,
@@ -349,8 +349,8 @@ class NMGR_Wordpress
                     'slug' => nmgr_get_option('permalink_base'),
                 ),
                 'query_var' => true,
-                'supports' => array( 'title' ),
-                'capability_type' => array( nmgr()->post_type, nmgr()->post_type_plural ),
+                'supports' => array('title'),
+                'capability_type' => array(nmgr()->post_type, nmgr()->post_type_plural),
                 'has_archive' => false,
                 'menu_icon' => 'dashicons-heart',
             )
@@ -404,10 +404,10 @@ class NMGR_Wordpress
     {
         if ('nmgr_medium' == $size) {
             $wishlist = nmgr_get_wishlist($attachment->post_parent);
-            if ($wishlist && !$attr[ 'alt' ]) {
-                $attr[ 'alt' ] = $wishlist->get_title();
+            if ($wishlist && !$attr['alt']) {
+                $attr['alt'] = $wishlist->get_title();
             }
-            $attr[ 'class' ] = $attr[ 'class' ] . ' nmgr-post-thumbnail';
+            $attr['class'] = $attr['class'] . ' nmgr-post-thumbnail';
         }
         return $attr;
     }
@@ -585,13 +585,13 @@ class NMGR_Wordpress
                 if ($user_id && absint($user_id) != absint($post->post_author)) {
                     $wpdb->update(
                         $wpdb->usermeta,
-                        array( 'user_id' => $post->post_author ),
+                        array('user_id' => $post->post_author),
                         array(
                             'meta_key' => 'nmgr_wishlist_id',
                             'meta_value' => $wishlist_id
                         ),
-                        array( '%d' ),
-                        array( '%s', '%d' )
+                        array('%d'),
+                        array('%s', '%d')
                     );
                 }
 
@@ -638,17 +638,17 @@ class NMGR_Wordpress
      */
     public static function show_notice()
     {
-        if (!isset($_REQUEST[ 'nmgr-notice' ])) { // phpcs:ignore WordPress.Security.NonceVerification
+        if (!isset($_REQUEST['nmgr-notice'])) { // phpcs:ignore WordPress.Security.NonceVerification
             return;
         }
 
-        $notice = sanitize_text_field(wp_unslash($_REQUEST[ 'nmgr-notice' ])); // phpcs:ignore WordPress.Security.NonceVerification
+        $notice = sanitize_text_field(wp_unslash($_REQUEST['nmgr-notice'])); // phpcs:ignore WordPress.Security.NonceVerification
 
         $redirect = is_nmgr_guest() ? false : true;
 
         switch ($notice) {
             case 'select-product':
-                $product_type = isset($_REQUEST[ 'nmgr-pt' ]) ? sanitize_text_field(wp_unslash($_REQUEST[ 'nmgr-pt' ])) : null; // phpcs:ignore WordPress.Security.NonceVerification
+                $product_type = isset($_REQUEST['nmgr-pt']) ? sanitize_text_field(wp_unslash($_REQUEST['nmgr-pt'])) : null; // phpcs:ignore WordPress.Security.NonceVerification
 
                 if ('variable' == $product_type) {
                     wc_add_notice(
@@ -697,7 +697,7 @@ class NMGR_Wordpress
 
         if ($redirect) {
             $query_string = '';
-            parse_str(wc_clean(wp_unslash($_SERVER[ 'QUERY_STRING' ])), $query_string); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            parse_str(wc_clean(wp_unslash($_SERVER['QUERY_STRING'])), $query_string); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
             $remove_keys = array_filter(array_keys($query_string), function ($val) {
                 return 'nmgr-redirect' !== $val && false !== strpos($val, 'nmgr-');
@@ -732,10 +732,12 @@ class NMGR_Wordpress
         $disabled_text = sprintf(__('You have successfully disabled the %s module.', 'nm-gift-registry-lite'), esc_html(nmgr_get_type_title()));
         $disabled_notice = apply_filters('nmgr_disabled_wishlist_notice', $disabled_text);
 
-        if (isset($_REQUEST[ 'nmgr-enable-wishlist-nonce' ]) &&
-            wp_verify_nonce(sanitize_key($_REQUEST[ 'nmgr-enable-wishlist-nonce' ]), 'nmgr_enable_wishlist')) {
-            if (isset($_REQUEST[ 'nmgr_enable_wishlist' ])) {
-                update_user_meta(get_current_user_id(), 'nmgr_enable_wishlist', absint($_REQUEST[ 'nmgr_enable_wishlist' ]));
+        if (
+            isset($_REQUEST['nmgr-enable-wishlist-nonce']) &&
+            wp_verify_nonce(sanitize_key($_REQUEST['nmgr-enable-wishlist-nonce']), 'nmgr_enable_wishlist')
+        ) {
+            if (isset($_REQUEST['nmgr_enable_wishlist'])) {
+                update_user_meta(get_current_user_id(), 'nmgr_enable_wishlist', absint($_REQUEST['nmgr_enable_wishlist']));
                 wc_add_notice($enabled_notice, 'success');
             } else {
                 delete_user_meta(get_current_user_id(), 'nmgr_enable_wishlist');
@@ -781,7 +783,7 @@ class NMGR_Wordpress
             '_email'
         );
 
-        $meta_args = array( 'relation' => 'OR' );
+        $meta_args = array('relation' => 'OR');
 
         foreach ($meta_keys_to_search as $key) {
             $meta_args[] = array(
@@ -796,7 +798,7 @@ class NMGR_Wordpress
         $sql = $meta_query->get_sql('post', $wpdb->posts, 'ID');
 
         $search_post_ids = array();
-        $found_post_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} " . $sql[ 'join' ] . $sql[ 'where' ]);
+        $found_post_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} " . $sql['join'] . $sql['where']);
 
         if (count($found_post_ids) > 0) {
             $search_post_ids = array_filter(array_unique(array_map('absint', $found_post_ids)));
@@ -830,20 +832,20 @@ class NMGR_Wordpress
         $request = $_REQUEST; // phpcs:ignore WordPress.Security.NonceVerification
         // if we don't have product id or wishlist id query key in the query, return
         if (
-            (!isset($request[ $pid ]) || !is_numeric(sanitize_key(wp_unslash($request[ $pid ])))) ||
-            (!isset($request[ $wid ]) || !is_numeric(sanitize_key(wp_unslash($request[ $wid ]))))
+            (!isset($request[$pid]) || !is_numeric(sanitize_key(wp_unslash($request[$pid])))) ||
+            (!isset($request[$wid]) || !is_numeric(sanitize_key(wp_unslash($request[$wid]))))
         ) {
             return;
         }
 
-        $product_id = absint(wp_unslash($request[ $pid ]));
-        $wishlist_id = absint(wp_unslash($request[ $wid ]));
-        $variation_id = isset($request[ nmgr_query_key('variation_id') ]) ? absint(wp_unslash($request[ nmgr_query_key('variation_id') ])) : 0;
+        $product_id = absint(wp_unslash($request[$pid]));
+        $wishlist_id = absint(wp_unslash($request[$wid]));
+        $variation_id = isset($request[nmgr_query_key('variation_id')]) ? absint(wp_unslash($request[nmgr_query_key('variation_id')])) : 0;
         $wishlist = nmgr_get_wishlist($wishlist_id, true);
         $product = wc_get_product($variation_id ? $variation_id : $product_id);
 
         // Serialized form values from default wc variaton form on product page
-        $variation_form_values = isset($request[ 'nmgr_wc_form_values' ]) ? $request[ 'nmgr_wc_form_values' ] : array();
+        $variation_form_values = isset($request['nmgr_wc_form_values']) ? $request['nmgr_wc_form_values'] : array();
 
         // Flag to check if product was added to the wishlist
         $result = false;
@@ -867,7 +869,7 @@ class NMGR_Wordpress
             }
 
             if ($product->is_type('grouped')) {
-                $qtys = isset($request[ nmgr_query_key('quantity') ]) ? ( array ) $request[ nmgr_query_key('quantity') ] : array();
+                $qtys = isset($request[nmgr_query_key('quantity')]) ? (array) $request[nmgr_query_key('quantity')] : array();
                 $posted_quantities = array_filter(array_map('absint', $qtys), function ($v) {
                     return $v > 0;
                 });
@@ -889,7 +891,7 @@ class NMGR_Wordpress
                     try {
                         $this_result = nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite);
                         if (!empty($this_result)) {
-                            $added_to_wishlist[ $product_id ] = $quantity;
+                            $added_to_wishlist[$product_id] = $quantity;
                         }
                     } catch (Exception $e) {
                         $error_msgs[] = $e->getMessage();
@@ -907,7 +909,7 @@ class NMGR_Wordpress
                     }
                 }
             } else {
-                $q = isset($request[ nmgr_query_key('quantity') ]) ? $request[ nmgr_query_key('quantity') ] : 1;
+                $q = isset($request[nmgr_query_key('quantity')]) ? $request[nmgr_query_key('quantity')] : 1;
                 $quantity = wc_stock_amount(wp_unslash($q));
                 $favourite = null;
                 $variations = $product->is_type('variation') ? nmgr_get_posted_variations($variation_id, $variation_form_values) : array();
@@ -937,9 +939,9 @@ class NMGR_Wordpress
     public static function login_redirect($redirect, $user)
     {
         // phpcs:disable WordPress.Security.NonceVerification
-        if (isset($_REQUEST[ 'nmgr-redirect' ]) && !empty($_REQUEST[ 'nmgr-redirect' ])) {
+        if (isset($_REQUEST['nmgr-redirect']) && !empty($_REQUEST['nmgr-redirect'])) {
             if (nmgr_get_user_wishlists_count($user->ID)) {
-                $redirect = sanitize_text_field(wp_unslash($_REQUEST[ 'nmgr-redirect' ]));
+                $redirect = sanitize_text_field(wp_unslash($_REQUEST['nmgr-redirect']));
             } else {
                 $redirect = add_query_arg('nmgr-notice', 'create-wishlist', nmgr_get_account_url());
             }
@@ -984,14 +986,14 @@ class NMGR_Wordpress
             add_action('woocommerce_product_thumbnails', 'nmgr_add_to_wishlist_button');
         } else {
             // This default must be there so that the button would always be displayed on the single page
-            add_action('woocommerce_single_product_summary', 'nmgr_add_to_wishlist_button', ( int ) $single_display_priority);
+            add_action('woocommerce_single_product_summary', 'nmgr_add_to_wishlist_button', (int) $single_display_priority);
         }
     }
 
     public static function maybe_set_user_id_cookie()
     {
-        if (is_nmgr_guest() && !isset($_COOKIE[ 'nmgr_user_id' ])) {
-            $days = ( int ) apply_filters('nmgr_guest_wishlist_expiry_days', nmgr_get_option('guest_wishlist_expiry_days'));
+        if (is_nmgr_guest() && !isset($_COOKIE['nmgr_user_id'])) {
+            $days = (int) apply_filters('nmgr_guest_wishlist_expiry_days', nmgr_get_option('guest_wishlist_expiry_days'));
             $val = 1 > $days ? 0 : (365 < $days ? 365 : $days);
             $expiration = 0 === $val ? 0 : strtotime($val . ' DAYS', time());
             nmgr_setcookie('nmgr_user_id', nmgr_generate_user_id(), $expiration);
@@ -1010,12 +1012,14 @@ class NMGR_Wordpress
         foreach ($post_ids as $id) {
             $post = get_post($id);
             $creation_date = strtotime($post->post_date);
-            $expiry_days = ( int ) apply_filters('nmgr_guest_wishlist_expiry_days', nmgr_get_option('guest_wishlist_expiry_days'));
+            $expiry_days = (int) apply_filters('nmgr_guest_wishlist_expiry_days', nmgr_get_option('guest_wishlist_expiry_days'));
             $expiry_date = strtotime($expiry_days . ' DAYS', $creation_date);
-            if ($expiry_date < time() &&
+            if (
+                $expiry_date < time() &&
                 0 == $post->post_author &&
                 'nm_gift_registry' === $post->post_type &&
-                'trash' !== $post->post_type) {
+                'trash' !== $post->post_type
+            ) {
                 $wishlist = nmgr_get_wishlist($id);
                 if ($wishlist) {
                     $wishlist->delete();
@@ -1050,10 +1054,12 @@ class NMGR_Wordpress
     {
         if (is_a(wc()->cart, 'WC_Cart') && !WC()->cart->is_empty()) {
             foreach (WC()->cart->get_cart() as $key => $cart_item) {
-                if (isset($cart_item[ 'nm_gift_registry' ])) {
-                    if (absint($wishlist_id === absint($cart_item[ 'nm_gift_registry' ][ 'wishlist_id' ])) &&
+                if (isset($cart_item['nm_gift_registry'])) {
+                    if (
+                        absint($wishlist_id === absint($cart_item['nm_gift_registry']['wishlist_id'])) &&
                         nmgr_get_wishlist($wishlist_id, true) &&
-                        absint($item_id) === absint($cart_item[ 'nm_gift_registry' ][ 'wishlist_item_id' ])) {
+                        absint($item_id) === absint($cart_item['nm_gift_registry']['wishlist_item_id'])
+                    ) {
                         wc()->cart->remove_cart_item($key);
                     }
                 }
@@ -1104,12 +1110,14 @@ class NMGR_Wordpress
 
     public static function filter_account_sections($sections)
     {
-        if (is_nmgr_modal() &&
+        if (
+            is_nmgr_modal() &&
             (doing_action('wp_ajax_nmgr_dialog_create_new_wishlist') ||
-            doing_action('wp_ajax_nopriv_nmgr_dialog_create_new_wishlist'))) {
+                doing_action('wp_ajax_nopriv_nmgr_dialog_create_new_wishlist'))
+        ) {
             $new_wishlist_sections = array_merge(
-                array( 'profile' ),
-                ( array ) apply_filters('nmgr_dialog_create_new_wishlist_optional_sections', array( 'shipping' ))
+                array('profile'),
+                (array) apply_filters('nmgr_dialog_create_new_wishlist_optional_sections', array('shipping'))
             );
 
             if (nmgr_get_option('shipping_address_required')) {
@@ -1118,7 +1126,7 @@ class NMGR_Wordpress
 
             foreach (array_keys($sections) as $key) {
                 if (!in_array($key, $new_wishlist_sections)) {
-                    unset($sections[ $key ]);
+                    unset($sections[$key]);
                 }
             }
         }
@@ -1127,9 +1135,11 @@ class NMGR_Wordpress
 
     public static function show_shipping_address_required_notice()
     {
-        if (is_nmgr_modal() &&
+        if (
+            is_nmgr_modal() &&
             (doing_action('wp_ajax_nmgr_dialog_set_shipping_address') ||
-            doing_action('wp_ajax_nopriv_nmgr_dialog_set_shipping_address'))) {
+                doing_action('wp_ajax_nopriv_nmgr_dialog_set_shipping_address'))
+        ) {
             wc_print_notice(
                 sprintf(
                     /* translators: %s: wishlist type title */
@@ -1145,12 +1155,12 @@ class NMGR_Wordpress
     {
         global $post;
 
-        if ('nm_gift_registry' !== $data[ 'post_type' ]) {
+        if ('nm_gift_registry' !== $data['post_type']) {
             return $data;
         }
 
-        if (!$data[ 'post_title' ]) {
-            $data[ 'post_title' ] = sprintf('%1$s #%2$s', nmgr_get_type_title('c'), $post->ID);
+        if (!$data['post_title']) {
+            $data['post_title'] = sprintf('%1$s #%2$s', nmgr_get_type_title('c'), $post->ID);
         }
 
         return $data;

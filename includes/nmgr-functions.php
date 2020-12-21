@@ -617,7 +617,7 @@ function nmgr_get_svg($args)
  * @param int $wishlist_id The wishlist id used to retrieve the wishlist
  * @param bool $active Whether the wishlist must be active. Default false. (An active wishlist has its
  * post status in the registered post statuses for wishlists. Active wishlists appear on the frontend).
- * @return mixed NMGR_Wishlist | false
+ * @return NMGR_Wishlist | false
  */
 function nmgr_get_wishlist($wishlist_id = 0, $active = false)
 {
