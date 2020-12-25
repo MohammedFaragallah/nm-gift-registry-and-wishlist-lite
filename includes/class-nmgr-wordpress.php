@@ -193,6 +193,27 @@ class NMGR_Wordpress
 
                             $wishlist_obj['products'] = $products->get_data();
                         }
+
+                        $items = array();
+
+                        foreach ($wishlist_obj['items'] as $key => $item) {
+                            $items[] = array(
+                                'id' => (int) $item['id'],
+                                "wishlist_id" => (int) $item['wishlist_id'],
+                                "name" => $item['name'],
+                                "date_created" =>  $item['date_created'],
+                                "date_modified" =>  $item['date_modified'],
+                                "product_id" => (int) $item['product_id'],
+                                "variation_id" => (int) $item['variation_id'] > 0 ? (int) $item['variation_id'] : null,
+                                "variation" =>  $item['variation'],
+                                "quantity" => (int) $item['quantity'],
+                                "purchased_quantity" => (int) $item['purchased_quantity'],
+                                "unique_id" =>  $item['unique_id'],
+                                "quantity_reference" =>  $item['quantity_reference'],
+                            );
+                        }
+
+                        $wishlist_obj['items'] = $items;
                     }
 
                     $wishlist_obj['total'] = $wishlist_class->get_total();
