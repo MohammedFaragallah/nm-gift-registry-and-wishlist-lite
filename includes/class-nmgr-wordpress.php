@@ -70,7 +70,7 @@ class NMGR_Wordpress
                         'description' => ''
                     ),
                     "date_created" => array(
-                        'type' => 'date',
+                        'type' => 'date-time',
                         'description' => ''
                     ),
                     "first_name" => array(
@@ -94,7 +94,7 @@ class NMGR_Wordpress
                         'description' => ''
                     ),
                     "event_date" => array(
-                        'type' => 'string',
+                        'type' => 'date-time',
                         'description' => ''
                     ),
                     "ship_to_account_address" => array(
@@ -148,7 +148,7 @@ class NMGR_Wordpress
                         'description' => ''
                     ),
                     "date_fulfilled" => array(
-                        'type' => 'string',
+                        'type' => 'date-time',
                         'description' => ''
                     ),
                     "nmgr_user_id" => array(
@@ -177,11 +177,11 @@ class NMGR_Wordpress
                                     'description' => ''
                                 ),
                                 "date_created" => array(
-                                    'type' => 'date',
+                                    'type' => 'date-time',
                                     'description' => ''
                                 ),
                                 "date_modified" => array(
-                                    'type' => 'date',
+                                    'type' => 'date-time',
                                     'description' => ''
                                 ),
                                 "product_id" => array(
