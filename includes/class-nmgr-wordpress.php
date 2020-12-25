@@ -216,6 +216,9 @@ class NMGR_Wordpress
                         $wishlist_obj['items'] = $items;
                     }
 
+                    $wishlist_obj['fulfilled'] = $wishlist_class->is_fulfilled();
+                    $wishlist_obj['item_count'] = $wishlist_class->get_item_count();
+                    $wishlist_obj['item_purchased_count'] = $wishlist_class->get_item_purchased_count();
                     $wishlist_obj['total'] = $wishlist_class->get_total();
                     $wishlist_obj['permalink'] = $wishlist_class->get_permalink();
 
