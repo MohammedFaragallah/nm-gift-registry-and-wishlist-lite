@@ -163,7 +163,7 @@ class NMGR_Wordpress
         function get_wishlist(WP_REST_Request $request)
         {
             $params      = $request->get_params();
-            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+            $wishlist_id = (int) nmgr_get_user_default_wishlist_id(get_current_user_id());
 
             if ($wishlist_id > 0) {
                 try {
@@ -210,7 +210,7 @@ class NMGR_Wordpress
         function add_item(WP_REST_Request $request)
         {
             $params      = $request->get_params();
-            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+            $wishlist_id = (int) nmgr_get_user_default_wishlist_id(get_current_user_id());
 
             if ($wishlist_id > 0) {
                 try {
@@ -242,7 +242,7 @@ class NMGR_Wordpress
         function remove_item(WP_REST_Request $request)
         {
             $params      = $request->get_params();
-            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+            $wishlist_id = (int) nmgr_get_user_default_wishlist_id(get_current_user_id());
 
             if ($wishlist_id > 0) {
                 try {
@@ -268,7 +268,7 @@ class NMGR_Wordpress
         function update_item(WP_REST_Request $request)
         {
             $params      = $request->get_params();
-            $wishlist_id = (int) get_user_meta(get_current_user_id(), 'nmgr_wishlist_id', true);
+            $wishlist_id = (int) nmgr_get_user_default_wishlist_id(get_current_user_id());
 
             if ($wishlist_id > 0) {
                 try {
