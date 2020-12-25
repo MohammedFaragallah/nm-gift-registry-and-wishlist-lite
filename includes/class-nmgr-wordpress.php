@@ -40,6 +40,221 @@ class NMGR_Wordpress
         add_action('nmgr_before_shipping', array(__CLASS__, 'show_shipping_address_required_notice'));
         add_filter('wp_insert_post_data', array(__CLASS__, 'insert_post_data'), 10, 2);
 
+        function get_wishlist_schema()
+        {
+            $product_controller = new WC_REST_Products_Controller();
+
+            $wishlist_schema = array(
+                '$schema'    => 'http://json-schema.org/draft-04/schema#',
+                'title'      => 'gift registry',
+                'type'       => 'object',
+                'properties' => array(
+                    "id" => array(
+                        'type' => 'integer',
+                        'description' => ''
+                    ),
+                    "title" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "status" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "description" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "slug" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "date_created" => array(
+                        'type' => 'date',
+                        'description' => ''
+                    ),
+                    "first_name" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "last_name" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "partner_first_name" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "partner_last_name" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "email" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "event_date" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "ship_to_account_address" => array(
+                        'type' => 'boolean',
+                        'description' => ''
+                    ),
+                    "shipping" => array(
+                        'type' => 'object',
+                        'description' => '',
+                        'properties' => array(
+                            "first_name" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "last_name" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "company" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "address_1" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "address_2" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "city" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "postcode" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "country" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                            "state" => array(
+                                'type' => 'string',
+                                'description' => '',
+                            ),
+                        )
+                    ),
+                    "fulfilled" => array(
+                        'type' => 'boolean',
+                        'description' => ''
+                    ),
+                    "date_fulfilled" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "nmgr_user_id" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "nmgr_guest" => array(
+                        'type' => 'string',
+                        'description' => ''
+                    ),
+                    "items" => array(
+                        'type' => 'array',
+                        'items' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                "id" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "wishlist_id" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "name" => array(
+                                    'type' => 'string',
+                                    'description' => ''
+                                ),
+                                "date_created" => array(
+                                    'type' => 'date',
+                                    'description' => ''
+                                ),
+                                "date_modified" => array(
+                                    'type' => 'date',
+                                    'description' => ''
+                                ),
+                                "product_id" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "variation_id" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "variation" => array(
+                                    "type" => "array",
+                                    "items" => array(
+                                        'type' => 'integer',
+                                        'description' => ''
+                                    )
+                                ),
+                                "quantity" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "purchased_quantity" => array(
+                                    'type' => 'integer',
+                                    'description' => ''
+                                ),
+                                "purchased_quantity" => array(
+                                    'type' => 'string',
+                                    'description' => ''
+                                ),
+                                "variation" => array(
+                                    "type" => "array",
+                                    "items" => array(
+                                        'type' => 'mixed',
+                                        'description' => ''
+                                    )
+                                ),
+                            )
+                        )
+                    ),
+                    "products" => array(
+                        'type' => 'array',
+                        "items" => array(
+                            "type" => "object",
+                            "properties" => $product_controller->get_public_item_schema()
+                        )
+                    ),
+                    "fulfilled" => array(
+                        'type' => 'boolean',
+                        'description' => ''
+                    ),
+                    "item_count" => array(
+                        'type' => 'integer',
+                        'description' => ''
+                    ),
+                    "item_purchased_count" => array(
+                        'type' => 'integer',
+                        'description' => ''
+                    ),
+                    "total" => array(
+                        'type' => 'integer',
+                        'description' => ''
+                    ),
+                    "permalink" => array(
+                        'type' => 'string',
+                        'format' => 'url',
+                        'description' => ''
+                    ),
+                ),
+            );
+
+            return $wishlist_schema;
+        }
+
         add_action(
             'rest_api_init',
             function () {
@@ -67,6 +282,7 @@ class NMGR_Wordpress
                             ], $product_controller->get_collection_params()),
                             'permission_callback' => '__return_true',
                         ],
+                        'schema' => 'get_wishlist_schema'
                     ]
                 );
 
