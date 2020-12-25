@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-12-21T11:56:00+01:00\n"
+"POT-Creation-Date: 2020-12-25T14:19:11+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: nm-gift-registry-lite\n"
@@ -171,7 +171,7 @@ msgid "Product"
 msgstr ""
 
 #: includes/class-nmgr-admin-post.php:404
-#: includes/nmgr-functions.php:2859
+#: includes/nmgr-functions.php:2853
 #: templates/account/items/item-quantity.php:18
 msgid "Quantity"
 msgstr ""
@@ -179,8 +179,8 @@ msgstr ""
 #: includes/class-nmgr-admin-post.php:408
 #: includes/class-nmgr-templates.php:364
 #: includes/class-nmgr-templates.php:446
-#: includes/class-nmgr-templates.php:894
-#: templates/account/overview.php:134
+#: includes/class-nmgr-templates.php:895
+#: templates/account/overview.php:132
 msgid "Add item(s)"
 msgstr ""
 
@@ -218,8 +218,8 @@ msgid "Add to wishlist"
 msgstr ""
 
 #: includes/class-nmgr-admin-settings.php:281
-#: includes/nmgr-functions.php:2731
-#: includes/nmgr-functions.php:2863
+#: includes/nmgr-functions.php:2725
+#: includes/nmgr-functions.php:2857
 msgid "Add to cart"
 msgstr ""
 
@@ -735,7 +735,7 @@ msgstr ""
 
 #: includes/class-nmgr-admin.php:64
 #: includes/class-nmgr-templates.php:541
-#: includes/nmgr-functions.php:2860
+#: includes/nmgr-functions.php:2854
 msgid "Purchased Quantity"
 msgstr ""
 
@@ -747,36 +747,36 @@ msgstr ""
 msgid "Enable wishlist"
 msgstr ""
 
-#: includes/class-nmgr-admin.php:132
+#: includes/class-nmgr-admin.php:133
 msgid "Enable the wishlist module"
 msgstr ""
 
-#: includes/class-nmgr-admin.php:162
+#: includes/class-nmgr-admin.php:163
 msgid "Single wishlist page"
 msgstr ""
 
-#: includes/class-nmgr-admin.php:166
+#: includes/class-nmgr-admin.php:167
 msgid "Wishlist search results page"
 msgstr ""
 
-#: includes/class-nmgr-admin.php:174
-#: includes/class-nmgr-admin.php:181
+#: includes/class-nmgr-admin.php:175
+#: includes/class-nmgr-admin.php:182
 msgid "Wishlists"
 msgstr ""
 
 #. translators: %s: count of items in wishlist
-#: includes/class-nmgr-admin.php:208
+#: includes/class-nmgr-admin.php:209
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-nmgr-admin.php:242
+#: includes/class-nmgr-admin.php:243
 msgid "Five star"
 msgstr ""
 
 #. translators: 1: plugin homepage link, 2: wordpress plugin review link
-#: includes/class-nmgr-admin.php:246
+#: includes/class-nmgr-admin.php:247
 msgid "Thanks for creating with %1$s. Love it  &hearts;, please leave a %2$s rating."
 msgstr ""
 
@@ -835,8 +835,8 @@ msgstr ""
 #. translators: %s: wishlist type title
 #: includes/class-nmgr-ajax.php:702
 #: includes/class-nmgr-ajax.php:729
-#: includes/class-nmgr-wordpress.php:1144
-#: includes/nmgr-functions.php:2335
+#: includes/class-nmgr-wordpress.php:1292
+#: includes/nmgr-functions.php:2334
 msgid "The shipping address for this %s is required before you can add items to it."
 msgstr ""
 
@@ -862,7 +862,7 @@ msgstr ""
 #: includes/class-nmgr-form.php:377
 #: includes/class-nmgr-widget-cart.php:31
 #: includes/class-nmgr-widget-search.php:27
-#: includes/nmgr-functions.php:2857
+#: includes/nmgr-functions.php:2851
 msgid "Title"
 msgstr ""
 
@@ -926,31 +926,31 @@ msgid "Save changes"
 msgstr ""
 
 #. translators: %s: shipping field label
-#: includes/class-nmgr-form.php:803
+#: includes/class-nmgr-form.php:802
 msgid "Shipping %s"
 msgstr ""
 
 #. translators: %s: shipping field label
-#: includes/class-nmgr-form.php:809
+#: includes/class-nmgr-form.php:808
 msgid "%s is a required field."
 msgstr ""
 
 #. translators: %s: supplied email address
-#: includes/class-nmgr-form.php:821
+#: includes/class-nmgr-form.php:820
 msgid "%s is not a valid email address."
 msgstr ""
 
-#: includes/class-nmgr-form.php:830
+#: includes/class-nmgr-form.php:829
 msgid "Please enter a valid postcode / ZIP."
 msgstr ""
 
 #. translators: %1$s: supplied state, %2$s: valid states
-#: includes/class-nmgr-form.php:847
+#: includes/class-nmgr-form.php:846
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr ""
 
 #. translators: %s: field label
-#: includes/class-nmgr-form.php:854
+#: includes/class-nmgr-form.php:853
 msgid "%s - Please enter the date in a valid format."
 msgstr ""
 
@@ -1053,7 +1053,7 @@ msgstr ""
 
 #. translators: %s: wishlist type title
 #: includes/class-nmgr-scripts.php:139
-#: includes/class-nmgr-wordpress.php:877
+#: includes/class-nmgr-wordpress.php:1025
 msgid "Please choose the quantity of items you wish to add to your %s."
 msgstr ""
 
@@ -1084,13 +1084,13 @@ msgid "Select an option..."
 msgstr ""
 
 #: includes/class-nmgr-templates.php:351
-#: templates/cart.php:198
+#: templates/cart.php:197
 msgid "Manage"
 msgstr ""
 
 #. translators: %s: wishlist type title
 #: includes/class-nmgr-templates.php:360
-#: templates/account/overview.php:132
+#: templates/account/overview.php:130
 msgid "Go shopping for items to add to your %s."
 msgstr ""
 
@@ -1104,7 +1104,7 @@ msgid "Share on:"
 msgstr ""
 
 #: includes/class-nmgr-templates.php:504
-#: includes/nmgr-functions.php:2858
+#: includes/nmgr-functions.php:2852
 #: templates/account/items/item-cost.php:18
 msgid "Cost"
 msgstr ""
@@ -1257,126 +1257,126 @@ msgstr ""
 msgid "Form action"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:317
-#: includes/class-nmgr-wordpress.php:318
-#: includes/class-nmgr-wordpress.php:320
+#: includes/class-nmgr-wordpress.php:559
+#: includes/class-nmgr-wordpress.php:560
+#: includes/class-nmgr-wordpress.php:562
 msgid "NM Gift Registry"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:319
+#: includes/class-nmgr-wordpress.php:561
 msgid "All Wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:321
+#: includes/class-nmgr-wordpress.php:563
 msgid "Add new wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:322
+#: includes/class-nmgr-wordpress.php:564
 msgid "Edit"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:323
+#: includes/class-nmgr-wordpress.php:565
 msgid "Edit wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:324
+#: includes/class-nmgr-wordpress.php:566
 msgid "New wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:325
+#: includes/class-nmgr-wordpress.php:567
 msgid "View wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:326
+#: includes/class-nmgr-wordpress.php:568
 msgid "View wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:327
+#: includes/class-nmgr-wordpress.php:569
 msgid "Search wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:328
+#: includes/class-nmgr-wordpress.php:570
 msgid "No wishlists found"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:329
+#: includes/class-nmgr-wordpress.php:571
 msgid "No wishlists found in trash"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:330
+#: includes/class-nmgr-wordpress.php:572
 msgid "Filter wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:331
+#: includes/class-nmgr-wordpress.php:573
 msgid "Wishlists list"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:332
+#: includes/class-nmgr-wordpress.php:574
 msgid "Wishlist published"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:333
+#: includes/class-nmgr-wordpress.php:575
 msgid "Wishlist published privately"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:334
+#: includes/class-nmgr-wordpress.php:576
 msgid "Wishlist updated"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:336
+#: includes/class-nmgr-wordpress.php:578
 msgid "Add gift registries and wishlists to your store."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:654
+#: includes/class-nmgr-wordpress.php:803
 msgid "Select a variation of this product to add to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:663
+#: includes/class-nmgr-wordpress.php:812
 msgid "Select option(s) of this product to add to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:676
+#: includes/class-nmgr-wordpress.php:825
 msgid "Login to add products to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:687
+#: includes/class-nmgr-wordpress.php:836
 msgid "Create a %s to add products to it."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:716
+#: includes/class-nmgr-wordpress.php:865
 msgid "You have successfully enabled the %s module."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:718
+#: includes/class-nmgr-wordpress.php:867
 msgid "View your %s dashboard"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:729
+#: includes/class-nmgr-wordpress.php:878
 msgid "You have successfully disabled the %s module."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:854
+#: includes/class-nmgr-wordpress.php:1002
 msgid "The specified %s doesn't exist."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:860
+#: includes/class-nmgr-wordpress.php:1008
 msgid "This item cannot be added to your %s"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:865
+#: includes/class-nmgr-wordpress.php:1013
 msgid "Please select options for this product"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:1101
+#: includes/class-nmgr-wordpress.php:1249
 msgid "Ok"
 msgstr ""
 
@@ -1422,7 +1422,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: wishlist type title, 2: wishlist type title plural form
-#: includes/nmgr-functions.php:778
+#: includes/nmgr-functions.php:779
 msgid "This product is in your %s"
 msgid_plural "This product is in one or more of your %s"
 msgstr[0] ""
@@ -1484,77 +1484,77 @@ msgid "%1$s could not be added to your %2$s"
 msgstr ""
 
 #. translators: 1: product name, 2: wishlist type title
-#: includes/nmgr-functions.php:1938
+#: includes/nmgr-functions.php:1937
 msgid "Add &quot;%1$s&quot; to my %2$s"
 msgstr ""
 
-#: includes/nmgr-functions.php:2102
-#: includes/nmgr-functions.php:2149
+#: includes/nmgr-functions.php:2101
+#: includes/nmgr-functions.php:2148
 msgid "gift registry"
 msgstr ""
 
-#: includes/nmgr-functions.php:2103
-#: includes/nmgr-functions.php:2149
+#: includes/nmgr-functions.php:2102
+#: includes/nmgr-functions.php:2148
 msgid "gift registries"
 msgstr ""
 
-#: includes/nmgr-functions.php:2106
+#: includes/nmgr-functions.php:2105
 msgid "wishlist"
 msgstr ""
 
-#: includes/nmgr-functions.php:2107
+#: includes/nmgr-functions.php:2106
 msgid "wishlists"
 msgstr ""
 
-#: includes/nmgr-functions.php:2110
+#: includes/nmgr-functions.php:2109
 msgid "gift list"
 msgstr ""
 
-#: includes/nmgr-functions.php:2111
+#: includes/nmgr-functions.php:2110
 msgid "gift lists"
 msgstr ""
 
-#: includes/nmgr-functions.php:2114
+#: includes/nmgr-functions.php:2113
 msgid "list"
 msgstr ""
 
-#: includes/nmgr-functions.php:2115
+#: includes/nmgr-functions.php:2114
 msgid "lists"
 msgstr ""
 
-#: includes/nmgr-functions.php:2345
-#: templates/account/shipping.php:51
+#: includes/nmgr-functions.php:2344
+#: templates/account/shipping.php:47
 msgid "Set now"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/nmgr-functions.php:2694
+#: includes/nmgr-functions.php:2688
 msgid "%s Items"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/nmgr-functions.php:2735
+#: includes/nmgr-functions.php:2729
 msgid "Remove from %s"
 msgstr ""
 
-#: includes/nmgr-functions.php:2831
+#: includes/nmgr-functions.php:2825
 msgid "Done"
 msgstr ""
 
-#: includes/nmgr-functions.php:2856
+#: includes/nmgr-functions.php:2850
 msgid "Thumbnail"
 msgstr ""
 
-#: includes/nmgr-functions.php:2861
+#: includes/nmgr-functions.php:2855
 msgid "Total Cost"
 msgstr ""
 
-#: includes/nmgr-functions.php:2862
+#: includes/nmgr-functions.php:2856
 msgid "Edit / delete"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/nmgr-functions.php:2897
+#: includes/nmgr-functions.php:2891
 msgid "Are you sure you want to remove the %s item?"
 msgstr ""
 
@@ -1577,7 +1577,7 @@ msgid "Let's go"
 msgstr ""
 
 #. translators: %s : wishlist type title
-#: templates/account/items.php:76
+#: templates/account/items.php:73
 msgid "This item has been bought for the %s owner."
 msgstr ""
 
@@ -1625,54 +1625,54 @@ msgid "Total cost"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:67
-#: templates/account/overview.php:98
+#: templates/account/overview.php:65
+#: templates/account/overview.php:96
 msgid "Your %s is fulfilled."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:76
+#: templates/account/overview.php:74
 msgid "item is in your %s"
 msgid_plural "items are in your %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/account/overview.php:106
+#: templates/account/overview.php:104
 msgid "item has been bought"
 msgid_plural "items have been bought"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: wishlist type titles
-#: templates/account/overview.php:121
+#: templates/account/overview.php:119
 msgid "Congratulations, your %s is fulfilled."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:148
+#: templates/account/overview.php:146
 msgid "Share your %s"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:158
+#: templates/account/overview.php:156
 msgid "You can copy your %s url below to share directly with others."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:168
+#: templates/account/overview.php:166
 msgid "Copy your %s url"
 msgstr ""
 
-#: templates/account/overview.php:170
+#: templates/account/overview.php:168
 msgid "Copy"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: templates/account/overview.php:176
+#: templates/account/overview.php:174
 msgid "View your %s page."
 msgstr ""
 
-#: templates/account/overview.php:178
+#: templates/account/overview.php:176
 msgid "View"
 msgstr ""
 
@@ -1697,7 +1697,7 @@ msgstr ""
 msgid "Click to share via email"
 msgstr ""
 
-#: templates/account/shipping.php:47
+#: templates/account/shipping.php:43
 msgid "You have not set up a shipping address yet for your account."
 msgstr ""
 
@@ -1717,22 +1717,22 @@ msgid "View your %s items"
 msgstr ""
 
 #. translators %s: wishlist type title
-#: templates/cart.php:59
+#: templates/cart.php:58
 msgid "There are currently no items in your %s."
 msgstr ""
 
-#: templates/cart.php:121
+#: templates/cart.php:120
 msgid "In:"
 msgstr ""
 
 #. translators: %d: quantity of items in wishlist cart
-#: templates/cart.php:182
+#: templates/cart.php:181
 msgid "%d item"
 msgid_plural "%d items in total"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/cart.php:190
+#: templates/cart.php:189
 msgid "Subtotal"
 msgstr ""
 

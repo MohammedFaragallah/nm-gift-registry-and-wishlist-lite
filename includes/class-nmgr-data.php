@@ -32,7 +32,7 @@ abstract class NMGR_Data
     protected $meta_data = null;
 
     /**
-     * 	All data for this object (merges core and meta data)
+     *  All data for this object (merges core and meta data)
      *
      * @var array
      */

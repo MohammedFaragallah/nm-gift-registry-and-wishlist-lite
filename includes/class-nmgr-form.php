@@ -327,9 +327,9 @@ class NMGR_Form
      * Set the current fields being worked with
      *
      * @param array $fields The fields to set as the current fields
-     * 									(This could be posted data from a form)
+     *                                  (This could be posted data from a form)
      * @param bool $registered_only Set only fields registered in the form
-     * 												within the given fields as the current fields
+     *                                              within the given fields as the current fields
      *
      * @todo Remove $registered_only parameter as it is not necessary
      *
@@ -738,7 +738,6 @@ class NMGR_Form
 
         foreach (array_keys($fields) as $key) {
             if (isset($data[$key])) {
-
                 // get field types to sanitize
                 $type = sanitize_title(isset($fields[$key]['type']) ? $fields[$key]['type'] : 'text');
 

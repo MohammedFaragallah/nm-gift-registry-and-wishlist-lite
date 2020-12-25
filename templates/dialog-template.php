@@ -49,8 +49,4 @@ $close_button = '<button type="button" class="close" data-dismiss="modal" aria-l
   <?php echo $footer; ?>
 </div>
 <?php
-
-
-
-
 endif;

@@ -20,9 +20,7 @@ defined('ABSPATH') || exit;
   data-nonce="<?php echo esc_attr($nonce); ?>">
   <?php
   if (!$wishlist) :
-
     nmgr_get_no_wishlist_placeholder('overview', true);
-
   else :
     if ($title) {
       printf('<div class="nmgr-template-title overview">%s</div>', nmgr_kses_post($title));
@@ -184,7 +182,6 @@ defined('ABSPATH') || exit;
     endif;
 
     do_action('nmgr_after_overview');
-
   endif;
   ?>
 </div>

@@ -750,99 +750,6 @@ class NMGR_Wordpress
     }
 
     /**
-     * Perform cleanup actions on wishlist data on delete or trash
-     *
-     * @param int $wishlist_id Wishlist id
-     */
-    public static function clean_wishlist_data_on_delete($wishlist_id)
-    {
-        $post = get_post($wishlist_id);
-
-        /**
-         * If the wishlist is being deleted or trashed, and it is the same wishlist stored
-         * in the user meta table, delete the user meta
-         */
-        if (doing_action('nmgr_delete_wishlist') || doing_action('nmgr_trashed_wishlist')) {
-            $stored_wishlist_id = get_user_meta($post->post_author, 'nmgr_wishlist_id', true);
-
-            if ($stored_wishlist_id && ($stored_wishlist_id == $wishlist_id)) {
-                delete_user_meta($post->post_author, 'nmgr_wishlist_id');
-            }
-            return;
-        }
-
-        /**
-         * If the wishlist is being untrashed (this happens only in admin), restore the user meta
-         * and delete any new wishlist the user has created if it exists
-         *
-         * (Admin managed restoration of trashed wishlists takes precedence over
-         * user created wishlists)
-         */
-        if (doing_action('nmgr_untrashed_wishlist')) {
-            $new_wishlist_id = get_user_meta($post->post_author, 'nmgr_wishlist_id', true);
-            if ($new_wishlist_id) {
-                wp_delete_post($new_wishlist_id, true);
-            }
-            update_user_meta($post->post_author, 'nmgr_wishlist_id', $wishlist_id);
-            return;
-        }
-    }
-
-    /**
-     * Perform update actions on wishlist data on save
-     *
-     * @param int $wishlist_id Wishlist id
-     */
-    public static function update_wishlist_data_on_save($wishlist_id)
-    {
-        $post = get_post($wishlist_id);
-
-        /**
-         * If a wishlist post is being created
-         * possibly update the user's user_meta wishlist_id value
-         */
-        if (!doing_action('nmgr_updated_wishlist')) {
-            // Add the wishlist_id as a user meta value if none exists
-            if (0 != $post->post_author && !get_user_meta($post->post_author, 'nmgr_wishlist_id', true)) {
-                update_user_meta($post->post_author, 'nmgr_wishlist_id', $wishlist_id);
-            }
-        } else {
-            /**
-             * During an update, if we are in the admin area
-             * possibly update the user's user_meta wishlist_id value
-             */
-            if (is_nmgr_admin()) {
-                global $wpdb;
-
-                // Check if the wishlist being updated is in the user meta table as two users cannot have the same wishlist
-                $user_id = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'nmgr_wishlist_id' AND meta_value=%s", $wishlist_id));
-
-                /**
-                 * if the wishlist is in the user meta table and the author of the wishlist is not the same as
-                 * the present author of the wishlist. update the author of the wishlist to the present one
-                 */
-                if ($user_id && absint($user_id) != absint($post->post_author)) {
-                    $wpdb->update(
-                        $wpdb->usermeta,
-                        array('user_id' => $post->post_author),
-                        array(
-                            'meta_key' => 'nmgr_wishlist_id',
-                            'meta_value' => $wishlist_id
-                        ),
-                        array('%d'),
-                        array('%s', '%d')
-                    );
-                }
-
-                // If the wishlist is not in the user meta table, add it
-                if (!$user_id) {
-                    update_user_meta($post->post_author, 'nmgr_wishlist_id', $wishlist_id);
-                }
-            }
-        }
-    }
-
-    /**
      * Set the mimimum purchase quantity for a product
      *
      * The 'nmgr_quantity_input_min' filter is a substitute for the woocommerce_quantity_input_min filter
@@ -1070,8 +977,7 @@ class NMGR_Wordpress
         $wid = nmgr_query_key('wishlist_id');
         $request = $_REQUEST; // phpcs:ignore WordPress.Security.NonceVerification
         // if we don't have product id or wishlist id query key in the query, return
-        if (
-            (!isset($request[$pid]) || !is_numeric(sanitize_key(wp_unslash($request[$pid])))) ||
+        if ((!isset($request[$pid]) || !is_numeric(sanitize_key(wp_unslash($request[$pid])))) ||
             (!isset($request[$wid]) || !is_numeric(sanitize_key(wp_unslash($request[$wid]))))
         ) {
             return;

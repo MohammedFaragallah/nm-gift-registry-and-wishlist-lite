@@ -21,11 +21,8 @@ defined('ABSPATH') || exit;
 
   <?php
   if (!$wishlist) :
-
     nmgr_get_no_wishlist_placeholder('shipping', true);
-
   else :
-
     if ($title) {
       printf('<div class="nmgr-template-title shipping">%s</div>', nmgr_kses_post($title));
     }
@@ -36,7 +33,6 @@ defined('ABSPATH') || exit;
   <form class="nmgr-shipping-form" method="POST">
 
     <?php if ($customer->get_id()) : ?>
-
     <?php echo $form->get_fields_html(array('ship_to_account_address')); ?>
 
     <div class="account-shipping-address">
@@ -75,7 +71,6 @@ defined('ABSPATH') || exit;
 
   <?php
     do_action('nmgr_after_shipping', $wishlist);
-
   endif;
   ?>
 

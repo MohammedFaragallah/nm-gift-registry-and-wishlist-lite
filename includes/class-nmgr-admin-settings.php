@@ -1017,10 +1017,10 @@ class NMGR_Admin_Settings
                     'default' => __('Gift Registry', 'nm-gift-registry-lite'),
                     'desc_tip' => sprintf(
                         /* translators:
-						 * 1: woocommerce account page url,
-						 * 2: plugin wishlist account page slug,
-						 * 3: plugin wishlist account page name
-						 */
+                         * 1: woocommerce account page url,
+                         * 2: plugin wishlist account page slug,
+                         * 3: plugin wishlist account page name
+                         */
                         __('This is for logged-in users only. It covers the menu title, page title and slug for the wishlist management page on the my-account page. With this you can manage your wishlist at %1$s%2$s/, and the title of the page would be "%3$s". It is best to set this only once to keep the name consistent for users. Leave empty if you do not want to manage wishlists in the my-account page, for example when you want to manage wishlists only through a custom page.', 'nm-gift-registry-lite'),
                         get_permalink(get_option('woocommerce_myaccount_page_id')),
                         nmgr_get_account_details('slug'),

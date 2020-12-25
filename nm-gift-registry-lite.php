@@ -22,7 +22,7 @@ defined('ABSPATH') || exit;
 define('NMGRLITE_FILE', __FILE__);
 
 if (!class_exists('NMGR_Lite_Install')) {
-	include_once 'includes/class-nmgr-lite-install.php';
+    include_once 'includes/class-nmgr-lite-install.php';
 
-	NMGR_Lite_Install::load();
+    NMGR_Lite_Install::load();
 }

@@ -21,7 +21,6 @@ defined('ABSPATH') || exit;
 do_action('nmgr_before_account_wishlist', $wishlist);
 
 if (!empty($tabs)) :
-
   if (1 < count($tabs)) :
 ?>
 <div id="nmgr-account-tabs" class="nmgr-tabs nmgr-account-sections">
@@ -64,7 +63,6 @@ if (!empty($tabs)) :
 </div>
 <?php
   endif;
-
 endif;
 
 /**

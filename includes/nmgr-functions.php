@@ -775,8 +775,8 @@ function nmgr_get_product_in_wishlist_title_attribute($product)
             );
         default:
             return sprintf(
+                /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                 _n(
-                    /* translators: 1: wishlist type title, 2: wishlist type title plural form */
                     'This product is in your %s',
                     'This product is in one or more of your %s',
                     $count,
@@ -1760,9 +1760,9 @@ function nmgr_add_to_wishlist($wishlist, $product, $quantity, $favourite = null,
         throw new Exception(
             sprintf(
                 /* translators:
-				 * 1: quantity to add, 2: product name, 3: wishlist type title,
-				 * 4: product quantity, 5: product quantity in wishlist, 6: wishlist type title
-				 */
+                 * 1: quantity to add, 2: product name, 3: wishlist type title,
+                 * 4: product quantity, 5: product quantity in wishlist, 6: wishlist type title
+                 */
                 __('You cannot add %1$s of &quot;%2$s&quot; to your %3$s &mdash; we have %4$s in stock and you already have %5$s in your %6$s.', 'nm-gift-registry-lite'),
                 $quantity,
                 $product->get_name(),
@@ -1813,8 +1813,7 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
         $product = wc_get_product($product);
     }
 
-    if (
-        (!is_nmgr_user() && !nmgr_get_option('add_to_wishlist_guests')) ||
+    if ((!is_nmgr_user() && !nmgr_get_option('add_to_wishlist_guests')) ||
         !is_nmgr_enabled() ||
         !$product
     ) {
@@ -2063,7 +2062,7 @@ function nmgr_get_add_to_wishlist_button($atts = false, $echo = false)
      *
      * @param string $button_template The button html
      * @param array $button_params Array keys of parameters used to compose the button html
-     * 					and their values. Default parameters: id, class, attributes, text, icon
+     *                  and their values. Default parameters: id, class, attributes, text, icon
      * @param array $args Arguments used to compose the overall button template
      */
     $args['button'] = apply_filters('nmgr_add_to_wishlist_button', $button_html, $button_params, $args);
@@ -2454,13 +2453,10 @@ if (!function_exists('nmgr_get_search_results_template')) {
         do_action('nmgr_search_results_header', $template_args);
 
         if ($wp_query->have_posts()) :
-
             while ($wp_query->have_posts()) :
-
                 $wp_query->the_post();
 
                 nmgr_template('content-search-nm_gift_registry.php');
-
             endwhile;
             nmgr_paging_nav();
         else :
@@ -2605,13 +2601,11 @@ function is_nmgr_guest()
  */
 function nmgr_get_current_user_id()
 {
-    if (AUTH) {
-        $auth = new AUTH();
-        $jwt_user = $auth->validate_token(false);
+    $auth = new AUTH();
+    $jwt_user = $auth->validate_token(false);
 
-        if ($jwt_user->data->user_id) {
-            return $jwt_user->data->user_id;
-        }
+    if ($jwt_user->data->user_id) {
+        return $jwt_user->data->user_id;
     }
 
     if (get_current_user_id()) {

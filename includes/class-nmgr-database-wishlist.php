@@ -151,7 +151,7 @@ class NMGR_Database_Wishlist
      * Update a wishlist post meta
      *
      * @param NMGR_Wishlist $wishlist Wishlist object
-     * @param bool $force	Whether to update all post meta or only changed ones. Used during create
+     * @param bool $force   Whether to update all post meta or only changed ones. Used during create
      */
     public function update_meta_data($wishlist, $force = false)
     {

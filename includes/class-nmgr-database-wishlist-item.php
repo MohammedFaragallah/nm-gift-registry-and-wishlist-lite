@@ -142,7 +142,7 @@ class NMGR_Database_Wishlist_Item
      * Saves an item's meta data in bulk to the database
      *
      * @param NMGR_Wishlist_Item $item Wishlist item object.
-     * @param bool $force	Whether to update all meta or only changed ones. Used during create
+     * @param bool $force   Whether to update all meta or only changed ones. Used during create
      */
     public function update_meta_data($item, $force = false)
     {

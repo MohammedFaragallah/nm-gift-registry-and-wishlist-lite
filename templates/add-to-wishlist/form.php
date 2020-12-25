@@ -30,7 +30,6 @@ global $product;
     <?php
     // If we're using the button as an anchor, simply print the anchor
     if (isset($permalink)) :
-
       if (isset($permalink_args)) :
         foreach ($permalink_args as $key => $value) {
           printf('<input type="hidden" name="%1$s" value="%2$s">', esc_attr($key), esc_attr($value));

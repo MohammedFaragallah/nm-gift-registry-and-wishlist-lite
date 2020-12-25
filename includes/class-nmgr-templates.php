@@ -899,8 +899,7 @@ class NMGR_Templates
 
     public static function after_items_actions_show_save_items_button($items, $wishlist, $items_args)
     {
-        if (
-            (!nmgr_get_option('display_item_quantity', 1) &&
+        if ((!nmgr_get_option('display_item_quantity', 1) &&
                 !nmgr_get_option('display_item_purchased_quantity', 1)) ||
             empty($items) ||
             !$items_args['editable']

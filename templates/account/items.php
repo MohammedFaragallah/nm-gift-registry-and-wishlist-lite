@@ -23,11 +23,8 @@ global $post;
 
   <?php
     if (!$wishlist) :
-
         nmgr_get_no_wishlist_placeholder('items', true);
-
     else :
-
         if ($title) {
             printf('<div class="nmgr-template-title items">%s</div>', nmgr_kses_post($title));
         }
@@ -99,7 +96,6 @@ global $post;
 
   <?php
         do_action('nmgr_after_items', $items, $wishlist, $items_args);
-
     endif;
     ?>
 
