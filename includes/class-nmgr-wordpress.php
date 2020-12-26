@@ -43,6 +43,7 @@ class NMGR_Wordpress
         function get_wishlist_schema()
         {
             $product_controller = new WC_REST_Products_Controller();
+            $product_schema = $product_controller->get_public_item_schema();
 
             $wishlist_schema = array(
                 '$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -51,19 +52,23 @@ class NMGR_Wordpress
                 'properties' => array(
                     "id" => array(
                         'type' => 'integer',
-                        'description' => ''
+                        'description' => 'unique identifier for this wishlist'
                     ),
                     "title" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' => 'the title of the wishlist'
                     ),
                     "status" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' => 'the post status of the wishlist (e.g. publish, draft)'
                     ),
                     "description" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' =>  'the wishlist description'
+                    ),
+                    "slug" => array(
+                        'type' => 'string',
+                        'description' =>  'the wishlist slug'
                     ),
                     "slug" => array(
                         'type' => 'string',
@@ -75,179 +80,184 @@ class NMGR_Wordpress
                     ),
                     "first_name" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' =>
+                        'the first name of the wishlist owner',
                     ),
                     "last_name" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' => 'the last name of the wishlist owner'
                     ),
                     "partner_first_name" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' =>
+                        'the first name of the wishlist owner\'s partner',
                     ),
                     "partner_last_name" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' =>
+                        'the last name of the wishlist owner\'s partner',
                     ),
                     "email" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' =>
+                        'the registered email for the wishlist',
                     ),
                     "event_date" => array(
                         'type' => 'date-time',
-                        'description' => ''
+                        'description' =>
+                        'the date for the wishlist event',
                     ),
                     "ship_to_account_address" => array(
                         'type' => 'boolean',
-                        'description' => ''
+                        'description' => sprintf(
+                            /* translators: %s: wishlist type title */
+                            __('Ship my %s items to my account shipping address', 'nm-gift-registry-lite'),
+                            nmgr_get_type_title()
+                        )
                     ),
                     "shipping" => array(
                         'type' => 'object',
-                        'description' => '',
+                        'description' => 'all shipping fields',
                         'properties' => array(
                             "first_name" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping first name.',
                             ),
                             "last_name" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping last name',
                             ),
                             "company" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping company',
                             ),
                             "address_1" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping address line 1',
                             ),
                             "address_2" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping address line 2.',
                             ),
                             "city" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping city.',
                             ),
                             "postcode" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping postcode.',
                             ),
                             "country" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping country.',
                             ),
                             "state" => array(
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'shipping state.',
                             ),
                         )
                     ),
                     "fulfilled" => array(
                         'type' => 'boolean',
-                        'description' => ''
+                        'description' => 'all items in the wishlist were marked as purchased'
                     ),
                     "date_fulfilled" => array(
                         'type' => 'date-time',
-                        'description' => ''
+                        'description' => 'the date the wishlist was fulfilled (This is the date all items in the wishlist were marked as purchased)'
                     ),
                     "nmgr_user_id" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' => 'Nmgr User Id'
                     ),
                     "nmgr_guest" => array(
                         'type' => 'string',
-                        'description' => ''
+                        'description' => 'Nmgr Guest'
                     ),
                     "items" => array(
                         'type' => 'array',
+                        'description' => 'Wishlist items',
                         'items' => array(
                             'type' => 'object',
                             'properties' => array(
                                 "id" => array(
                                     'type' => 'integer',
-                                    'description' => ''
+                                    'description' => 'unique identifier for this item'
                                 ),
                                 "wishlist_id" => array(
                                     'type' => 'integer',
-                                    'description' => ''
+                                    'description' => 'unique identifier for this wishlist'
                                 ),
                                 "name" => array(
                                     'type' => 'string',
-                                    'description' => ''
+                                    'description' => 'product item name'
                                 ),
                                 "date_created" => array(
                                     'type' => 'date-time',
-                                    'description' => ''
+                                    'description' => 'date created'
                                 ),
                                 "date_modified" => array(
                                     'type' => 'date-time',
-                                    'description' => ''
+                                    'description' => 'date modified'
                                 ),
                                 "product_id" => array(
                                     'type' => 'integer',
-                                    'description' => ''
+                                    'description' => 'product id'
                                 ),
                                 "variation_id" => array(
-                                    'type' => 'integer',
-                                    'description' => ''
+                                    'type' => ['integer', 'null'],
+                                    'description' => 'variation id'
                                 ),
                                 "variation" => array(
                                     "type" => "array",
                                     "items" => array(
                                         'type' => 'integer',
                                         'description' => ''
-                                    )
+                                    ),
+                                    'deprecated' => true
                                 ),
                                 "quantity" => array(
                                     'type' => 'integer',
-                                    'description' => ''
+                                    'description' => 'quantity'
                                 ),
                                 "purchased_quantity" => array(
                                     'type' => 'integer',
-                                    'description' => ''
+                                    'description' => 'purchased quantity'
                                 ),
-                                "purchased_quantity" => array(
+                                "unique_id" => array(
                                     'type' => 'string',
-                                    'description' => ''
+                                    'description' => 'unique id'
                                 ),
-                                "variation" => array(
-                                    "type" => "array",
-                                    "items" => array(
-                                        'type' => 'mixed',
-                                        'description' => ''
-                                    )
+                                "quantity_reference" => array(
+                                    'type' => 'mixed',
+                                    'description' => 'quantity reference'
                                 ),
                             )
                         )
                     ),
                     "products" => array(
                         'type' => 'array',
+                        'description' => 'woocommerce products',
                         "items" => array(
                             "type" => "object",
-                            "properties" => $product_controller->get_public_item_schema()
+                            "properties" => $product_schema['properties'],
                         )
-                    ),
-                    "fulfilled" => array(
-                        'type' => 'boolean',
-                        'description' => ''
                     ),
                     "item_count" => array(
                         'type' => 'integer',
-                        'description' => ''
+                        'description' => 'Wishlist items count',
                     ),
                     "item_purchased_count" => array(
                         'type' => 'integer',
-                        'description' => ''
+                        'description' => 'Wishlist purchased items count',
                     ),
                     "total" => array(
                         'type' => 'integer',
-                        'description' => ''
+                        'description' => 'the total price of all items in the wishlist'
                     ),
                     "permalink" => array(
                         'type' => 'string',
                         'format' => 'url',
-                        'description' => ''
+                        'description' => 'the permalink for the wishlist'
                     ),
                 ),
             );
@@ -432,10 +442,10 @@ class NMGR_Wordpress
                         $wishlist_obj['items'] = $items;
                     }
 
-                    $wishlist_obj['fulfilled'] = $wishlist_class->is_fulfilled();
-                    $wishlist_obj['item_count'] = $wishlist_class->get_item_count();
-                    $wishlist_obj['item_purchased_count'] = $wishlist_class->get_item_purchased_count();
-                    $wishlist_obj['total'] = $wishlist_class->get_total();
+                    $wishlist_obj['fulfilled'] = (bool) $wishlist_class->is_fulfilled();
+                    $wishlist_obj['item_count'] = (int) $wishlist_class->get_item_count();
+                    $wishlist_obj['item_purchased_count'] = (int) $wishlist_class->get_item_purchased_count();
+                    $wishlist_obj['total'] = (int) $wishlist_class->get_total();
                     $wishlist_obj['permalink'] = $wishlist_class->get_permalink();
 
                     return $wishlist_obj;
