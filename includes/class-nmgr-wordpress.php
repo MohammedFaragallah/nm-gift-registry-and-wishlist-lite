@@ -268,7 +268,7 @@ class NMGR_Wordpress
         add_action(
             'rest_api_init',
             function () {
-                $namespace = 'frego-mobile-builder/v1';
+                $namespace = 'nm-gift-registry/v1';
 
                 $base = 'gift-registry';
 
