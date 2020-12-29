@@ -42,9 +42,6 @@ class NMGR_Wordpress
 
         function get_wishlist_schema()
         {
-            $product_controller = new WC_REST_Products_Controller();
-            $product_schema = $product_controller->get_public_item_schema();
-
             $wishlist_schema = array(
                 '$schema'    => 'http://json-schema.org/draft-04/schema#',
                 'title'      => 'gift registry',
@@ -231,15 +228,45 @@ class NMGR_Wordpress
                                     'type' => 'mixed',
                                     'description' => 'quantity reference'
                                 ),
+
+                                "image" => array(
+                                    'description' => 'product item image.',
+                                    'type'        => 'object',
+                                    'context'     => ['view', 'edit', 'embed'],
+                                    'readonly'    => true,
+                                    "properties" => array(
+                                        'id'        => [
+                                            'description' => 'Image ID.',
+                                            'type'        => 'integer',
+                                            'context'     => ['view', 'edit'],
+                                        ],
+                                        'src' => [
+                                            'description' => 'Thumbnail URL.',
+                                            'type'        => 'string',
+                                            'format'      => 'uri',
+                                            'context'     => ['view', 'edit'],
+                                        ],
+                                        'name'      => [
+                                            'description' => 'Image name.',
+                                            'type'        => 'string',
+                                            'context'     => ['view', 'edit'],
+                                        ],
+                                        'alt'       => [
+                                            'description' => 'Image alternative text.',
+                                            'type'        => 'string',
+                                            'context'     => ['view', 'edit'],
+                                        ],
+                                    )
+                                ),
+                                "price" => array(
+                                    'type' => 'integer',
+                                    'description' => 'price'
+                                ),
+                                "price_html" => array(
+                                    'type' => 'string',
+                                    'description' => 'price_html'
+                                ),
                             )
-                        )
-                    ),
-                    "products" => array(
-                        'type' => 'array',
-                        'description' => 'woocommerce products',
-                        "items" => array(
-                            "type" => "object",
-                            "properties" => $product_schema['properties'],
                         )
                     ),
                     "item_count" => array(
@@ -403,39 +430,38 @@ class NMGR_Wordpress
 
                     if ($params['items']) {
                         $wishlist_obj['products'] = array();
-                        $ids = array();
-
-                        foreach ($wishlist_class->get_items() as $key => $item) {
-                            $d = new NMGR_Wishlist_Item($key);
-                            array_push($ids, $d->get_product_id());
-                        }
-
-                        if (count($ids)) {
-                            $product_controller = new WC_REST_Products_Controller();
-
-                            $request->set_param('include', $ids);
-
-                            $products =  $product_controller->get_items($request);
-
-                            $wishlist_obj['products'] = $products->get_data();
-                        }
 
                         $items = array();
 
                         foreach ($wishlist_obj['items'] as $key => $item) {
+                            $product_id = (int) $item['product_id'];
+                            $product = wc_get_product($product_id);
+                            $attachment_id = $product->get_image_id();
+
+                            $thumbnail = wp_get_attachment_image_src($attachment_id, 'woocommerce_thumbnail');
+
                             $items[] = array(
                                 'id' => (int) $item['id'],
                                 "wishlist_id" => (int) $item['wishlist_id'],
                                 "name" => $item['name'],
                                 "date_created" =>  $item['date_created'],
                                 "date_modified" =>  $item['date_modified'],
-                                "product_id" => (int) $item['product_id'],
+                                "product_id" => $product_id,
                                 "variation_id" => (int) $item['variation_id'] > 0 ? (int) $item['variation_id'] : null,
                                 "variation" =>  $item['variation'],
                                 "quantity" => (int) $item['quantity'],
                                 "purchased_quantity" => (int) $item['purchased_quantity'],
                                 "unique_id" =>  $item['unique_id'],
                                 "quantity_reference" =>  $item['quantity_reference'],
+
+                                "image" =>  array(
+                                    'id'        => (int) $attachment_id,
+                                    'src' => current($thumbnail),
+                                    'name'      => get_the_title($attachment_id),
+                                    'alt' => get_post_meta($attachment_id, '_wp_attachment_image_alt', true)
+                                ),
+                                "price" =>  $product->get_price(),
+                                "price_html" =>  $product->get_price_html(),
                             );
                         }
 
