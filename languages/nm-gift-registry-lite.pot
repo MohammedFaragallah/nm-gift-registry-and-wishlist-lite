@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-12-25T14:50:59+01:00\n"
+"POT-Creation-Date: 2020-12-29T11:38:57+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: nm-gift-registry-lite\n"
@@ -835,7 +835,7 @@ msgstr ""
 #. translators: %s: wishlist type title
 #: includes/class-nmgr-ajax.php:702
 #: includes/class-nmgr-ajax.php:729
-#: includes/class-nmgr-wordpress.php:1298
+#: includes/class-nmgr-wordpress.php:1384
 #: includes/nmgr-functions.php:2334
 msgid "The shipping address for this %s is required before you can add items to it."
 msgstr ""
@@ -1053,7 +1053,7 @@ msgstr ""
 
 #. translators: %s: wishlist type title
 #: includes/class-nmgr-scripts.php:139
-#: includes/class-nmgr-wordpress.php:1031
+#: includes/class-nmgr-wordpress.php:1117
 msgid "Please choose the quantity of items you wish to add to your %s."
 msgstr ""
 
@@ -1258,130 +1258,143 @@ msgid "Form action"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:110
+#: includes/class-nmgr-wordpress.php:111
 msgid "Ship my %s items to my account shipping address"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:565
-#: includes/class-nmgr-wordpress.php:566
+#. translators: %s: wishlist type title
+#: includes/class-nmgr-wordpress.php:430
+#: includes/class-nmgr-wordpress.php:510
 #: includes/class-nmgr-wordpress.php:568
+#: includes/class-nmgr-wordpress.php:604
+msgid "this %s is not active."
+msgstr ""
+
+#. translators: %s: wishlist type title
+#: includes/class-nmgr-wordpress.php:554
+msgid "%s item no longer exists or is invalid."
+msgstr ""
+
+#: includes/class-nmgr-wordpress.php:651
+#: includes/class-nmgr-wordpress.php:652
+#: includes/class-nmgr-wordpress.php:654
 msgid "NM Gift Registry"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:567
+#: includes/class-nmgr-wordpress.php:653
 msgid "All Wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:569
+#: includes/class-nmgr-wordpress.php:655
 msgid "Add new wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:570
+#: includes/class-nmgr-wordpress.php:656
 msgid "Edit"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:571
+#: includes/class-nmgr-wordpress.php:657
 msgid "Edit wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:572
+#: includes/class-nmgr-wordpress.php:658
 msgid "New wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:573
+#: includes/class-nmgr-wordpress.php:659
 msgid "View wishlist"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:574
+#: includes/class-nmgr-wordpress.php:660
 msgid "View wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:575
+#: includes/class-nmgr-wordpress.php:661
 msgid "Search wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:576
+#: includes/class-nmgr-wordpress.php:662
 msgid "No wishlists found"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:577
+#: includes/class-nmgr-wordpress.php:663
 msgid "No wishlists found in trash"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:578
+#: includes/class-nmgr-wordpress.php:664
 msgid "Filter wishlists"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:579
+#: includes/class-nmgr-wordpress.php:665
 msgid "Wishlists list"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:580
+#: includes/class-nmgr-wordpress.php:666
 msgid "Wishlist published"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:581
+#: includes/class-nmgr-wordpress.php:667
 msgid "Wishlist published privately"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:582
+#: includes/class-nmgr-wordpress.php:668
 msgid "Wishlist updated"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:584
+#: includes/class-nmgr-wordpress.php:670
 msgid "Add gift registries and wishlists to your store."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:809
+#: includes/class-nmgr-wordpress.php:895
 msgid "Select a variation of this product to add to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:818
+#: includes/class-nmgr-wordpress.php:904
 msgid "Select option(s) of this product to add to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:831
+#: includes/class-nmgr-wordpress.php:917
 msgid "Login to add products to your %s."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:842
+#: includes/class-nmgr-wordpress.php:928
 msgid "Create a %s to add products to it."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:871
+#: includes/class-nmgr-wordpress.php:957
 msgid "You have successfully enabled the %s module."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:873
+#: includes/class-nmgr-wordpress.php:959
 msgid "View your %s dashboard"
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:884
+#: includes/class-nmgr-wordpress.php:970
 msgid "You have successfully disabled the %s module."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:1008
+#: includes/class-nmgr-wordpress.php:1094
 msgid "The specified %s doesn't exist."
 msgstr ""
 
 #. translators: %s: wishlist type title
-#: includes/class-nmgr-wordpress.php:1014
+#: includes/class-nmgr-wordpress.php:1100
 msgid "This item cannot be added to your %s"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:1019
+#: includes/class-nmgr-wordpress.php:1105
 msgid "Please select options for this product"
 msgstr ""
 
-#: includes/class-nmgr-wordpress.php:1255
+#: includes/class-nmgr-wordpress.php:1341
 msgid "Ok"
 msgstr ""
 

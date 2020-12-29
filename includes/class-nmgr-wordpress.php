@@ -423,7 +423,17 @@ class NMGR_Wordpress
                     $wishlist_class = new NMGR_Wishlist($wishlist_id);
 
                     if (!$wishlist_class->is_active()) {
-                        return false;
+                        return new WP_Error(
+                            'nmgr_rest_wishlist_not_active',
+                            sprintf(
+                                /* translators: %s: wishlist type title */
+                                __('this %s is not active.', 'nm-gift-registry-lite'),
+                                nmgr_get_type_title()
+                            ),
+                            array(
+                                'status' => 409,
+                            )
+                        );
                     }
 
                     $wishlist_obj = $wishlist_class->get_data($params['items']);
@@ -493,7 +503,17 @@ class NMGR_Wordpress
                     $wishlist_class = new NMGR_Wishlist($wishlist_id);
 
                     if (!$wishlist_class->is_active()) {
-                        return false;
+                        return new WP_Error(
+                            'nmgr_rest_wishlist_not_active',
+                            sprintf(
+                                /* translators: %s: wishlist type title */
+                                __('this %s is not active.', 'nm-gift-registry-lite'),
+                                nmgr_get_type_title()
+                            ),
+                            array(
+                                'status' => 409,
+                            )
+                        );
                     }
 
                     $product = wc_get_product($params['product_id']);
@@ -524,8 +544,34 @@ class NMGR_Wordpress
                 try {
                     $wishlist_class = new NMGR_Wishlist($wishlist_id);
 
+                    $exist = $wishlist_class->get_item($params['item_id']);
+
+                    if (empty($exist)) {
+                        return new WP_Error(
+                            'nmgr_rest_wishlist_invalid_key',
+                            sprintf(
+                                /* translators: %s: wishlist type title */
+                                __('%s item no longer exists or is invalid.', 'nm-gift-registry-lite'),
+                                nmgr_get_type_title()
+                            ),
+                            array(
+                                'status' => 409,
+                            )
+                        );
+                    }
+
                     if (!$wishlist_class->is_active()) {
-                        return false;
+                        return new WP_Error(
+                            'nmgr_rest_wishlist_not_active',
+                            sprintf(
+                                /* translators: %s: wishlist type title */
+                                __('this %s is not active.', 'nm-gift-registry-lite'),
+                                nmgr_get_type_title()
+                            ),
+                            array(
+                                'status' => 409,
+                            )
+                        );
                     }
 
                     if ($params['clear'])  return $wishlist_class->delete_items();
@@ -551,7 +597,17 @@ class NMGR_Wordpress
                     $wishlist_class = new NMGR_Wishlist($wishlist_id);
 
                     if (!$wishlist_class->is_active()) {
-                        return false;
+                        return new WP_Error(
+                            'nmgr_rest_wishlist_not_active',
+                            sprintf(
+                                /* translators: %s: wishlist type title */
+                                __('this %s is not active.', 'nm-gift-registry-lite'),
+                                nmgr_get_type_title()
+                            ),
+                            array(
+                                'status' => 409,
+                            )
+                        );
                     }
 
                     $item = $wishlist_class->get_Item($params['item_id']);
